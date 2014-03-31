@@ -10,11 +10,21 @@
 #import "AiGridView.h"
 #import "AiVideoObject.h"
 #import "AiDefine.h"
-#import "AiDataManager.h"
+#import "AiDataRequestManager.h"
+#import "AiGridViewController.h"
+
+#import "MZFormSheetController.h"
+#import "SwipeView.h"
 
 @interface AiFirstViewController ()
 {
-    AiDataManager *_dataManager;
+    AiDataRequestManager *_dataManager;
+    NSMutableArray *_songListArray;
+    AiGridViewController *_songViewController;
+    AiGridViewController *_catoonViewController;
+    AiGridViewController *_videoViewController;
+    kTagButtonType _currentType;
+    int _scrollNum;
 }
 @end
 
@@ -24,7 +34,6 @@
 {
     [super viewDidLoad];
     [self setUI];
-    [self getVideoDatas];
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -34,90 +43,90 @@
     self.catoonButton.tag = kTagButtonTypeCatoon;
     self.videoButton.tag = kTagButtonTypeVideo;
     
-    AiGridView *songGridView_ = [[AiGridView alloc] initWithFrame:self.backgroundView.frame];
-    songGridView_.tag = kTagButtonTypeSong;
-    self.songGridView = songGridView_;
-    
-    AiGridView *catoonGridView_ = [[AiGridView alloc] initWithFrame:self.backgroundView.frame];
-    catoonGridView_.tag = kTagButtonTypeCatoon;
-    self.catoonGridView = catoonGridView_;
-    
-    AiGridView *videoGridView_ = [[AiGridView alloc] initWithFrame:self.backgroundView.frame];
-    videoGridView_.tag = kTagButtonTypeVideo;
-    self.videoGridView = videoGridView_;
-    
-    [self.view addSubview:self.catoonGridView];
-    [self.view addSubview:self.videoGridView];
-    [self.view addSubview:self.songGridView];
-}
-
--(void)saveVideoObjects:(NSArray *)resultArray saveArray:(NSMutableArray *)saveArray error:(NSError *)error
-{
-    if (error == nil) {
-        for (int i = 0; i < resultArray.count; i++) {
-            AiVideoObject *videoObject = [[AiVideoObject alloc] init];
-            ResourceInfo *resourceInfo = [resultArray objectAtIndex:i];
-            videoObject.title = resourceInfo.title;
-            videoObject.imageUrl = resourceInfo.img;
-            videoObject.vid = resourceInfo.url;
-            videoObject.sourceType = resourceInfo.resourceType;
-            [saveArray addObject:videoObject];
-        }
-    } else{
-        NSLog(@"error is %@",error);
-    }
-}
-
--(void)getVideoDatas
-{
-    _dataManager = [[AiDataManager alloc] initWithBabyId:123123];
-    NSMutableArray *songArray = [NSMutableArray array];
-    NSMutableArray *catoonArray = [NSMutableArray array];
-    NSMutableArray *videoArray = [NSMutableArray array];
-    [_dataManager searchWithKeyWords:@"儿歌" completion:^(NSArray *resultArray ,NSError *error){
-        [self saveVideoObjects:resultArray saveArray:songArray error:error];
-    }];
-    
-    [_dataManager searchWithKeyWords:@"动画" completion:^(NSArray *resultArray ,NSError *error){
-        [self saveVideoObjects:resultArray saveArray:catoonArray error:error];
-    }];
-    
-    [_dataManager searchWithKeyWords:@"视频" completion:^(NSArray *resultArray ,NSError *error){
-        [self saveVideoObjects:resultArray saveArray:videoArray error:error];
+    CGRect backGroundRect = self.backgroundView.frame;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.songGridView setVideoObjects:songArray];
-            [self.catoonGridView setVideoObjects:catoonArray];
-            [self.videoGridView setVideoObjects:videoArray];
-        });
+    _songViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
+    self.songGridView = _songViewController.gridView;
+    self.songGridView.tag = kTagButtonTypeSong;
+    _catoonViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
+    self.catoonGridView = _catoonViewController.gridView;
+    self.catoonGridView.tag = kTagButtonTypeCatoon;
+
+    _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"节目"];
+    self.videoGridView = _videoViewController.gridView;
+    self.videoGridView.tag = kTagButtonTypeVideo;
+    SwipeView *swipeView = [[SwipeView alloc] initWithFrame:backGroundRect];
+    swipeView.dataSource = self;
+    swipeView.pagingEnabled = YES;
+    self.swipeview = swipeView;
+    [self.view addSubview:swipeView];
+    
+}
+
+- (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
+{
+    return 3;
+}
+
+- (UIView *)swipeView:(SwipeView *)swipeView viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
+{
+    UIView *showView = nil;
+    if (index == 0) {
+        showView = self.songGridView;
+    }
+    if (index == 1) {
+        showView = self.catoonGridView;
+    }
+    if (index == 2) {
+        showView = self.videoGridView;
+    }
+    return showView;
+}
+
+-(MZFormSheetController *)makeMZFormSheetController:(UIViewController *)viewController
+{
+    MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:viewController];
+    
+    formSheet.presentedFormSheetSize = CGSizeMake(self.backgroundView.frame.size.width + 50, self.backgroundView.frame.size.height);
+    formSheet.transitionStyle = MZFormSheetTransitionStyleFade;
+    formSheet.shadowRadius = 2.0;
+    formSheet.shadowOpacity = 0.3;
+    formSheet.shouldDismissOnBackgroundViewTap = YES;
+    formSheet.shouldCenterVertically = YES;
+    formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
+    return formSheet;
+}
+
+-(IBAction)onClickSearch:(id)sender
+{
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"search"];
+
+    [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+    }];
+}
+
+-(IBAction)onClickHistory:(id)sender
+{
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"history"];
+    [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+    }];
+}
+
+-(IBAction)onClickSetting:(id)sender
+{
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"setting"];
+    [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
     }];
 }
 
 -(IBAction)onClickButton:(UIButton *)sender
 {
-    switch (sender.tag) {
-        case kTagButtonTypeSong:
-        {
-            NSLog(@"song click!!");
-            [self.view bringSubviewToFront:self.songGridView];
-            break;
-        }
-        case kTagButtonTypeCatoon:
-        {
-            NSLog(@"catoon click!!");
-            [self.view bringSubviewToFront:self.catoonGridView];
-            break;
-        }
-        case kTagButtonTypeVideo:
-        {
-            NSLog(@"video click!!");
-            [self.view bringSubviewToFront:self.videoGridView];
-            break;
-        }
-        default:
-            break;
-    }
+    _currentType = (int)sender.tag;
+    
+    [self.swipeview scrollToItemAtIndex:_currentType duration:0.2];
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {

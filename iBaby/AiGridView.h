@@ -8,16 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-//@class AiGridViewCell;
-//
-//@protocol AiGridViewDataSource <NSObject>
-//
-//-(NSInteger)gridViewNumber;
-//
-//-(AiGridViewCell *)cellForRowWithIndex;
-//
-//@end
-
 #import "AiVideoObject.h"
 
 @interface AiGridViewCell : UIView
@@ -28,14 +18,20 @@
 
 @property (nonatomic, strong) UILabel *titleLabel;
 
-//@property (nonatomic, assign) UIViewController *backgroundViewController;
-
 @end
 
-@interface AiGridView : UIView
+@interface AiGridView : UIScrollView
 
 @property (nonatomic, strong) NSArray * videoDatas;
 
+@property (nonatomic, strong) UIImageView *arrowImageView;
+
+@property (nonatomic, strong) UIImageView *headerArrowView;
+
 -(void)setVideoObjects:(NSArray *)videoObjects;
+
+-(void)transFormArrow:(UIImageView *)imageView;
+
+-(void)recover:(UIImageView *)imageView;
 
 @end

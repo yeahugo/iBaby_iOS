@@ -17,6 +17,8 @@
 
 @property (nonatomic, copy) NSString *vid;
 
+@property (nonatomic, assign) NSInteger playTime;
+
 @property (nonatomic, assign) kTagPlaySourceType sourceType;
 
 -(void)getSongUrlWithCompletion:(void (^)(NSString *urlString,NSError *error))completion;

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AiGridView.h"
+#import "SwipeView.h"
 
-@interface AiFirstViewController : UIViewController
+@interface AiFirstViewController : UIViewController <SwipeViewDataSource>
 
 @property (nonatomic, assign) IBOutlet UIButton *songButton;
 
@@ -25,6 +26,12 @@
 
 @property (nonatomic, strong) AiGridView *videoGridView;
 
+@property (nonatomic, strong) SwipeView *swipeview;
+
 -(IBAction)onClickButton:(id)sender;
+
+-(IBAction)onClickSearch:(id)sender;
+
+-(IBAction)onClickHistory:(id)sender;
 
 @end

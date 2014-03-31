@@ -20,14 +20,22 @@ typedef enum {
     kTagPlaySourceType56,
 } kTagPlaySourceType;
 
-#define kTagVideoCellStartIndex 100
+#define kTagVideoCellStartIndex 1000
 
 #define AI_HOST_IP @"115.28.213.143"
 
 #define AI_HOST_PORT 9090
 
-#define SearchNum 20
+#define SearchNum 12
 
 #define RecommendNum 20
+
+#define ColNum 4
+
+#define RowNum 3
+
+#define ScrollOffSet 100
+
+#define VideoTypeNum 3
 
 #endif

@@ -1968,8 +1968,13 @@
   if (__head_isset) {
     if (__head != nil) {
       [outProtocol writeFieldBeginWithName: @"head" type: TType_STRUCT fieldID: 1];
-      [__head write: outProtocol];
-      [outProtocol writeFieldEnd];
+        @try {
+            [__head write: outProtocol];
+            [outProtocol writeFieldEnd];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"thrift write failed!");
+        }
     }
   }
   if (__searchKeys_isset) {
