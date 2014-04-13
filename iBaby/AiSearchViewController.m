@@ -70,6 +70,7 @@
         [self.view addSubview:self.gridViewController.swipeView];
     } else {
         [self.gridViewController clickKeyWords:keywords];
+        [self.gridViewController.swipeView reloadData];
     }
 }
 

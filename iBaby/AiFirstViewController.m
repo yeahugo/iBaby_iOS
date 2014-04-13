@@ -26,6 +26,7 @@
     kTagButtonType _currentType;
     int _scrollNum;
     BOOL _isPresentView;
+    BOOL _isOnClickButton;
 }
 @end
 
@@ -36,6 +37,7 @@
     [super viewDidLoad];
     [self setUI];
     _isPresentView = NO;
+    _isOnClickButton = NO;
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -75,10 +77,18 @@
     return 3;
 }
 
-- (void)swipeViewDidEndDragging:(SwipeView *)swipeView willDecelerate:(BOOL)decelerate
+- (void)swipeViewCurrentItemIndexDidChange:(SwipeView *)swipeView
 {
-    _currentType = swipeView.currentItemIndex;
-    [self setCurrentButton:_currentType];
+    if (_isOnClickButton == NO) {
+        _currentType = swipeView.currentItemIndex;
+        NSLog(@"currentType is %d",_currentType);
+        [self setCurrentButton:_currentType];        
+    }
+}
+
+- (void)swipeViewWillBeginDecelerating:(SwipeView *)swipeView
+{
+    _isOnClickButton = NO;
 }
 
 - (UIView *)swipeView:(SwipeView *)swipeView viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
@@ -194,6 +204,7 @@
 -(IBAction)onClickButton:(UIButton *)sender
 {
     _currentType = (int)sender.tag;
+    _isOnClickButton = YES;
     [self setCurrentButton:_currentType];
     [self.swipeview scrollToItemAtIndex:_currentType duration:0.5];
 }

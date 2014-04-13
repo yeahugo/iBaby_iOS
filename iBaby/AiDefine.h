@@ -26,7 +26,9 @@ typedef enum {
 
 #define AI_HOST_PORT 9090
 
-#define SearchNum 12
+#define ShowNum 12
+
+#define SearchNum (12*3)
 
 #define RecommendNum 20
 
