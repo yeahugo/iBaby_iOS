@@ -7,20 +7,26 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "SwipView/SwipeView.h"
 #import "AiVideoObject.h"
 
-@interface AiGridView : UIScrollView
+@interface AiGridView  : UIView
+
+@property (nonatomic, strong) NSOperationQueue *queue;
 
 @property (nonatomic, strong) NSArray * videoDatas;
+
+-(void)setVideoObjects:(NSArray *)videoObjects;
+
+@end
+
+@interface AiSwipeView : SwipeView
 
 @property (nonatomic, strong) UIImageView *footerArrowView;
 
 @property (nonatomic, strong) UIImageView *headerArrowView;
 
-@property (nonatomic, strong) NSOperationQueue *queue;
-
--(void)setVideoObjects:(NSArray *)videoObjects;
+@property (nonatomic, strong) AiGridView * gridView;
 
 -(void)transFormArrow:(UIImageView *)imageView;
 

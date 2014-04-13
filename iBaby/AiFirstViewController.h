@@ -21,15 +21,21 @@
 
 @property (nonatomic, assign) IBOutlet UIView *backgroundView;
 
+@property (nonatomic, strong) IBOutlet UIButton *historyButton;
+
+@property (nonatomic, strong) IBOutlet UIButton *searchButton;
+
+@property (nonatomic, strong) IBOutlet UIButton *settingButton;
+
 @property (nonatomic, assign) UIButton *closeButton;
 
 @property (nonatomic, strong) MZFormSheetController *formSheetController;
 
-@property (nonatomic, strong) AiGridView *songGridView;
+@property (nonatomic, strong) SwipeView *songGridView;
 
-@property (nonatomic, strong) AiGridView *catoonGridView;
+@property (nonatomic, strong) SwipeView *catoonGridView;
 
-@property (nonatomic, strong) AiGridView *videoGridView;
+@property (nonatomic, strong) SwipeView *videoGridView;
 
 @property (nonatomic, strong) SwipeView *swipeview;
 

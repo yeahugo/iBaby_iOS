@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "AiGridView.h"
 
-@interface AiGridViewController : NSObject<UIScrollViewDelegate>
+@interface AiGridViewController : NSObject<UIScrollViewDelegate,SwipeViewDataSource,SwipeViewDelegate>
 
 -(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
 
 -(void)clickKeyWords:(NSString *)keyWords;
 
-@property (nonatomic, strong) AiGridView *gridView;
+@property (nonatomic, strong) AiSwipeView *swipeView;
+
+@property (nonatomic, copy) NSString *keyWords;
 
 @end

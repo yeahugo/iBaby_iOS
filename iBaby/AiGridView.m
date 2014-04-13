@@ -18,19 +18,19 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.backgroundColor = [UIColor blackColor];
-        CGRect rect = CGRectMake(15, 30, frame.size.width - 20, frame.size.height - 30);
+        self.backgroundColor = [UIColor clearColor];
+        CGRect rect = CGRectMake(5, 5, frame.size.width - 10, frame.size.height - 10);
         UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
         self.imageButton = imageButton_;
         [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.imageButton];
         
-        CGRect frameRect = CGRectMake(3, 15, frame.size.width, frame.size.height);
+        CGRect frameRect = CGRectMake(0, 0, frame.size.width, frame.size.height);
         UIImageView *frameImageView = [[UIImageView alloc] initWithFrame:frameRect];
         frameImageView.image = [UIImage imageNamed:@"item_normal"];
         [self addSubview:frameImageView];
         
-        CGRect labelRect = CGRectMake(20, rect.size.height + 40, rect.size.width, 30);
+        CGRect labelRect = CGRectMake(20, rect.size.height + 10, rect.size.width, 30);
         UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
         label_.font = [UIFont systemFontOfSize:12];
         label_.backgroundColor = [UIColor clearColor];
@@ -89,25 +89,26 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height * 1.1);
-        self.showsVerticalScrollIndicator = NO;
-        
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"blueArrow.png"]];
-        self.footerArrowView = imageView;
-        self.footerArrowView.hidden = YES;
-        self.footerArrowView.tag = 0;
-        self.footerArrowView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height);
-        [self addSubview:self.footerArrowView];
-        NSLog(@"frame is %@",NSStringFromCGRect(self.frame));
-
-        UIImage *arrowImage = [UIImage imageNamed:@"blueArrow.png"];
-        UIImageView *headerView = [[UIImageView alloc] initWithImage:arrowImage];
-        self.headerArrowView = headerView;
-        self.headerArrowView.center = CGPointMake(self.frame.size.width/2, 0);
-        self.headerArrowView.transform = CGAffineTransformMakeScale(1.0,-1.0);
-        self.headerArrowView.tag = 1;
-        [self addSubview:self.headerArrowView];
-        self.headerArrowView.hidden = YES;
+        self.backgroundColor = [UIColor clearColor];
+//        self.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height * 1.1);
+//        self.showsVerticalScrollIndicator = NO;
+//        
+//        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"blueArrow.png"]];
+//        self.footerArrowView = imageView;
+//        self.footerArrowView.hidden = YES;
+//        self.footerArrowView.tag = 0;
+//        self.footerArrowView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height);
+//        [self addSubview:self.footerArrowView];
+//        NSLog(@"frame is %@",NSStringFromCGRect(self.frame));
+//
+//        UIImage *arrowImage = [UIImage imageNamed:@"blueArrow.png"];
+//        UIImageView *headerView = [[UIImageView alloc] initWithImage:arrowImage];
+//        self.headerArrowView = headerView;
+//        self.headerArrowView.center = CGPointMake(self.frame.size.width/2, 0);
+//        self.headerArrowView.transform = CGAffineTransformMakeScale(1.0,-1.0);
+//        self.headerArrowView.tag = 1;
+//        [self addSubview:self.headerArrowView];
+//        self.headerArrowView.hidden = YES;
         
         NSOperationQueue * queue = [[NSOperationQueue alloc] init];
         self.queue = queue;
@@ -130,7 +131,7 @@
 {
     int colNum = ColNum;
     int rowNum = RowNum;
-    CGSize size = CGSizeMake(160, 140);
+    CGSize size = CGSizeMake(180, 135);
     int startX = 0;
     int startY = 0;
     int deltaX = (self.frame.size.width)/colNum;
@@ -176,6 +177,26 @@
         AiGridViewCell *cell = [self gridViewCellWithIndex:i];
         cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
     }
+}
+
+@end
+
+@implementation AiSwipeView
+
+-(id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.vertical = YES;
+        [self setScrollOffset:1];
+        [self scrollToItemAtIndex:0 duration:0.2];
+    }
+    return self;
+}
+
+-(AiGridView *)gridView
+{
+    return (AiGridView *)self.currentItemView;
 }
 
 @end

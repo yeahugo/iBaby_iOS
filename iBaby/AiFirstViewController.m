@@ -25,6 +25,7 @@
     AiGridViewController *_videoViewController;
     kTagButtonType _currentType;
     int _scrollNum;
+    BOOL _isPresentView;
 }
 @end
 
@@ -34,6 +35,7 @@
 {
     [super viewDidLoad];
     [self setUI];
+    _isPresentView = NO;
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -46,24 +48,26 @@
     CGRect backGroundRect = self.backgroundView.frame;
         
     _songViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
-    self.songGridView = _songViewController.gridView;
+    self.songGridView = _songViewController.swipeView;
     self.songGridView.tag = kTagButtonTypeSong;
     _catoonViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
-    self.catoonGridView = _catoonViewController.gridView;
+    self.catoonGridView = _catoonViewController.swipeView;
     self.catoonGridView.tag = kTagButtonTypeCatoon;
-
     _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"节目"];
-    self.videoGridView = _videoViewController.gridView;
+    self.videoGridView = _videoViewController.swipeView;
     self.videoGridView.tag = kTagButtonTypeVideo;
     
     SwipeView *swipeView = [[SwipeView alloc] initWithFrame:backGroundRect];
-//    swipeView.vertical = YES;
     swipeView.delegate = self;
     swipeView.dataSource = self;
     swipeView.pagingEnabled = YES;
     self.swipeview = swipeView;
     [self.view addSubview:swipeView];
     [self setCurrentButton:_currentType];
+    
+    //下面的代码防止滑动过程出现左右偏移
+    [self.swipeview setScrollOffset:1];
+    [self.swipeview scrollToItemAtIndex:0 duration:0.5];
 }
 
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
@@ -71,7 +75,7 @@
     return 3;
 }
 
-- (void)swipeViewCurrentItemIndexDidChange:(SwipeView *)swipeView
+- (void)swipeViewDidEndDragging:(SwipeView *)swipeView willDecelerate:(BOOL)decelerate
 {
     _currentType = swipeView.currentItemIndex;
     [self setCurrentButton:_currentType];
@@ -94,7 +98,7 @@
 
 -(void)close:(id)sender
 {
-    [self.closeButton removeFromSuperview];
+    self.closeButton.hidden = YES;
     [self.formSheetController dismissAnimated:YES completionHandler:nil];
 }
 
@@ -109,38 +113,50 @@
     formSheet.shadowOpacity = 0.3;
     formSheet.shouldDismissOnBackgroundViewTap = YES;
     formSheet.shouldCenterVertically = YES;
+    formSheet.shouldDismissOnBackgroundViewTap = NO;
     formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
     
-    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.backgroundView.frame.size.width + 160, 60, 50, 50)];
+    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.backgroundView.frame.size.width + 130, 60, 50, 50)];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [closeButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
     closeButton.tag = 3;
     self.closeButton = closeButton;
-    NSLog(@"view is %@",self.formSheetController.presentedFSViewController.view);
     [self.formSheetController.view addSubview:closeButton];
     return formSheet;
 }
 
 -(IBAction)onClickSearch:(id)sender
 {
-    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"search"];
-
-    [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-    }];
+    if (_isPresentView == NO) {
+        _isPresentView = YES;
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"search"];
+        [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+            NSLog(@"finish!!");
+            _isPresentView = NO;
+        }];
+    }
 }
 
 -(IBAction)onClickHistory:(id)sender
 {
-    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"history"];
-    [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-    }];
+    if (_isPresentView == NO) {
+        _isPresentView = YES;
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"history"];
+        [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+            _isPresentView = NO;
+        }];
+    }
 }
 
 -(IBAction)onClickSetting:(id)sender
 {
-    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"setting"];
-    [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-    }];
+    if (_isPresentView == NO) {
+        _isPresentView = YES;
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"setting"];
+        [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+            _isPresentView = NO;
+        }];
+    }
 }
 
 -(void)setCurrentButton:(kTagButtonType)buttonType
@@ -179,7 +195,7 @@
 {
     _currentType = (int)sender.tag;
     [self setCurrentButton:_currentType];
-    [self.swipeview scrollToItemAtIndex:_currentType duration:0.2];
+    [self.swipeview scrollToItemAtIndex:_currentType duration:0.5];
 }
 
 

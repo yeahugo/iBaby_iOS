@@ -67,7 +67,7 @@
     if (self.gridViewController == nil) {
         AiGridViewController *gridViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:keywords];
         self.gridViewController = gridViewController;
-        [self.view addSubview:self.gridViewController.gridView];
+        [self.view addSubview:self.gridViewController.swipeView];
     } else {
         [self.gridViewController clickKeyWords:keywords];
     }
@@ -82,8 +82,10 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     AiFirstViewController *firstViewController = (AiFirstViewController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-    UIButton * closeButton = firstViewController.closeButton;
-    closeButton.center = CGPointMake(closeButton.center.x, closeButton.center.y - 50);
+    if (firstViewController.closeButton) {
+        UIButton * closeButton = firstViewController.closeButton;
+        closeButton.center = CGPointMake(closeButton.center.x, closeButton.center.y - 50);
+    }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField

@@ -82,7 +82,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="i0c-ZO-b1c">
-                                <rect key="frame" x="174" y="100" width="745" height="537"/>
+                                <rect key="frame" x="150" y="100" width="780" height="550"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
@@ -143,6 +143,9 @@
                     <connections>
                         <outlet property="backgroundView" destination="i0c-ZO-b1c" id="ngj-ca-xcI"/>
                         <outlet property="catoonButton" destination="Vle-m7-BOe" id="YM1-pR-bKe"/>
+                        <outlet property="historyButton" destination="8Us-SA-z4x" id="2RX-5e-1aQ"/>
+                        <outlet property="searchButton" destination="Q2c-Et-gXe" id="ql9-k4-jnh"/>
+                        <outlet property="settingButton" destination="a2b-0B-9kx" id="7Ec-vo-QJZ"/>
                         <outlet property="songButton" destination="b9Z-mX-Dak" id="8L9-Ag-aGA"/>
                         <outlet property="videoButton" destination="XOV-Qw-Czm" id="2Q7-wf-Zk3"/>
                     </connections>
@@ -216,7 +219,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="fbQ-zI-CZZ">
-                                <rect key="frame" x="30" y="50" width="1000" height="700"/>
+                                <rect key="frame" x="30" y="80" width="1000" height="680"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
