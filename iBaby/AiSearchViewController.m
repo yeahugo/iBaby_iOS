@@ -8,6 +8,8 @@
 
 #import "AiSearchViewController.h"
 #import "AiDataRequestManager.h"
+#import "AiGridViewController.h"
+#import "AiFirstViewController.h"
 
 @interface AiSearchViewController ()
 
@@ -30,6 +32,8 @@
     _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     _activityView.center = CGPointMake(200, 120);
     [self.view addSubview:_activityView];
+    self.textField.delegate = self;
+
     // Do any additional setup after loading the view.
 }
 
@@ -52,47 +56,47 @@
 
 -(IBAction)onClickSearchField
 {
-    NSMutableArray * saveArray = [NSMutableArray array];
-    [self.resultGridView removeFromSuperview];
-    AiGridView *resultGridView_ = [[AiGridView alloc] initWithFrame:self.backGroundView.frame];
-    resultGridView_.backgroundColor = [UIColor clearColor];
-    self.resultGridView = resultGridView_;
-    [self.view addSubview:self.resultGridView];
-    [self.activityView startAnimating];
-    [[AiDataRequestManager shareInstance] requestSearchWithKeyWords:self.textField.text startId:[NSNumber numberWithInt:0] completion:^(NSArray *resultArray ,NSError *error){
-        [self saveVideoObjects:resultArray saveArray:saveArray error:error];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityView stopAnimating];
-            [self.resultGridView setVideoObjects:saveArray];
-            [self.textField resignFirstResponder];
-        });
-    }];
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
-{
-    NSMutableArray * saveArray = [NSMutableArray array];
-    [self.resultGridView removeFromSuperview];
-    AiGridView *resultGridView_ = [[AiGridView alloc] initWithFrame:self.backGroundView.frame];
-    self.resultGridView = resultGridView_;
-    [self.view addSubview:self.resultGridView];
-    [self.activityView startAnimating];
-    [[AiDataRequestManager shareInstance] requestSearchWithKeyWords:searchBar.text startId:[NSNumber numberWithInt:0] completion:^(NSArray *resultArray ,NSError *error){
-        [self saveVideoObjects:resultArray saveArray:saveArray error:error];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityView stopAnimating];
-            [self.resultGridView setVideoObjects:saveArray];
-            [searchBar resignFirstResponder];
-        });
-    }];
+    NSString *keywords = nil;
+    if (self.textField.text == nil) {
+        keywords = @"";
+    } else {
+        keywords = self.textField.text;
+    }
+    [self.textField resignFirstResponder];
+    
+    if (self.gridViewController == nil) {
+        AiGridViewController *gridViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:keywords];
+        self.gridViewController = gridViewController;
+        [self.view addSubview:self.gridViewController.gridView];
+    } else {
+        [self.gridViewController clickKeyWords:keywords];
+    }
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    AiFirstViewController *firstViewController = (AiFirstViewController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
+    UIButton * closeButton = firstViewController.closeButton;
+    closeButton.center = CGPointMake(closeButton.center.x, closeButton.center.y - 50);
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    AiFirstViewController *firstViewController = (AiFirstViewController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
+    UIButton * closeButton = firstViewController.closeButton;
+    closeButton.center = CGPointMake(closeButton.center.x, closeButton.center.y + 50);
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self onClickSearchField];
+    return YES;
 }
 
 /*

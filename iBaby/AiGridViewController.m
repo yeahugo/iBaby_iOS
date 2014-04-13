@@ -29,29 +29,29 @@
         gridView.backgroundColor = [UIColor clearColor];
         self.gridView = gridView;
         
-        [AiDataRequestManager shareInstance].babyId = 123;
-        AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
-        NSMutableArray *songArray = [[NSMutableArray alloc] init];
-        __block int searchNum = 0;
-        [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:0] completion:^(NSArray *resultArray ,NSError *error){
-            searchNum ++;
-            [self saveVideoObjects:resultArray saveArray:songArray error:error];
-            [_songListArray addObject:songArray];
-            
-            if (resultArray.count == SearchNum && searchNum == 1) {
-                [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum] completion:^(NSArray *resultArray, NSError *error) {
-                    NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
-                    [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
-                    [_songListArray addObject:nextSongArray];
-                }];                
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.gridView setVideoObjects:songArray];
-            });
-        }];
+        [self clickKeyWords:keyWords];
     }
     return self;
+}
+
+-(void)clickKeyWords:(NSString *)keyWords
+{
+    [_songListArray removeAllObjects];
+    AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
+    NSMutableArray *songArray = [[NSMutableArray alloc] init];
+    [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:0] completion:^(NSArray *resultArray ,NSError *error){
+        
+        [self saveVideoObjects:resultArray saveArray:songArray error:error];
+        [_songListArray addObject:songArray];
+        [self.gridView setVideoObjects:songArray];
+        if (resultArray.count == SearchNum) {
+            [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum] completion:^(NSArray *resultArray, NSError *error) {
+                NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
+                [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
+                [_songListArray addObject:nextSongArray];
+            }];
+        }
+    }];
 }
 
 #pragma UIScrollViewDelegate
@@ -64,40 +64,30 @@
         NSLog(@"change to left");
     }
     else {
-    if (scrollView.contentOffset.y > ScrollOffSet/2) {
-        self.gridView.arrowImageView.hidden = NO;
-        if (scrollView.contentOffset.y > ScrollOffSet) {
-            [self.gridView transFormArrow:self.gridView.arrowImageView];
+        if (scrollView.contentOffset.y > ScrollOffSet/2) {
+            self.gridView.footerArrowView.hidden = NO;
+            if (scrollView.contentOffset.y > ScrollOffSet) {
+                [self.gridView transFormArrow:self.gridView.footerArrowView];
+            }
+            if (scrollView.contentOffset.y < ScrollOffSet) {
+                [self.gridView recover:self.gridView.footerArrowView];
+            }
+            self.gridView.headerArrowView.hidden = YES;
+        } else if(scrollView.contentOffset.y < -ScrollOffSet/2) {
+            self.gridView.headerArrowView.hidden = NO;
+            if (scrollView.contentOffset.y < ScrollOffSet) {
+                [self.gridView transFormArrow:self.gridView.headerArrowView];
+            }
+            if (scrollView.contentOffset.y < ScrollOffSet) {
+                [self.gridView recover:self.gridView.headerArrowView];
+            }
+            self.gridView.footerArrowView.hidden = YES;
+        } else{
+            self.gridView.headerArrowView.hidden = YES;
+            self.gridView.footerArrowView.hidden = YES;
         }
-        if (scrollView.contentOffset.y < ScrollOffSet) {
-            [self.gridView recover:self.gridView.arrowImageView];
-        }
-        self.gridView.headerArrowView.hidden = YES;
-    } else if(scrollView.contentOffset.y < -ScrollOffSet/2) {
-        self.gridView.headerArrowView.hidden = NO;
-        if (scrollView.contentOffset.y < ScrollOffSet) {
-            [self.gridView transFormArrow:self.gridView.headerArrowView];
-        }
-        if (scrollView.contentOffset.y < ScrollOffSet) {
-            [self.gridView recover:self.gridView.headerArrowView];
-        }
-        self.gridView.arrowImageView.hidden = YES;
-    } else{
-        self.gridView.headerArrowView.hidden = YES;
-        self.gridView.arrowImageView.hidden = YES;
-    }}
+    }
 }
-
-//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-//    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-//        CGPoint point = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self];
-//        if ((fabs(point.y) / fabs(point.x)) < 1) { // 判断角度 tan(45),这里需要通过正负来判断手势方向
-//            NSLog(@"横向手势");
-//            return NO;
-//        }
-//    }
-//    return [super gestureRecognizerShouldBegin:gestureRecognizer];
-//}
 
 -(void)saveVideoObjects:(NSArray *)resultArray saveArray:(NSMutableArray *)saveArray error:(NSError *)error
 {
@@ -118,26 +108,35 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (scrollView.contentOffset.y > ScrollOffSet) {
-        _scrollNum ++;
-        NSLog(@"scrollNum is %d",_scrollNum);
-        if (_songListArray.count -1 >= _scrollNum) {
-            NSMutableArray *songArray = [_songListArray objectAtIndex:_scrollNum];
+    NSLog(@"count is %d",[[_songListArray objectAtIndex:_scrollNum] count]);
+    if (scrollView.contentOffset.y > ScrollOffSet ) {
+        if ([[_songListArray objectAtIndex:_scrollNum] count] == SearchNum)
+        {
+            _scrollNum ++;
+            
+            if (_songListArray.count -1 >= _scrollNum) {
+                NSMutableArray *songArray = [_songListArray objectAtIndex:_scrollNum];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.gridView setVideoObjects:songArray];
+                    [self.gridView setContentOffset:CGPointMake(0, 0) animated:YES];
+                });
+                
+                if (_songListArray.count -1 == _scrollNum) {
+                    NSLog(@"request next page!!");
+                    NSMutableArray *newSongArray = [[NSMutableArray alloc] init];
+                    int startId = _scrollNum * SearchNum;
+                    [[AiDataRequestManager shareInstance] requestSearchWithKeyWords:@"儿歌" startId:[NSNumber numberWithInt:startId] completion:^(NSArray *resultArray ,NSError *error){
+                        [self saveVideoObjects:resultArray saveArray:newSongArray error:error];
+                        [_songListArray addObject:newSongArray];
+                    }];
+                }
+            } else {
+            }
+        }
+        else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.gridView setVideoObjects:songArray];
                 [self.gridView setContentOffset:CGPointMake(0, 0) animated:YES];
             });
-            
-            if (_songListArray.count -1 == _scrollNum) {
-                NSMutableArray *newSongArray = [[NSMutableArray alloc] init];
-                int startId = _scrollNum * SearchNum;
-                [[AiDataRequestManager shareInstance] requestSearchWithKeyWords:@"儿歌" startId:[NSNumber numberWithInt:startId] completion:^(NSArray *resultArray ,NSError *error){
-                    [self saveVideoObjects:resultArray saveArray:newSongArray error:error];
-                    [_songListArray addObject:newSongArray];
-                }];
-            }
-        } else {
-            // to do  here!!
         }
     } else if (scrollView.contentOffset.y < -ScrollOffSet && _scrollNum > 0){
         _scrollNum --;
@@ -148,6 +147,7 @@
             [self.gridView setVideoObjects:songArray];
         });
     }
+    NSLog(@"scrollNum is %d",_scrollNum);
 }
 
 @end

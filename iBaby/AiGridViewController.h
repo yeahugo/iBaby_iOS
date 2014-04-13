@@ -13,6 +13,8 @@
 
 -(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
 
+-(void)clickKeyWords:(NSString *)keyWords;
+
 @property (nonatomic, strong) AiGridView *gridView;
 
 @end

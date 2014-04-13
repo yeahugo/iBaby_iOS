@@ -10,6 +10,24 @@
 
 #import "AiVideoObject.h"
 
+@interface AiGridView : UIScrollView
+
+@property (nonatomic, strong) NSArray * videoDatas;
+
+@property (nonatomic, strong) UIImageView *footerArrowView;
+
+@property (nonatomic, strong) UIImageView *headerArrowView;
+
+@property (nonatomic, strong) NSOperationQueue *queue;
+
+-(void)setVideoObjects:(NSArray *)videoObjects;
+
+-(void)transFormArrow:(UIImageView *)imageView;
+
+-(void)recover:(UIImageView *)imageView;
+
+@end
+
 @interface AiGridViewCell : UIView
 
 @property (nonatomic, strong) AiVideoObject *aiVideoObject;
@@ -18,20 +36,6 @@
 
 @property (nonatomic, strong) UILabel *titleLabel;
 
-@end
-
-@interface AiGridView : UIScrollView
-
-@property (nonatomic, strong) NSArray * videoDatas;
-
-@property (nonatomic, strong) UIImageView *arrowImageView;
-
-@property (nonatomic, strong) UIImageView *headerArrowView;
-
--(void)setVideoObjects:(NSArray *)videoObjects;
-
--(void)transFormArrow:(UIImageView *)imageView;
-
--(void)recover:(UIImageView *)imageView;
+@property (nonatomic, assign) AiGridView *gridView;
 
 @end

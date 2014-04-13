@@ -31,7 +31,7 @@
     AiGridView * gridView = [[AiGridView alloc] initWithFrame:self.backGroundView.frame];
     gridView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:gridView];
-
+    
     [[AiDataBaseManager shareInstance] getVideoListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
             [gridView setVideoObjects:videoList];

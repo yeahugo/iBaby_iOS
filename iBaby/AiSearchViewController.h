@@ -7,17 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AiGridView.h"
+#import "AiGridViewController.h"
 
-@interface AiSearchViewController : UIViewController<UISearchBarDelegate>
+@interface AiSearchViewController : UIViewController<UITextFieldDelegate>
 
 @property (nonatomic, assign) IBOutlet UIView * backGroundView;
 
-@property (nonatomic, assign) AiGridView *resultGridView;
+@property (nonatomic, strong) AiGridViewController *gridViewController;
 
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;
 
 @property (nonatomic, assign) IBOutlet UITextField *textField;
 
 -(IBAction)onClickSearchField;
+
 @end

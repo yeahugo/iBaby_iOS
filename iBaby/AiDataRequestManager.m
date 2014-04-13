@@ -27,7 +27,8 @@
     self = [super init];
     if (self) {
         _reConnectNum = 0;
-        _queue = [[NSOperationQueue alloc] init];
+//        _queue = [[NSOperationQueue alloc] init];
+        _queue = [NSOperationQueue currentQueue];
         [_queue setMaxConcurrentOperationCount:1];
         _reqHead = [[ReqHead alloc] initWithBabyId:123 guid:@"123" version:@"1.0"];
     }
@@ -50,36 +51,6 @@
         [_queue setMaxConcurrentOperationCount:1];
     }
     return self;
-}
-
--(void)doSearch:(NSDictionary *)info
-{
-    NSString *keyWords = [info valueForKey:@"keyWords"];
-    int startId = [[info valueForKeyPath:@"startId"] intValue];
-    Completion completion = [info valueForKey:@"completion"];
-    SearchReq *searchReq = [[SearchReq alloc] initWithHead:_reqHead searchKeys:keyWords resourceType:0 startId:startId recordNum:SearchNum];
-    @try {
-        NSLog(@"doSearch with %@",keyWords);
-        SearchResp *resp = [[AiThriftManager shareInstance].resourceClient search:searchReq];
-        
-        if (resp.resCode == 200) {
-            NSArray * resultArray = resp.result;
-            completion(resultArray,nil);
-        } else {
-            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
-            completion(nil,error);
-        }
-        
-        _reConnectNum = 0;
-    }
-    @catch (NSException *exception) {
-        _reConnectNum ++;
-        if (_reConnectNum < 3) {
-            [[AiThriftManager shareInstance] reConnect];
-            [self doSearch:info];
-        }
-        NSLog(@"exception is %@",exception);
-    }
 }
 
 -(void)getRecommend
@@ -109,10 +80,42 @@
     [_queue addOperation:operation];
 }
 
+-(void)doSearchWithRequest:(SearchReq *)searchReq completion:(void (^)(NSArray *, NSError *))completion
+{
+    NSLog(@"doSearchWithRequest with keyWords is %@",searchReq);
+    SearchResp *resp = [[AiThriftManager shareInstance].resourceClient search:searchReq];
+        
+    if (resp.resCode == 200) {
+        NSArray * resultArray = resp.result;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(resultArray,nil);
+        });
+    } else {
+        NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(nil,error);
+        });
+    }
+}
+
 -(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId completion:(void (^)(NSArray *, NSError *))completion
 {
-    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:keyWords,@"keyWords",startId,@"startId",[completion copy],@"completion",nil];
-    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(doSearch:) object:dictionary];
-    [_queue addOperation:operation];
+    [_queue addOperationWithBlock:^(void){
+        SearchReq *searchReq = [[SearchReq alloc] initWithHead:_reqHead searchKeys:keyWords resourceType:0 startId:[startId integerValue] recordNum:SearchNum];
+        @try {
+            [self doSearchWithRequest:searchReq completion:completion];
+        }
+        @catch (NSException *exception) {
+            [[AiThriftManager shareInstance] reConnect];
+            NSLog(@"exception is %@",exception);
+            @try {
+                [self doSearchWithRequest:searchReq completion:completion];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"exception is %@",exception);
+            }
+        }
+
+    }];
 }
 @end

@@ -38,4 +38,6 @@ typedef enum {
 
 #define VideoTypeNum 3
 
+#define HistoryNum 12
+
 #endif

@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "AiGridView.h"
 #import "SwipeView.h"
+#import "MZFormSheetController.h"
 
-@interface AiFirstViewController : UIViewController <SwipeViewDataSource>
+@interface AiFirstViewController : UIViewController <SwipeViewDataSource,SwipeViewDelegate>
 
 @property (nonatomic, assign) IBOutlet UIButton *songButton;
 
@@ -19,6 +20,10 @@
 @property (nonatomic, assign) IBOutlet UIButton *videoButton;
 
 @property (nonatomic, assign) IBOutlet UIView *backgroundView;
+
+@property (nonatomic, assign) UIButton *closeButton;
+
+@property (nonatomic, strong) MZFormSheetController *formSheetController;
 
 @property (nonatomic, strong) AiGridView *songGridView;
 

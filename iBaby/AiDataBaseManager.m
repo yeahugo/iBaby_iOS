@@ -36,22 +36,18 @@
             [_dataBase executeUpdate:sqlString];
         }
         _queue = [[NSOperationQueue alloc] init];
+        [_queue setMaxConcurrentOperationCount:1];
     }
     return self;
 }
 
 -(void)getVideoListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion
 {
-    EGODatabaseRequest *request = [_dataBase requestWithQuery:@"SELECT * FROM `PlayedVideos`"];
+    EGODatabaseRequest *request = [_dataBase requestWithQuery:[NSString stringWithFormat:@"SELECT * FROM `PlayedVideos` ORDER BY Id DESC LIMIT %d",HistoryNum]];
     request.completion = ^(EGODatabaseRequest* request, EGODatabaseResult* result, NSError* error){
         if (result.errorCode == 0) {
             NSMutableArray *videoArray = [NSMutableArray array];
             for(EGODatabaseRow* row in result) {
-                NSLog(@"title: %@", [row stringForColumn:@"Title"]);
-                NSLog(@"imageUrl: %@", [row stringForColumn:@"ImageUrl"]);
-                NSLog(@"sourceType: %d", [row intForColumn:@"SourceType"]);
-                NSLog(@"vid: %@", [row stringForColumn:@"Vid"]);
-                NSLog(@"playtime: %d",[row intForColumn:@"PlayTime"]);
                 AiVideoObject *video = [[AiVideoObject alloc] init];
                 video.title = [row stringForColumn:@"Title"];
                 video.imageUrl = [row stringForColumn:@"ImageUrl"];
@@ -70,9 +66,20 @@
 
 -(void)addVideoRecord:(AiVideoObject *)videoObject
 {
-    NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO PlayedVideos(Id, Title,ImageUrl,SourceType,Vid,PlayTime) VALUES (NULL,'%@','%@',%d,'%@',%d);",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid,videoObject.playTime];
-    EGODatabaseRequest *request = [_dataBase requestWithUpdate:sqlString];
-    [_queue addOperation:request];
+    @try {
+        NSString *deleteString = [NSString stringWithFormat:@"DELETE FROM PlayedVideos WHERE SourceType=%d and Vid='%@'",videoObject.sourceType,videoObject.vid];
+        NSLog(@"deleteString is %@",deleteString);
+        EGODatabaseRequest *deleteRequest = [_dataBase requestWithUpdate:deleteString];
+        [_queue addOperation:deleteRequest];
+        
+        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO PlayedVideos(Id, Title,ImageUrl,SourceType,Vid,PlayTime) VALUES (NULL,'%@','%@',%d,'%@',%d);",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid,videoObject.playTime];
+        NSLog(@"insertString is %@",sqlString);
+        EGODatabaseRequest *request = [_dataBase requestWithUpdate:sqlString];
+        [_queue addOperation:request];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception is %@",exception);
+    }
 }
 
 @end

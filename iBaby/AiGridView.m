@@ -19,19 +19,24 @@
     self = [super initWithFrame:frame];
     if (self) {
 //        self.backgroundColor = [UIColor blackColor];
-        CGRect rect = CGRectMake(0, 0, frame.size.width - 20, frame.size.height - 30);
+        CGRect rect = CGRectMake(15, 30, frame.size.width - 20, frame.size.height - 30);
         UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
         self.imageButton = imageButton_;
         [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.imageButton];
         
-        CGRect labelRect = CGRectMake(0, rect.size.height, rect.size.width - 20, 30);
+        CGRect frameRect = CGRectMake(3, 15, frame.size.width, frame.size.height);
+        UIImageView *frameImageView = [[UIImageView alloc] initWithFrame:frameRect];
+        frameImageView.image = [UIImage imageNamed:@"item_normal"];
+        [self addSubview:frameImageView];
+        
+        CGRect labelRect = CGRectMake(20, rect.size.height + 40, rect.size.width, 30);
         UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
         label_.font = [UIFont systemFontOfSize:12];
         label_.backgroundColor = [UIColor clearColor];
         self.titleLabel = label_;
         [self addSubview:self.titleLabel];
-                
+        
         _aiVideoObject = [[AiVideoObject alloc] init];
     }
     return self;
@@ -62,9 +67,13 @@
     UMImageView *imageView = [[UMImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"20090706065940.gif"]];
     [imageView setImageURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
     if ( !imageView.isCache) {
-        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
-        UIImage *image = [UIImage imageWithData:imageData];
-        [self.imageButton setImage:image forState:UIControlStateNormal];
+        [self.gridView.queue addOperationWithBlock:^(void){
+            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
+            UIImage *image = [UIImage imageWithData:imageData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.imageButton setImage:image forState:UIControlStateNormal];
+            });
+        }];
     } else {
         [self.imageButton setBackgroundImage:imageView.image forState:UIControlStateNormal];
     }
@@ -80,29 +89,39 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
         self.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height * 1.1);
         self.showsVerticalScrollIndicator = NO;
         
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"blueArrow.png"]];
-        self.arrowImageView = imageView;
-        self.arrowImageView.hidden = YES;
-        [self addSubview:imageView];
-        imageView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height);
-        
+        self.footerArrowView = imageView;
+        self.footerArrowView.hidden = YES;
+        self.footerArrowView.tag = 0;
+        self.footerArrowView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height);
+        [self addSubview:self.footerArrowView];
+        NSLog(@"frame is %@",NSStringFromCGRect(self.frame));
+
         UIImage *arrowImage = [UIImage imageNamed:@"blueArrow.png"];
         UIImageView *headerView = [[UIImageView alloc] initWithImage:arrowImage];
-        [self addSubview:headerView];
-        headerView.center = CGPointMake(self.frame.size.width/2, 0);
-        imageView.transform = CGAffineTransformMakeScale(1.0,-1.0);
         self.headerArrowView = headerView;
+        self.headerArrowView.center = CGPointMake(self.frame.size.width/2, 0);
+        self.headerArrowView.transform = CGAffineTransformMakeScale(1.0,-1.0);
+        self.headerArrowView.tag = 1;
+        [self addSubview:self.headerArrowView];
         self.headerArrowView.hidden = YES;
+        
+        NSOperationQueue * queue = [[NSOperationQueue alloc] init];
+        self.queue = queue;
     }
     return self;
 }
 
 -(void)setVideoObjects:(NSArray *)videoObjects
 {
+    for (UIView *subView in self.subviews) {
+        if (subView.tag > 3) {
+            [subView removeFromSuperview];
+        }
+    }
     self.videoDatas = videoObjects;
     [self setNeedsDisplay];
 }
@@ -111,7 +130,7 @@
 {
     int colNum = ColNum;
     int rowNum = RowNum;
-    CGSize size = CGSizeMake(140, 140);
+    CGSize size = CGSizeMake(160, 140);
     int startX = 0;
     int startY = 0;
     int deltaX = (self.frame.size.width)/colNum;
@@ -121,6 +140,7 @@
         cell = (AiGridViewCell *)[self viewWithTag:index + kTagVideoCellStartIndex];
     } else {
         cell = [[AiGridViewCell alloc] initWithFrame:CGRectMake(startX + (index%colNum)*deltaX, startY+(index/colNum)*deltaY, size.width, size.height)];
+        cell.gridView = self;
         cell.tag = index + kTagVideoCellStartIndex;
         [self addSubview:cell];
     }
@@ -156,7 +176,6 @@
         AiGridViewCell *cell = [self gridViewCellWithIndex:i];
         cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
     }
-    
 }
 
 @end

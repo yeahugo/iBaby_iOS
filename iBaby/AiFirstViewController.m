@@ -55,17 +55,26 @@
     _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"节目"];
     self.videoGridView = _videoViewController.gridView;
     self.videoGridView.tag = kTagButtonTypeVideo;
+    
     SwipeView *swipeView = [[SwipeView alloc] initWithFrame:backGroundRect];
+//    swipeView.vertical = YES;
+    swipeView.delegate = self;
     swipeView.dataSource = self;
     swipeView.pagingEnabled = YES;
     self.swipeview = swipeView;
     [self.view addSubview:swipeView];
-    
+    [self setCurrentButton:_currentType];
 }
 
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
 {
     return 3;
+}
+
+- (void)swipeViewCurrentItemIndexDidChange:(SwipeView *)swipeView
+{
+    _currentType = swipeView.currentItemIndex;
+    [self setCurrentButton:_currentType];
 }
 
 - (UIView *)swipeView:(SwipeView *)swipeView viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
@@ -83,17 +92,32 @@
     return showView;
 }
 
+-(void)close:(id)sender
+{
+    [self.closeButton removeFromSuperview];
+    [self.formSheetController dismissAnimated:YES completionHandler:nil];
+}
+
 -(MZFormSheetController *)makeMZFormSheetController:(UIViewController *)viewController
 {
     MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:viewController];
-    
-    formSheet.presentedFormSheetSize = CGSizeMake(self.backgroundView.frame.size.width + 50, self.backgroundView.frame.size.height);
+    self.formSheetController = formSheet;
+
+    formSheet.presentedFormSheetSize = CGSizeMake(self.backgroundView.frame.size.width + 100, self.backgroundView.frame.size.height+ 50);
     formSheet.transitionStyle = MZFormSheetTransitionStyleFade;
     formSheet.shadowRadius = 2.0;
     formSheet.shadowOpacity = 0.3;
     formSheet.shouldDismissOnBackgroundViewTap = YES;
     formSheet.shouldCenterVertically = YES;
     formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
+    
+    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.backgroundView.frame.size.width + 160, 60, 50, 50)];
+    [closeButton setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
+    [closeButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+    closeButton.tag = 3;
+    self.closeButton = closeButton;
+    NSLog(@"view is %@",self.formSheetController.presentedFSViewController.view);
+    [self.formSheetController.view addSubview:closeButton];
     return formSheet;
 }
 
@@ -119,10 +143,42 @@
     }];
 }
 
+-(void)setCurrentButton:(kTagButtonType)buttonType
+{
+    if (buttonType == kTagButtonTypeSong) {
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie"] forState:UIControlStateNormal];
+        
+//        CATransition *transition = [CATransition animation];
+//        transition.duration = 0.7;
+//        transition.type = kCATransitionFade;
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu_select"] forState:UIControlStateNormal];
+//        [self.view.layer addAnimation:transition forKey:@"button"];
+    } else if (buttonType == kTagButtonTypeCatoon){
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie"] forState:UIControlStateNormal];
+        
+//        CATransition *transition = [CATransition animation];
+//        transition.duration = 0.7;
+//        transition.type = kCATransitionFade;
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui_select"] forState:UIControlStateNormal];
+//        [self.view.layer addAnimation:transition forKey:@"button"];
+    } else if (buttonType == kTagButtonTypeVideo){
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu"] forState:UIControlStateNormal];
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui"] forState:UIControlStateNormal];
+        
+//        CATransition *transition = [CATransition animation];
+//        transition.duration = 0.7;
+//        transition.type = kCATransitionFade;
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie_select"] forState:UIControlStateNormal];
+//        [self.view.layer addAnimation:transition forKey:@"button"];
+    }
+}
+
 -(IBAction)onClickButton:(UIButton *)sender
 {
     _currentType = (int)sender.tag;
-    
+    [self setCurrentButton:_currentType];
     [self.swipeview scrollToItemAtIndex:_currentType duration:0.2];
 }
 
