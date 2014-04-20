@@ -21,6 +21,8 @@
 
 @property (nonatomic, assign) kTagPlaySourceType sourceType;
 
+@property (nonatomic, assign) kTagButtonType videoType;
+
 -(void)getSongUrlWithCompletion:(void (^)(NSString *urlString,NSError *error))completion;
 
 @end

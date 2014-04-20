@@ -50,12 +50,18 @@
     CGRect backGroundRect = self.backgroundView.frame;
         
     _songViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
+    _songViewController.videoType = kTagButtonTypeSong;
+    _songViewController.sourceType = kDataSourceTypeWeb;
     self.songGridView = _songViewController.swipeView;
     self.songGridView.tag = kTagButtonTypeSong;
     _catoonViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
+    _catoonViewController.videoType = kTagButtonTypeCatoon;
+    _catoonViewController.sourceType = kDataSourceTypeWeb;
     self.catoonGridView = _catoonViewController.swipeView;
     self.catoonGridView.tag = kTagButtonTypeCatoon;
-    _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"节目"];
+    _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"贝瓦"];
+    _videoViewController.videoType = kTagButtonTypeVideo;
+    _videoViewController.sourceType = kDataSourceTypeWeb;
     self.videoGridView = _videoViewController.swipeView;
     self.videoGridView.tag = kTagButtonTypeVideo;
     
@@ -126,7 +132,7 @@
     formSheet.shouldDismissOnBackgroundViewTap = NO;
     formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
     
-    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.backgroundView.frame.size.width + 130, 60, 50, 50)];
+    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.backgroundView.frame.size.width + 125, 65, 60, 60)];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [closeButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
     closeButton.tag = 3;
@@ -175,29 +181,17 @@
         [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui"] forState:UIControlStateNormal];
         [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie"] forState:UIControlStateNormal];
         
-//        CATransition *transition = [CATransition animation];
-//        transition.duration = 0.7;
-//        transition.type = kCATransitionFade;
         [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu_select"] forState:UIControlStateNormal];
-//        [self.view.layer addAnimation:transition forKey:@"button"];
     } else if (buttonType == kTagButtonTypeCatoon){
         [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu"] forState:UIControlStateNormal];
         [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie"] forState:UIControlStateNormal];
         
-//        CATransition *transition = [CATransition animation];
-//        transition.duration = 0.7;
-//        transition.type = kCATransitionFade;
         [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui_select"] forState:UIControlStateNormal];
-//        [self.view.layer addAnimation:transition forKey:@"button"];
     } else if (buttonType == kTagButtonTypeVideo){
         [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu"] forState:UIControlStateNormal];
         [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui"] forState:UIControlStateNormal];
         
-//        CATransition *transition = [CATransition animation];
-//        transition.duration = 0.7;
-//        transition.type = kCATransitionFade;
         [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie_select"] forState:UIControlStateNormal];
-//        [self.view.layer addAnimation:transition forKey:@"button"];
     }
 }
 

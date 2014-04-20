@@ -9,6 +9,7 @@
 #import "AiHistoryViewController.h"
 #import "AiDataBaseManager.h"
 #import "AiGridView.h"
+#import "AiGridViewController.h"
 
 @interface AiHistoryViewController ()
 
@@ -28,18 +29,40 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    AiGridView * gridView = [[AiGridView alloc] initWithFrame:self.backGroundView.frame];
-    gridView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:gridView];
     
+    _historyViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+    _historyViewController.sourceType = kDataSourceTypeDatabase;
+    [self.view addSubview:_historyViewController.swipeView];
+      
     [[AiDataBaseManager shareInstance] getVideoListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
-            [gridView setVideoObjects:videoList];
+            NSArray *videos = [self makeVideoArrays:videoList];
+            [_historyViewController.songListArray addObjectsFromArray:videos];
+            [_historyViewController.swipeView reloadData];
         } else {
             NSLog(@"getVideoList error is %@",error);
         }
     }];
     // Do any additional setup after loading the view.
+}
+
+-(NSMutableArray *)makeVideoArrays:(NSArray *)videoList
+{
+    NSMutableArray *resultArray = [NSMutableArray array];
+    int resultCount = videoList.count/ShowNum + 1;
+    for (int i = 0; i < resultCount; i++) {
+        NSRange range = {0,0};
+        if (i == resultCount - 1) {
+            NSRange range1 = {i*ShowNum,videoList.count - i*ShowNum};
+            range = range1;
+        } else {
+            NSRange range1 = {i*ShowNum, ShowNum};
+            range = range1;
+        }
+        NSArray * videos = [videoList subarrayWithRange:range];
+        [resultArray addObject:videos];
+    }
+    return resultArray;
 }
 
 - (void)didReceiveMemoryWarning

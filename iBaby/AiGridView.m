@@ -51,7 +51,8 @@
             [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
             [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
             UIApplication *shareApplication = [UIApplication sharedApplication];
-            [shareApplication.keyWindow.rootViewController presentModalViewController:playViewController animated:YES];
+            [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+//            [shareApplication.keyWindow.rootViewController presentModalViewController:playViewController animated:YES];
         } else {
             NSLog(@"error is %@",error);
         }
@@ -82,6 +83,7 @@
 }
 
 @end
+
 
 @implementation AiGridView
 

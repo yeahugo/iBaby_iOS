@@ -28,7 +28,7 @@ typedef enum {
 
 #define ShowNum 12
 
-#define SearchNum (12*3)
+#define SearchNum 12*3
 
 #define RecommendNum 20
 
@@ -40,6 +40,6 @@ typedef enum {
 
 #define VideoTypeNum 3
 
-#define HistoryNum 12
+#define HistoryNum 12*6
 
 #endif

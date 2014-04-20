@@ -8,6 +8,7 @@
 
 #import "AiGridViewController.h"
 #import "AiDataRequestManager.h"
+#import "AiDataBaseManager.h"
 
 @interface AiGridViewController()
 {
@@ -26,15 +27,27 @@
         _scrollNum = 0;
         _swipeItemNum = 1;
         _songListArray = [[NSMutableArray alloc] init];
+        self.songListArray = _songListArray;
         AiSwipeView *swipeView = [[AiSwipeView alloc] initWithFrame:frame];
         swipeView.delegate = self;
         swipeView.dataSource = self;
         swipeView.backgroundColor = [UIColor clearColor];
         self.swipeView = swipeView;
         
-        [self clickKeyWords:keyWords];
+        if (keyWords) {
+            [self clickKeyWords:keyWords];
+        }
     }
     return self;
+}
+
+-(void)getDataFromDatabase
+{
+    AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
+    [dataManager requestRecommendWithCompletion:^(NSArray * array, NSError * error) {
+        [_songListArray addObjectsFromArray:array];
+        [self.swipeView reloadData];
+    }];
 }
 
 -(void)clickKeyWords:(NSString *)keyWords
@@ -45,27 +58,33 @@
     NSMutableArray *songArray = [[NSMutableArray alloc] init];
     [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:0] completion:^(NSArray *firstResultArray ,NSError *error){
         
-        [self saveVideoObjects:firstResultArray saveArray:songArray error:error];
-//        [_songListArray addObject:songArray];
-        [_songListArray addObjectsFromArray:songArray];
-        [self.swipeView reloadData];
-        
-        if (firstResultArray.count == SearchNum) {
-            NSLog(@"resultArray is %@",firstResultArray);
-            [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum] completion:^(NSArray *resultArray, NSError *error) {
-                NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
-                [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
-                [_songListArray addObjectsFromArray:nextSongArray];
+        //若从服务器得不到数据，将从数据库更新数据
+//        if (error) {
+//            [self getDataFromDatabase];
+//        } else
+        {
+            [self saveVideoObjects:firstResultArray saveArray:songArray error:error];
+            [_songListArray addObjectsFromArray:songArray];
+            
+            if (firstResultArray.count == SearchNum) {
+                [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum] completion:^(NSArray *resultArray, NSError *error) {
+                    NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
+                    [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
+                    [_songListArray addObjectsFromArray:nextSongArray];
+                    [self.swipeView reloadData];
+                    
+                    if (resultArray.count == SearchNum) {
+                        [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum * 2] completion:^(NSArray *resultArray, NSError *error) {
+                            NSMutableArray * thirdSongArray = [[NSMutableArray alloc] init];
+                            [self saveVideoObjects:resultArray saveArray:thirdSongArray error:error];
+                            [_songListArray addObjectsFromArray:nextSongArray];
+                            [self.swipeView reloadData];}];
+                    }
+                }];
+            }
+            else{
                 [self.swipeView reloadData];
-                
-                if (resultArray.count == SearchNum) {
-                    [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum * 2] completion:^(NSArray *resultArray, NSError *error) {
-                        NSMutableArray * thirdSongArray = [[NSMutableArray alloc] init];
-                        [self saveVideoObjects:resultArray saveArray:thirdSongArray error:error];
-                        [_songListArray addObjectsFromArray:nextSongArray];
-                        [self.swipeView reloadData];}];
-                }
-            }];
+            }
         }
     }];
 }
@@ -73,20 +92,21 @@
 #pragma SwipeViewDelegate
 - (void)swipeViewCurrentItemIndexDidChange:(SwipeView *)swipeView
 {
-    if (swipeView.currentItemIndex + 2 == [_songListArray count] && [[_songListArray objectAtIndex:_songListArray.count - 2] count] == SearchNum) {
-        [[AiDataRequestManager shareInstance] requestSearchWithKeyWords:self.keyWords startId:[NSNumber numberWithInt:SearchNum * _songListArray.count] completion:^(NSArray *resultArray, NSError *error) {
-            NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
-            [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
-            [_songListArray addObject:nextSongArray];
-            [self.swipeView reloadData];
-        }];
-    }
+//    if (swipeView.currentItemIndex + 2 == [_songListArray count] && [[_songListArray objectAtIndex:_songListArray.count - 2] count] == ShowNum) {
+//        if (self.sourceType == kDataSourceTypeWeb) {
+//            [[AiDataRequestManager shareInstance] requestSearchWithKeyWords:self.keyWords startId:[NSNumber numberWithInt:ShowNum * _songListArray.count] completion:^(NSArray *resultArray, NSError *error) {
+//                NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
+//                [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
+//                [_songListArray addObject:nextSongArray];
+//                [self.swipeView reloadData];
+//            }];
+//        }
+//    }
 }
 
 #pragma SwipeViewDataSource
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
 {
-    NSLog(@"_swipeItemNum is %d",_swipeItemNum);
     return [_songListArray count];
 }
 
@@ -104,6 +124,8 @@
 -(void)saveVideoObjects:(NSArray *)resultArray saveArray:(NSMutableArray *)saveArray error:(NSError *)error
 {
     if (error == nil) {
+//        AiDataBaseManager *dataManager = [AiDataBaseManager shareInstance];
+        
         int count = resultArray.count/ShowNum;
         for (int i = 0 ; i <= count; i++) {
             NSMutableArray * newArray = [[NSMutableArray alloc] init];
@@ -115,6 +137,9 @@
                 videoObject.imageUrl = resourceInfo.img;
                 videoObject.vid = resourceInfo.url;
                 videoObject.sourceType = resourceInfo.resourceType;
+                videoObject.videoType = self.videoType;
+//                //保存在推荐记录数据库
+//                [dataManager addVideoRecord:videoObject];
                 [newArray addObject:videoObject];
             }
             if (newArray.count > 0) {

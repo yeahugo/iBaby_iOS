@@ -27,8 +27,8 @@
     self = [super init];
     if (self) {
         _reConnectNum = 0;
-//        _queue = [[NSOperationQueue alloc] init];
-        _queue = [NSOperationQueue currentQueue];
+        _queue = [[NSOperationQueue alloc] init];
+//        _queue = [NSOperationQueue currentQueue];
         [_queue setMaxConcurrentOperationCount:1];
         _reqHead = [[ReqHead alloc] initWithBabyId:123 guid:@"123" version:@"1.0"];
     }

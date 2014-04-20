@@ -20,6 +20,7 @@
 
 @end
 
+
 @interface AiSwipeView : SwipeView
 
 @property (nonatomic, strong) UIImageView *footerArrowView;

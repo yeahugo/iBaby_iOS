@@ -9,7 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "AiGridView.h"
 
+typedef enum {
+    kDataSourceTypeWeb,
+    kDataSourceTypeDatabase,
+} kDataSourceType;
+
 @interface AiGridViewController : NSObject<UIScrollViewDelegate,SwipeViewDataSource,SwipeViewDelegate>
+
+@property (nonatomic, strong) NSMutableArray *songListArray;
+
+@property (nonatomic, assign) kTagButtonType videoType;
+
+@property (nonatomic, assign) kDataSourceType sourceType;
 
 -(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
 
