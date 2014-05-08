@@ -20,9 +20,18 @@
 
 -(void)getRecommendListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
 
+-(void)getFavouriteListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
+
 -(void)getVideoListsWithStartLimit:(int)startLimit withCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
 
 -(void)getVideoListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
 
 -(void)addVideoRecord:(AiVideoObject *)videoObject;
+
+-(void)addFavouriteRecord:(AiVideoObject *)videoObject;
+
+-(void)deleteFavouriteRecord:(AiVideoObject *)videoObject;
+
+-(BOOL)isFavouriteVideo:(AiVideoObject *)videoObject;
+
 @end

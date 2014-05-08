@@ -80,6 +80,23 @@
     [_queue addOperation:operation];
 }
 
+-(void)doResouceWithRequest:(ResourcesReq *)resourcesReq completion:(void (^)(NSArray *, NSError *))completion
+{
+    ResourceResp *resp = [[AiThriftManager shareInstance].resourceClient getResources:resourcesReq];
+    
+    if (resp.resCode == 200) {
+        NSArray * resultArray = resp.resList;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(resultArray,nil);
+        });
+    } else {
+        NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(nil,error);
+        });
+    }
+}
+
 -(void)doSearchWithRequest:(SearchReq *)searchReq completion:(void (^)(NSArray *, NSError *))completion
 {
     NSLog(@"doSearchWithRequest with keyWords is %@",searchReq);
@@ -96,6 +113,47 @@
             completion(nil,error);
         });
     }
+}
+
+-(void)requestGetResourcesWithSerialId:(NSString *)serialId totalSectionNum:(int)totalNum completion:(void (^)(NSArray * result, NSError * error))completion
+{
+    [_queue addOperationWithBlock:^(void){
+        ResourcesReq * resourcesReq = [[ResourcesReq alloc] initWithHead:_reqHead name:nil serialId:serialId startId:0 recordNum:totalNum resourceType:RESOURCE_TYPE_CARTOON];
+        @try {
+            [self doResouceWithRequest:resourcesReq completion:completion];
+        }
+        @catch (NSException *exception) {
+            [[AiThriftManager shareInstance] reConnect];
+            NSLog(@"exception is %@",exception);
+            @try {
+                [self doResouceWithRequest:resourcesReq completion:completion];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"exception is %@",exception);
+            }
+        }
+        
+    }];
+}
+
+-(void)requestGetResourcesWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId totalSectionNum:(int)sectionNum completion:(void (^)(NSArray *, NSError *))completion
+{
+    [_queue addOperationWithBlock:^(void){
+        ResourcesReq * resourcesReq = [[ResourcesReq alloc] initWithHead:_reqHead name:keyWords serialId:@"" startId:0 recordNum:sectionNum resourceType:RESOURCE_TYPE_CARTOON];
+        @try {
+            [self doResouceWithRequest:resourcesReq completion:completion];
+        }
+        @catch (NSException *exception) {
+            [[AiThriftManager shareInstance] reConnect];
+            NSLog(@"exception is %@",exception);
+            @try {
+                [self doResouceWithRequest:resourcesReq completion:completion];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"exception is %@",exception);
+            }
+        }
+    }];
 }
 
 -(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId completion:(void (^)(NSArray *, NSError *))completion

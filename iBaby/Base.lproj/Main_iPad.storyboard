@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -18,7 +18,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="b9Z-mX-Dak">
-                                <rect key="frame" x="296" y="665" width="103" height="83"/>
+                                <rect key="frame" x="296" y="658" width="103" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="xiaoyu.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -28,7 +28,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Vle-m7-BOe">
-                                <rect key="frame" x="462" y="665" width="89" height="83"/>
+                                <rect key="frame" x="462" y="658" width="89" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="wugui.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -38,7 +38,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="XOV-Qw-Czm">
-                                <rect key="frame" x="633" y="666" width="87" height="82"/>
+                                <rect key="frame" x="633" y="658" width="87" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="panxie.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -48,21 +48,11 @@
                                 </connections>
                             </button>
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tizhi.png" id="hL3-fd-Cyq">
-                                <rect key="frame" x="6" y="203" width="102" height="422"/>
+                                <rect key="frame" x="0.0" y="212" width="105" height="422"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Q2c-Et-gXe">
-                                <rect key="frame" x="20" y="334" width="71" height="79"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="fadajing.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onClickSearch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mXo-nL-yPw"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8Us-SA-z4x">
-                                <rect key="frame" x="20" y="235" width="71" height="66"/>
+                                <rect key="frame" x="12" y="390" width="71" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="shizhong.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -72,13 +62,23 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="a2b-0B-9kx">
-                                <rect key="frame" x="22" y="445" width="66" height="63"/>
+                                <rect key="frame" x="14" y="510" width="66" height="63"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="haixing.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="onClickSetting:" destination="dkx-z0-nzr" eventType="touchUpInside" id="Z29-FP-WsA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Q2c-Et-gXe">
+                                <rect key="frame" x="12" y="267" width="71" height="79"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="fadajing.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClickSearch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mXo-nL-yPw"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="i0c-ZO-b1c">
@@ -115,21 +115,21 @@
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="tXJ-zL-JP1">
-                                <rect key="frame" x="942" y="184" width="102" height="219"/>
+                                <rect key="frame" x="942" y="184" width="102" height="225"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="shu.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6r9-12-APB">
-                                <rect key="frame" x="950" y="411" width="76" height="214"/>
+                                <rect key="frame" x="948" y="420" width="76" height="214"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="xianhua.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YDB-hX-3ZA">
-                                <rect key="frame" x="947" y="417" width="72" height="56"/>
+                                <rect key="frame" x="947" y="417" width="63" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="mifeng.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -154,10 +154,10 @@
             </objects>
             <point key="canvasLocation" x="-485" y="-528"/>
         </scene>
-        <!--View Controller-->
+        <!--Ai Favourite View Controller-->
         <scene sceneID="k5P-ja-idp">
             <objects>
-                <viewController storyboardIdentifier="setting" id="uVP-fW-Hjh" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="setting" id="uVP-fW-Hjh" customClass="AiFavouriteViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3wp-R2-Dwf">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -166,11 +166,29 @@
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
+                            <view contentMode="scaleToFill" id="wex-qE-Adh">
+                                <rect key="frame" x="30" y="70" width="1080" height="650"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="oS1-eQ-HzO">
+                                <rect key="frame" x="946" y="0.0" width="72" height="75"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="close.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="close:" destination="7ab-zD-Ugq" eventType="touchUpInside" id="3ee-ux-Tqh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <connections>
+                        <outlet property="backGroundView" destination="wex-qE-Adh" id="HQX-n2-6FP"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7ab-zD-Ugq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -189,10 +207,20 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="Pba-O5-OfP">
-                                <rect key="frame" x="40" y="30" width="1080" height="380"/>
+                                <rect key="frame" x="40" y="60" width="1080" height="380"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LGc-P9-6TG">
+                                <rect key="frame" x="945" y="0.0" width="73" height="77"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="close.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="close:" destination="N5w-uQ-wXO" eventType="touchUpInside" id="jJ1-Pd-dgT"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -224,17 +252,27 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" background="searchField.png" id="dcQ-sL-Vza">
-                                <rect key="frame" x="131" y="20" width="610" height="44"/>
+                                <rect key="frame" x="131" y="80" width="610" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="search"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="mMJ-6x-Ruq">
-                                <rect key="frame" x="148" y="25" width="34" height="37"/>
+                                <rect key="frame" x="146" y="87" width="34" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="searchIcon.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="07J-hf-j4f">
+                                <rect key="frame" x="946" y="0.0" width="73" height="77"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="close.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="close:" destination="9SC-Ks-iZW" eventType="touchUpInside" id="F5F-Qx-WNE"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -253,23 +291,24 @@
     </scenes>
     <resources>
         <image name="background.png" width="1024" height="768"/>
-        <image name="fadajing.png" width="80" height="80"/>
+        <image name="close.png" width="63" height="63"/>
+        <image name="fadajing.png" width="76" height="73"/>
         <image name="fengzheng.png" width="273" height="77"/>
         <image name="haixing.png" width="78" height="80"/>
         <image name="mifeng.png" width="83" height="65"/>
-        <image name="panxie.png" width="78" height="76"/>
-        <image name="popup.png" width="788" height="544"/>
+        <image name="panxie.png" width="100" height="105"/>
+        <image name="popup.png" width="807" height="566"/>
         <image name="searchField.png" width="665" height="36"/>
         <image name="searchIcon.png" width="25" height="25"/>
         <image name="shizhong.png" width="67" height="76"/>
         <image name="shu.png" width="112" height="219"/>
         <image name="sun.png" width="124" height="90"/>
-        <image name="tizhi.png" width="64" height="388"/>
-        <image name="wugui.png" width="79" height="77"/>
+        <image name="tizhi.png" width="139" height="554"/>
+        <image name="wugui.png" width="104" height="114"/>
         <image name="xianhua.png" width="93" height="300"/>
         <image name="xiaohai.png" width="145" height="139"/>
         <image name="xiaoniao.png" width="94" height="66"/>
-        <image name="xiaoyu.png" width="79" height="77"/>
+        <image name="xiaoyu.png" width="97" height="97"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

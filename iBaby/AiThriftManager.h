@@ -15,7 +15,7 @@
 #import "TFramedTransport.h"
 #import "TMultiplexedProtocol.h"
 
-#import "shy_client_server.h"
+#import "shy_server.h"
 
 @interface AiThriftManager : NSObject
 

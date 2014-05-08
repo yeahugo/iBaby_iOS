@@ -10,6 +10,7 @@
 #import "AiDataBaseManager.h"
 #import "AiGridView.h"
 #import "AiGridViewController.h"
+#import "AiFirstViewController.h"
 
 @interface AiHistoryViewController ()
 
@@ -63,6 +64,12 @@
         [resultArray addObject:videos];
     }
     return resultArray;
+}
+
+-(IBAction)close:(id)sender
+{
+    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    [rootViewController closeSheetController];
 }
 
 - (void)didReceiveMemoryWarning

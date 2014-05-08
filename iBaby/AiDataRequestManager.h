@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "shy_client_server.h"
+#import "shy_server.h"
+//#import "shy_client_server.h"
 #import "AiDefine.h"
 
 typedef void (^Completion)(NSArray *resultArray,NSError *error);
@@ -31,7 +32,11 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
 
 -(id)initWithBabyId:(int)babyId;
 
+-(void)requestGetResourcesWithSerialId:(NSString *)serialId totalSectionNum:(int)totalNum completion:(void (^)(NSArray * result, NSError * error))completion;
+
 -(void)requestRecommendWithCompletion:(void (^)(NSArray *, NSError *))completion;
+
+-(void)requestGetResourcesWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId totalSectionNum:(int)sectionNum completion:(void (^)(NSArray *, NSError *))completion;
 
 -(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId completion:(void (^)(NSArray *resultArray,NSError *error))completion;
 @end

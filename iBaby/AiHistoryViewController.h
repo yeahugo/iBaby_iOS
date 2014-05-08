@@ -16,4 +16,6 @@
 
 @property (nonatomic, assign) IBOutlet UIView *backGroundView;
 
+-(IBAction)close:(id)sender;
+
 @end

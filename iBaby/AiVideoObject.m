@@ -12,6 +12,21 @@
 
 @implementation AiVideoObject
 
+-(id)initWithResourceInfo:(ResourceInfo *)resourceInfo
+{
+    if (self = [super init]) {
+        self.title = resourceInfo.title;
+        self.imageUrl = resourceInfo.img;
+        self.vid = resourceInfo.url;
+        self.sourceType = resourceInfo.resourceType;
+        self.videoType = resourceInfo.fileType;
+        self.serialId = resourceInfo.serialId;
+        self.totalSectionNum = resourceInfo.SectionNum;
+        self.curSectionNum = resourceInfo.curSection;
+    }
+    return self;
+}
+
 - (NSString *)md5Value:(NSString *)string {
     const char *cStr = [string UTF8String];
     unsigned char result[16];

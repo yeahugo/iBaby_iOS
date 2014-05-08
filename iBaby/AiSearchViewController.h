@@ -19,6 +19,9 @@
 
 @property (nonatomic, assign) IBOutlet UITextField *textField;
 
+@property (nonatomic, assign) id firstViewController;
+
 -(IBAction)onClickSearchField;
 
+-(IBAction)close:(id)sender;
 @end

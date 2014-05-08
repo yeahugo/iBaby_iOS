@@ -56,6 +56,72 @@
     self.keyWords = keyWords;
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
     NSMutableArray *songArray = [[NSMutableArray alloc] init];
+    
+    [dataManager requestGetResourcesWithKeyWords:keyWords startId:[NSNumber numberWithInt:0] totalSectionNum:SearchNum completion:^(NSArray *firstResultArray ,NSError * error) {
+        [self saveVideoObjects:firstResultArray saveArray:songArray error:error];
+        [_songListArray addObjectsFromArray:songArray];
+        
+        if (firstResultArray.count == SearchNum) {
+            [dataManager requestGetResourcesWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum] totalSectionNum:SearchNum completion:^(NSArray *resultArray,NSError *error){
+                NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
+                [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
+                [_songListArray addObjectsFromArray:nextSongArray];
+                [self.swipeView reloadData];
+
+                if (resultArray.count == SearchNum) {
+                    [dataManager requestGetResourcesWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum * 2] totalSectionNum:SearchNum completion:^(NSArray *resultArray, NSError *error) {
+                        NSMutableArray * thirdSongArray = [[NSMutableArray alloc] init];
+                        [self saveVideoObjects:resultArray saveArray:thirdSongArray error:error];
+                        [_songListArray addObjectsFromArray:nextSongArray];
+                        [self.swipeView reloadData];}];
+                }
+            }];
+        }
+        else{
+            [self.swipeView reloadData];
+        }
+    }];
+    
+//    [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:0] completion:^(NSArray *firstResultArray ,NSError *error){
+//        
+//        //若从服务器得不到数据，将从数据库更新数据
+//        //        if (error) {
+//        //            [self getDataFromDatabase];
+//        //        } else
+//        {
+//            [self saveVideoObjects:firstResultArray saveArray:songArray error:error];
+//            [_songListArray addObjectsFromArray:songArray];
+//            
+//            if (firstResultArray.count == SearchNum) {
+//                [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum] completion:^(NSArray *resultArray, NSError *error) {
+//                    NSMutableArray * nextSongArray = [[NSMutableArray alloc] init];
+//                    [self saveVideoObjects:resultArray saveArray:nextSongArray error:error];
+//                    [_songListArray addObjectsFromArray:nextSongArray];
+//                    [self.swipeView reloadData];
+//                    
+//                    if (resultArray.count == SearchNum) {
+//                        [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:SearchNum * 2] completion:^(NSArray *resultArray, NSError *error) {
+//                            NSMutableArray * thirdSongArray = [[NSMutableArray alloc] init];
+//                            [self saveVideoObjects:resultArray saveArray:thirdSongArray error:error];
+//                            [_songListArray addObjectsFromArray:nextSongArray];
+//                            [self.swipeView reloadData];}];
+//                    }
+//                }];
+//            }
+//            else{
+//                [self.swipeView reloadData];
+//            }
+//        }
+//    }];
+}
+
+
+-(void)clickKeyWords1:(NSString *)keyWords
+{
+    [_songListArray removeAllObjects];
+    self.keyWords = keyWords;
+    AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
+    NSMutableArray *songArray = [[NSMutableArray alloc] init];
     [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:0] completion:^(NSArray *firstResultArray ,NSError *error){
         
         //若从服务器得不到数据，将从数据库更新数据
@@ -126,18 +192,14 @@
     if (error == nil) {
 //        AiDataBaseManager *dataManager = [AiDataBaseManager shareInstance];
         
-        int count = resultArray.count/ShowNum;
+        long count = resultArray.count/ShowNum;
         for (int i = 0 ; i <= count; i++) {
             NSMutableArray * newArray = [[NSMutableArray alloc] init];
-            int num = (i+1)*ShowNum < resultArray.count ? (i+1)*ShowNum:resultArray.count;
+            long num = (i+1)*ShowNum < resultArray.count ? (i+1)*ShowNum:resultArray.count;
             for (int j = i*ShowNum; j < num; j++) {
-                AiVideoObject *videoObject = [[AiVideoObject alloc] init];
                 ResourceInfo *resourceInfo = [resultArray objectAtIndex:j];
-                videoObject.title = resourceInfo.title;
-                videoObject.imageUrl = resourceInfo.img;
-                videoObject.vid = resourceInfo.url;
-                videoObject.sourceType = resourceInfo.resourceType;
-                videoObject.videoType = self.videoType;
+                AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
+                NSLog(@"videoType is %d resourceInfo is %d serialId is %@ sectionNum is %d",videoObject.videoType,resourceInfo.fileType,resourceInfo.serialId,videoObject.totalSectionNum);
 //                //保存在推荐记录数据库
 //                [dataManager addVideoRecord:videoObject];
                 [newArray addObject:videoObject];

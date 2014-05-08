@@ -54,6 +54,12 @@
     }
 }
 
+-(IBAction)close:(id)sender
+{
+    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    [rootViewController closeSheetController];
+}
+
 -(IBAction)onClickSearchField
 {
     NSString *keywords = nil;

@@ -68,7 +68,8 @@
     SwipeView *swipeView = [[SwipeView alloc] initWithFrame:backGroundRect];
     swipeView.delegate = self;
     swipeView.dataSource = self;
-    swipeView.pagingEnabled = YES;
+    swipeView.pagingEnabled = NO;
+    swipeView.scrollEnabled = NO;
     self.swipeview = swipeView;
     [self.view addSubview:swipeView];
     [self setCurrentButton:_currentType];
@@ -112,7 +113,7 @@
     return showView;
 }
 
--(void)close:(id)sender
+-(IBAction)closeSheetController
 {
     self.closeButton.hidden = YES;
     [self.formSheetController dismissAnimated:YES completionHandler:nil];
@@ -131,13 +132,6 @@
     formSheet.shouldCenterVertically = YES;
     formSheet.shouldDismissOnBackgroundViewTap = NO;
     formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
-    
-    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.backgroundView.frame.size.width + 125, 65, 60, 60)];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-    [closeButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
-    closeButton.tag = 3;
-    self.closeButton = closeButton;
-    [self.formSheetController.view addSubview:closeButton];
     return formSheet;
 }
 

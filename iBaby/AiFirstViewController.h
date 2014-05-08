@@ -45,4 +45,5 @@
 
 -(IBAction)onClickHistory:(id)sender;
 
+-(IBAction)closeSheetController;
 @end

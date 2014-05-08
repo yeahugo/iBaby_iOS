@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AiPlayerViewController.h"
 #import "AiVideoObject.h"
+#import "AiPlayerViewController.h"
 
 @interface AiVideoPlayerManager : NSObject
 

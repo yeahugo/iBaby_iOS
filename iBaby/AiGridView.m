@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "UMImageView.h"
 #import "AiVideoPlayerManager.h"
+#import "AiThriftManager.h"
 
 @implementation AiGridViewCell
 
@@ -44,19 +45,28 @@
 
 -(void)onClickButton:(UIButton *)button
 {
-    NSLog(@"vid is %@ sourceType is %d",self.aiVideoObject.vid,self.aiVideoObject.sourceType);
-    [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
-        if (error == nil) {
-            AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
-            [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
-            [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
-            UIApplication *shareApplication = [UIApplication sharedApplication];
-            [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
-//            [shareApplication.keyWindow.rootViewController presentModalViewController:playViewController animated:YES];
-        } else {
-            NSLog(@"error is %@",error);
-        }
-    }];
+    NSLog(@"vid is %@ sourceType is %d videoType is %d",self.aiVideoObject.vid,self.aiVideoObject.sourceType,self.aiVideoObject.videoType);
+    if (self.aiVideoObject.videoType == RESOURCE_TYPE_CARTOON) {
+        AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:self.aiVideoObject.vid]];
+        self.aiVideoObject.playUrl = self.aiVideoObject.vid;
+        [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
+        [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
+        UIApplication *shareApplication = [UIApplication sharedApplication];
+        [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+    } else if (self.aiVideoObject.videoType == RESOURCE_TYPE_SONG) {
+        [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+            if (error == nil) {
+                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
+                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
+                self.aiVideoObject.playUrl = urlString;
+                [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
+                UIApplication *shareApplication = [UIApplication sharedApplication];
+                [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+            } else {
+                NSLog(@"error is %@",error);
+            }
+        }];
+    }
 }
 
 -(void)setAiVideoObject:(AiVideoObject *)aiVideoObject
@@ -65,6 +75,9 @@
     self.aiVideoObject.imageUrl = aiVideoObject.imageUrl;
     self.aiVideoObject.vid = aiVideoObject.vid;
     self.aiVideoObject.sourceType = aiVideoObject.sourceType;
+    self.aiVideoObject.videoType = aiVideoObject.videoType;
+    self.aiVideoObject.serialId = aiVideoObject.serialId;
+    self.aiVideoObject.totalSectionNum = aiVideoObject.totalSectionNum;
     UMImageView *imageView = [[UMImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"20090706065940.gif"]];
     [imageView setImageURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
     if ( !imageView.isCache) {
@@ -72,7 +85,8 @@
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
             UIImage *image = [UIImage imageWithData:imageData];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.imageButton setImage:image forState:UIControlStateNormal];
+                [self.imageButton setBackgroundImage:image forState:UIControlStateNormal];
+//                [self.imageButton setImage:image forState:UIControlStateNormal];
             });
         }];
     } else {
@@ -92,25 +106,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-//        self.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height * 1.1);
-//        self.showsVerticalScrollIndicator = NO;
-//        
-//        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"blueArrow.png"]];
-//        self.footerArrowView = imageView;
-//        self.footerArrowView.hidden = YES;
-//        self.footerArrowView.tag = 0;
-//        self.footerArrowView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height);
-//        [self addSubview:self.footerArrowView];
-//        NSLog(@"frame is %@",NSStringFromCGRect(self.frame));
-//
-//        UIImage *arrowImage = [UIImage imageNamed:@"blueArrow.png"];
-//        UIImageView *headerView = [[UIImageView alloc] initWithImage:arrowImage];
-//        self.headerArrowView = headerView;
-//        self.headerArrowView.center = CGPointMake(self.frame.size.width/2, 0);
-//        self.headerArrowView.transform = CGAffineTransformMakeScale(1.0,-1.0);
-//        self.headerArrowView.tag = 1;
-//        [self addSubview:self.headerArrowView];
-//        self.headerArrowView.hidden = YES;
         
         NSOperationQueue * queue = [[NSOperationQueue alloc] init];
         self.queue = queue;

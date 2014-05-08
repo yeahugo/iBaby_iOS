@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AiDefine.h"
+#import "AiThriftManager.h"
 
 @interface AiVideoObject : NSObject
 
@@ -19,10 +20,20 @@
 
 @property (nonatomic, assign) NSInteger playTime;
 
+@property (nonatomic, copy) NSString *serialId;
+
 @property (nonatomic, assign) kTagPlaySourceType sourceType;
 
-@property (nonatomic, assign) kTagButtonType videoType;
+@property (nonatomic, copy) NSString *playUrl;
+
+@property (nonatomic, assign) int curSectionNum;
+
+@property (nonatomic, assign) int totalSectionNum;
+
+@property (nonatomic, assign) int videoType;        //RESOURCE_TYPE
 
 -(void)getSongUrlWithCompletion:(void (^)(NSString *urlString,NSError *error))completion;
+
+-(id)initWithResourceInfo:(ResourceInfo *)resourceInfo;
 
 @end
