@@ -34,7 +34,7 @@ typedef enum {
 
 #define ColNum 4
 
-#define RowNum 3
+#define RowNum 2
 
 #define ScrollOffSet 100
 

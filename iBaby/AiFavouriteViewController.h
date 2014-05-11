@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "AiGridViewController.h"
+#import "AiScrollViewController.h"
 
 @interface AiFavouriteViewController : UIViewController
 {
-    AiGridViewController *_favouriteViewController;
+//    AiGridViewController *_favouriteViewController;
+    AiScrollViewController *_favouriViewController;
 }
 
 @property (nonatomic, assign) IBOutlet UIView * backGroundView;

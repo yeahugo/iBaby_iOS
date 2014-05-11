@@ -28,15 +28,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _favouriteViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
-    _favouriteViewController.sourceType = kDataSourceTypeDatabase;
-    [self.view addSubview:_favouriteViewController.swipeView];
+    _favouriViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+    _favouriViewController.sourceType = kDataSourceTypeDatabase;
+    [self.view addSubview:_favouriViewController.scrollView];
+//    _favouriteViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+//    _favouriteViewController.sourceType = kDataSourceTypeDatabase;
+//    [self.view addSubview:_favouriteViewController.swipeView];
     
     [[AiDataBaseManager shareInstance] getFavouriteListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
-            NSArray *videos = [self makeVideoArrays:videoList];
-            [_favouriteViewController.songListArray addObjectsFromArray:videos];
-            [_favouriteViewController.swipeView reloadData];
+            [_favouriViewController.scrollView setVideoDatas:videoList];
+            [_favouriViewController.scrollView reloadData];
+//            NSArray *videos = [self makeVideoArrays:videoList];
+//            [_favouriteViewController.songListArray addObjectsFromArray:videos];
+//            [_favouriteViewController.swipeView reloadData];
         } else {
             NSLog(@"getVideoList error is %@",error);
         }

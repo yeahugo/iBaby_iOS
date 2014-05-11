@@ -33,11 +33,14 @@
         EGODatabaseResult *result = [_dataBase executeQuery:queryString];
         if (result.errorCode == 1) {
             NSString *historySqlString = [NSString stringWithFormat:@"CREATE TABLE PlayedVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,PlayTime integer);"];
-            [_dataBase executeUpdate:historySqlString];
+            [_dataBase requestWithUpdate:historySqlString];
+//            [_dataBase executeUpdate:historySqlString];
             NSString *recommendSqlString = [NSString stringWithFormat:@"CREATE TABLE RecommendVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,VideoType integer);"];
-            [_dataBase executeUpdate:recommendSqlString];
+            [_dataBase requestWithUpdate:recommendSqlString];
+//            [_dataBase executeUpdate:recommendSqlString];
             NSString *favouriteSqlString = [NSString stringWithFormat:@"CREATE TABLE FavouriteVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,VideoType integer);"];
-            [_dataBase executeUpdate:favouriteSqlString];
+            [_dataBase requestWithUpdate:favouriteSqlString];
+//            [_dataBase executeUpdate:favouriteSqlString];
         }
         _queue = [[NSOperationQueue alloc] init];
         [_queue setMaxConcurrentOperationCount:1];

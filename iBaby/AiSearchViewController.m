@@ -70,14 +70,21 @@
     }
     [self.textField resignFirstResponder];
     
-    if (self.gridViewController == nil) {
-        AiGridViewController *gridViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:keywords];
-        self.gridViewController = gridViewController;
-        [self.view addSubview:self.gridViewController.swipeView];
-    } else {
-        [self.gridViewController clickKeyWords:keywords];
-        [self.gridViewController.swipeView reloadData];
+    UIView *scrollView = [self.view viewWithTag:2000];
+    if (scrollView) {
+        [scrollView removeFromSuperview];
     }
+    UIView *albumView = [self.view viewWithTag:2001];
+    if (albumView) {
+        [albumView removeFromSuperview];
+    }
+    
+    AiScrollViewController *scrollViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:keywords];
+    self.scrollViewController = scrollViewController;
+    self.scrollViewController.scrollView.tag = 2000;
+    [self.view addSubview:self.scrollViewController.scrollView];
+//
+//    [self.view addSubview:self.scrollViewController.scrollView];
 }
 
 - (void)didReceiveMemoryWarning

@@ -12,6 +12,7 @@
 #import "AiDefine.h"
 #import "AiDataRequestManager.h"
 #import "AiGridViewController.h"
+#import "AiScrollViewController.h"
 
 #import "MZFormSheetController.h"
 #import "SwipeView.h"
@@ -20,9 +21,14 @@
 {
     AiDataRequestManager *_dataManager;
     NSMutableArray *_songListArray;
-    AiGridViewController *_songViewController;
-    AiGridViewController *_catoonViewController;
-    AiGridViewController *_videoViewController;
+//    AiGridViewController *_songViewController;
+//    AiGridViewController *_catoonViewController;
+//    AiGridViewController *_videoViewController;
+    
+    AiScrollViewController *_songViewController;
+    AiScrollViewController *_catoonViewController;
+    AiScrollViewController *_videoViewController;
+    
     kTagButtonType _currentType;
     int _scrollNum;
     BOOL _isPresentView;
@@ -48,22 +54,31 @@
     self.videoButton.tag = kTagButtonTypeVideo;
     
     CGRect backGroundRect = self.backgroundView.frame;
-        
-    _songViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
+    
+    _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
+//    _songViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
     _songViewController.videoType = kTagButtonTypeSong;
     _songViewController.sourceType = kDataSourceTypeWeb;
-    self.songGridView = _songViewController.swipeView;
-    self.songGridView.tag = kTagButtonTypeSong;
-    _catoonViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
+    self.songScrollView = _songViewController.scrollView;
+    self.songScrollView.tag = kTagButtonTypeSong;
+//    self.songGridView = _songViewController.swipeView;
+//    self.songGridView.tag = kTagButtonTypeSong;
+    _catoonViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
+    self.catoonScrollView = _catoonViewController.scrollView;
+    self.catoonScrollView.tag = kTagButtonTypeCatoon;
+//    _catoonViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
     _catoonViewController.videoType = kTagButtonTypeCatoon;
     _catoonViewController.sourceType = kDataSourceTypeWeb;
-    self.catoonGridView = _catoonViewController.swipeView;
-    self.catoonGridView.tag = kTagButtonTypeCatoon;
-    _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"贝瓦"];
+//    self.catoonGridView = _catoonViewController.swipeView;
+//    self.catoonGridView.tag = kTagButtonTypeCatoon;
+//    _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"贝瓦"];
+    _videoViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"节目"];
+    self.videoScrollView = _videoViewController.scrollView;
+    self.videoScrollView.tag = kTagButtonTypeVideo;
     _videoViewController.videoType = kTagButtonTypeVideo;
     _videoViewController.sourceType = kDataSourceTypeWeb;
-    self.videoGridView = _videoViewController.swipeView;
-    self.videoGridView.tag = kTagButtonTypeVideo;
+//    self.videoGridView = _videoViewController.swipeView;
+//    self.videoGridView.tag = kTagButtonTypeVideo;
     
     SwipeView *swipeView = [[SwipeView alloc] initWithFrame:backGroundRect];
     swipeView.delegate = self;
@@ -102,13 +117,13 @@
 {
     UIView *showView = nil;
     if (index == 0) {
-        showView = self.songGridView;
+        showView = self.songScrollView;
     }
     if (index == 1) {
-        showView = self.catoonGridView;
+        showView = self.catoonScrollView;
     }
     if (index == 2) {
-        showView = self.videoGridView;
+        showView = self.videoScrollView;
     }
     return showView;
 }
@@ -124,7 +139,7 @@
     MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:viewController];
     self.formSheetController = formSheet;
 
-    formSheet.presentedFormSheetSize = CGSizeMake(self.backgroundView.frame.size.width + 100, self.backgroundView.frame.size.height+ 50);
+    formSheet.presentedFormSheetSize = CGSizeMake(self.backgroundView.frame.size.width + 80, self.backgroundView.frame.size.height+ 50);
     formSheet.transitionStyle = MZFormSheetTransitionStyleFade;
     formSheet.shadowRadius = 2.0;
     formSheet.shadowOpacity = 0.3;
@@ -172,20 +187,20 @@
 -(void)setCurrentButton:(kTagButtonType)buttonType
 {
     if (buttonType == kTagButtonTypeSong) {
-        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui"] forState:UIControlStateNormal];
-        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie"] forState:UIControlStateNormal];
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon_off"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"tv_off"] forState:UIControlStateNormal];
         
-        [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu_select"] forState:UIControlStateNormal];
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song"] forState:UIControlStateNormal];
     } else if (buttonType == kTagButtonTypeCatoon){
-        [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu"] forState:UIControlStateNormal];
-        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie"] forState:UIControlStateNormal];
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song_off"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"tv_off"] forState:UIControlStateNormal];
         
-        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui_select"] forState:UIControlStateNormal];
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon"] forState:UIControlStateNormal];
     } else if (buttonType == kTagButtonTypeVideo){
-        [self.songButton setBackgroundImage:[UIImage imageNamed:@"xiaoyu"] forState:UIControlStateNormal];
-        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"wugui"] forState:UIControlStateNormal];
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song_off"] forState:UIControlStateNormal];
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon_off"] forState:UIControlStateNormal];
         
-        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"panxie_select"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"tv"] forState:UIControlStateNormal];
     }
 }
 

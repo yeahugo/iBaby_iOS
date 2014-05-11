@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AiGridViewController.h"
+//#import "AiGridViewController.h"
+#import "AiScrollViewController.h"
 
 @interface AiHistoryViewController : UIViewController
 {
-    AiGridViewController *_historyViewController;
+    AiScrollViewController *_scrollViewController;
+//    AiGridViewController *_historyViewController;
 }
 
 @property (nonatomic, assign) IBOutlet UIView *backGroundView;

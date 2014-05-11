@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AiGridView.h"
+#import "AiScrollView.h"
 #import "SwipeView.h"
 #import "MZFormSheetController.h"
 
@@ -31,11 +32,19 @@
 
 @property (nonatomic, strong) MZFormSheetController *formSheetController;
 
-@property (nonatomic, strong) SwipeView *songGridView;
 
-@property (nonatomic, strong) SwipeView *catoonGridView;
 
-@property (nonatomic, strong) SwipeView *videoGridView;
+//@property (nonatomic, strong) SwipeView *songGridView;
+//
+//@property (nonatomic, strong) SwipeView *catoonGridView;
+//
+//@property (nonatomic, strong) SwipeView *videoGridView;
+
+@property (nonatomic, strong) AiScrollView *songScrollView;
+
+@property (nonatomic, strong) AiScrollView *catoonScrollView;
+
+@property (nonatomic, strong) AiScrollView *videoScrollView;
 
 @property (nonatomic, strong) SwipeView *swipeview;
 

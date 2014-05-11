@@ -31,15 +31,21 @@
 {
     [super viewDidLoad];
     
-    _historyViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
-    _historyViewController.sourceType = kDataSourceTypeDatabase;
-    [self.view addSubview:_historyViewController.swipeView];
-      
+    _scrollViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+    _scrollViewController.sourceType = kDataSourceTypeDatabase;
+    [self.view addSubview:_scrollViewController.scrollView];
+//    _historyViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+//    _historyViewController.sourceType = kDataSourceTypeDatabase;
+//    [self.view addSubview:_historyViewController.swipeView];
+    
     [[AiDataBaseManager shareInstance] getVideoListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
-            NSArray *videos = [self makeVideoArrays:videoList];
-            [_historyViewController.songListArray addObjectsFromArray:videos];
-            [_historyViewController.swipeView reloadData];
+            [_scrollViewController.scrollView setVideoDatas:videoList];
+            [_scrollViewController.scrollView reloadData];
+//            NSArray *videos = [self makeVideoArrays:videoList];
+//            [_scrollViewController.songListArray addObjectsFromArray:videoList];
+//            [_historyViewController.songListArray addObjectsFromArray:videos];
+//            [_historyViewController.swipeView reloadData];
         } else {
             NSLog(@"getVideoList error is %@",error);
         }
