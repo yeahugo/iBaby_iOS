@@ -17,6 +17,9 @@
 //} kDataSourceType;
 
 @interface AiScrollViewController : NSObject<UIScrollViewDelegate>
+{
+    int _startId;
+}
 
 @property (nonatomic, strong) NSMutableArray *songListArray;
 
@@ -27,6 +30,8 @@
 -(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
 
 -(void)clickKeyWords:(NSString *)keyWords;
+
+-(void)getMoreData;
 
 @property (nonatomic, strong) AiScrollView *scrollView;
 

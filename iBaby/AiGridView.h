@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong) NSOperationQueue *queue;
 
-@property (nonatomic, strong) NSArray * videoDatas;
+@property (nonatomic, strong) NSMutableArray * videoDatas;
 
 -(void)setVideoObjects:(NSArray *)videoObjects;
 

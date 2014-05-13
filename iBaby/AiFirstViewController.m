@@ -56,29 +56,20 @@
     CGRect backGroundRect = self.backgroundView.frame;
     
     _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
-//    _songViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
     _songViewController.videoType = kTagButtonTypeSong;
     _songViewController.sourceType = kDataSourceTypeWeb;
     self.songScrollView = _songViewController.scrollView;
     self.songScrollView.tag = kTagButtonTypeSong;
-//    self.songGridView = _songViewController.swipeView;
-//    self.songGridView.tag = kTagButtonTypeSong;
     _catoonViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
     self.catoonScrollView = _catoonViewController.scrollView;
     self.catoonScrollView.tag = kTagButtonTypeCatoon;
-//    _catoonViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
     _catoonViewController.videoType = kTagButtonTypeCatoon;
     _catoonViewController.sourceType = kDataSourceTypeWeb;
-//    self.catoonGridView = _catoonViewController.swipeView;
-//    self.catoonGridView.tag = kTagButtonTypeCatoon;
-//    _videoViewController = [[AiGridViewController alloc] initWithFrame:backGroundRect keyWords:@"贝瓦"];
     _videoViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"节目"];
     self.videoScrollView = _videoViewController.scrollView;
     self.videoScrollView.tag = kTagButtonTypeVideo;
     _videoViewController.videoType = kTagButtonTypeVideo;
     _videoViewController.sourceType = kDataSourceTypeWeb;
-//    self.videoGridView = _videoViewController.swipeView;
-//    self.videoGridView.tag = kTagButtonTypeVideo;
     
     SwipeView *swipeView = [[SwipeView alloc] initWithFrame:backGroundRect];
     swipeView.delegate = self;

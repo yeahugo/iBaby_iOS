@@ -87,7 +87,6 @@
             UIImage *image = [UIImage imageWithData:imageData];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.imageButton setBackgroundImage:image forState:UIControlStateNormal];
-//                [self.imageButton setImage:image forState:UIControlStateNormal];
             });
         }];
     } else {

@@ -17,8 +17,10 @@
     _songListArray = [[NSMutableArray alloc] init];
     self.songListArray = _songListArray;
     if (self) {
+        _startId = 0;
         AiScrollView *scrollView = [[AiScrollView alloc] initWithFrame:frame];
         scrollView.delegate = self;
+        scrollView.scrollViewController = self;
         self.scrollView = scrollView;
         self.scrollView.backgroundColor = [UIColor clearColor];
         _songListArray = [[NSMutableArray alloc] init];
@@ -34,15 +36,36 @@
     [_songListArray removeAllObjects];
     self.keyWords = keyWords;
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
-    [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:0] completion:^(NSArray *resultArray,NSError *error){
-        NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
-        for (int i = 0; i < resultArray.count; i++) {
-            ResourceInfo * resourceInfo = [resultArray objectAtIndex:i];
-            AiVideoObject * videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
-            [saveSongArray addObject:videoObject];
+    [dataManager requestSearchWithKeyWords:keyWords startId:[NSNumber numberWithInt:_startId] completion:^(NSArray *resultArray,NSError *error){
+        if (error == nil) {
+            _startId = _startId + resultArray.count;
+            NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
+            for (int i = 0; i < resultArray.count; i++) {
+                ResourceInfo * resourceInfo = [resultArray objectAtIndex:i];
+                AiVideoObject * videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
+                [saveSongArray addObject:videoObject];
+            }
+            [_songListArray addObjectsFromArray:saveSongArray];
+            [self.scrollView setAiVideoObjects:_songListArray];
         }
-        [_songListArray addObjectsFromArray:saveSongArray];
-        [self.scrollView setAiVideoObjects:_songListArray];
+    }];
+}
+
+-(void)getMoreData
+{
+    AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
+    [dataManager requestSearchWithKeyWords:self.keyWords startId:[NSNumber numberWithInt:_startId] completion:^(NSArray *resultArray,NSError *error){
+        if (error == nil) {
+            _startId = _startId + resultArray.count;
+            NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
+            for (int i = 0; i < resultArray.count; i++) {
+                ResourceInfo * resourceInfo = [resultArray objectAtIndex:i];
+                AiVideoObject * videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
+                [saveSongArray addObject:videoObject];
+            }
+            [_songListArray addObjectsFromArray:saveSongArray];
+            [self.scrollView addAiVideoObjects:saveSongArray];
+        }
     }];
 }
 

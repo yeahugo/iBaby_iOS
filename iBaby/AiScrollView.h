@@ -8,14 +8,27 @@
 
 #import <UIKit/UIKit.h>
 #import "AiVideoObject.h"
+#import "SwipeView.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface AiScrollView : UIScrollView
+@class AiScrollViewController;
 
-@property (nonatomic, strong) NSArray * videoDatas;
+@interface AiScrollView : UIScrollView<SwipeViewDataSource,EGORefreshTableHeaderDelegate,UIScrollViewDelegate>
+{
+    EGORefreshTableHeaderView * _egoFooterView;
+    int _cellHeight;
+    int _cellOffSet;
+}
+
+@property (nonatomic, strong) NSMutableArray * videoDatas;
 
 @property (nonatomic, strong) NSOperationQueue *queue;
 
+@property (nonatomic, assign) AiScrollViewController * scrollViewController;
+
 -(void)setAiVideoObjects:(NSArray *)aiVideoObjects;
+
+-(void)addAiVideoObjects:(NSArray *)aiVideoObjects;
 
 -(void)reloadData;
 @end
