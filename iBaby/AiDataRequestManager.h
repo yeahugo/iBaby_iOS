@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "shy_server.h"
-//#import "shy_client_server.h"
+#import "shy.h"
 #import "AiDefine.h"
 
 typedef void (^Completion)(NSArray *resultArray,NSError *error);
@@ -18,25 +17,26 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
     int _babyId;
     
     ReqHead *_reqHead;
-    
-    NSOperationQueue *_queue;
-    
+        
     int _reConnectNum;
 }
 
-@property (nonatomic, copy) Completion completion;
+@property (nonatomic, strong) ReqHead *reqHead;
 
 @property (nonatomic, assign) int babyId;
 
 + (AiDataRequestManager *)shareInstance;
 
--(id)initWithBabyId:(int)babyId;
+-(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId  recordNum:(int)recordNum completion:(void (^)(NSArray *resultArray,NSError *error))completion;
 
--(void)requestGetResourcesWithSerialId:(NSString *)serialId totalSectionNum:(int)totalNum completion:(void (^)(NSArray * result, NSError * error))completion;
-
--(void)requestRecommendWithCompletion:(void (^)(NSArray *, NSError *))completion;
+-(void)requestRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion;
 
 -(void)requestGetResourcesWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId totalSectionNum:(int)sectionNum completion:(void (^)(NSArray *, NSError *))completion;
 
--(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId completion:(void (^)(NSArray *resultArray,NSError *error))completion;
+-(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId resourceType:(int)resourceType completion:(void (^)(NSArray *resultArray,NSError *error))completion;
+
+-(void)requestSearchRecommend:(void (^)(NSArray * resultArray,NSError *error))completion;
+
+-(void)requestReportWithString:(NSString *)reportString completion:(void (^)(NSArray *resultArray , NSError * error))completion;
+
 @end

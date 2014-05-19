@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AiGridViewController.h"
+//#import "AiGridViewController.h"
 #import "AiScrollViewController.h"
 
 @interface AiSearchViewController : UIViewController<UITextFieldDelegate>
 
 @property (nonatomic, assign) IBOutlet UIView * backGroundView;
-
-@property (nonatomic, strong) AiGridViewController *gridViewController;
 
 @property (nonatomic, strong) AiScrollViewController *scrollViewController;
 

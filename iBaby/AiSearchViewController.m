@@ -8,8 +8,9 @@
 
 #import "AiSearchViewController.h"
 #import "AiDataRequestManager.h"
-#import "AiGridViewController.h"
+//#import "AiGridViewController.h"
 #import "AiFirstViewController.h"
+#import "AiDefaultSearchView.h"
 
 @interface AiSearchViewController ()
 
@@ -33,6 +34,20 @@
     _activityView.center = CGPointMake(200, 120);
     [self.view addSubview:_activityView];
     self.textField.delegate = self;
+
+    NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiDefaultSearchView" owner:self options:nil];
+    AiDefaultSearchView *defaultSearchView = [nib objectAtIndex:0];
+    NSArray *subViews = [defaultSearchView subviews];
+    [[AiDataRequestManager shareInstance] requestSearchRecommend:^(NSArray *resultArray, NSError *error) {
+        for (int i= 0; i<resultArray.count; i++) {
+            ResourceInfo *resourceInfo = [resultArray objectAtIndex:i];
+            AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
+            UIView *subView = [subViews objectAtIndex:i];
+            AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:subView.frame cellType:kViewCellTypeSearchRecommend];
+            scrollViewCell.aiVideoObject = videoObject;
+            [self.backGroundView addSubview:scrollViewCell];
+        }
+    }];
 
     // Do any additional setup after loading the view.
 }
@@ -60,8 +75,16 @@
     [rootViewController closeSheetController];
 }
 
+-(void)removeAllSubView
+{
+    for (UIView *subView in self.backGroundView.subviews) {
+        [subView removeFromSuperview];
+    }
+}
+
 -(IBAction)onClickSearchField
 {
+    [self removeAllSubView];
     NSString *keywords = nil;
     if (self.textField.text == nil) {
         keywords = @"";
@@ -83,8 +106,6 @@
     self.scrollViewController = scrollViewController;
     self.scrollViewController.scrollView.tag = 2000;
     [self.view addSubview:self.scrollViewController.scrollView];
-//
-//    [self.view addSubview:self.scrollViewController.scrollView];
 }
 
 - (void)didReceiveMemoryWarning

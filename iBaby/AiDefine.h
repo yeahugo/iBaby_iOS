@@ -16,21 +16,37 @@ typedef enum {
 } kTagButtonType;
 
 typedef enum {
-    kTagPlaySourceTypeYouku,
-    kTagPlaySourceType56,
-} kTagPlaySourceType;
+    kViewCellTypeHot,
+    kViewCellTypeRecommend,
+    kViewCellTypeNormal,
+    kViewCellTypeSearchRecommend
+}kViewCellType;
+
+typedef enum {
+    kTagViewTypeIndex,
+    kTagViewTypeSearch,
+    kTagViewTypeHistory,
+    kTagViewTypeFavourite,
+    kTagViewTypeAlbum
+} kTagViewType;
+
+#define ResponseCodeSuccess 0
 
 #define kTagVideoCellStartIndex 1000
 
 #define AI_HOST_IP @"115.28.213.143"
+//#define AI_HOST_IP @"10.0.2.15"
 
-#define AI_HOST_PORT 9090
+//#define AI_HOST_PORT 9090
+#define AI_HOST_PORT 9013
 
 #define ShowNum 12
 
 #define SearchNum 12*3
 
-#define RecommendNum 20
+#define AlbumNum 35
+
+#define RecommendNum SearchNum
 
 #define ColNum 4
 
@@ -41,5 +57,7 @@ typedef enum {
 #define VideoTypeNum 3
 
 #define HistoryNum 12*6
+
+#define VERSION @"1.0"
 
 #endif

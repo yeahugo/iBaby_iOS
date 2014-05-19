@@ -9,20 +9,27 @@
 #import "AiVideoObject.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "AFNetworking.h"
+#import "shy.h"
 
 @implementation AiVideoObject
 
 -(id)initWithResourceInfo:(ResourceInfo *)resourceInfo
 {
     if (self = [super init]) {
+//        NSLog(@"resourceInfo is %@",resourceInfo);
         self.title = resourceInfo.title;
+        self.playUrl = resourceInfo.url;
         self.imageUrl = resourceInfo.img;
-        self.vid = resourceInfo.url;
-        self.sourceType = resourceInfo.resourceType;
-        self.videoType = resourceInfo.fileType;
+        self.vid = resourceInfo.vid;
+        self.sourceType = resourceInfo.sourceType;
+        self.resourceType = resourceInfo.resourceType;
+        self.videoType = resourceInfo.resourceType;
         self.serialId = resourceInfo.serialId;
-        self.totalSectionNum = resourceInfo.SectionNum;
+        self.totalSectionNum = resourceInfo.sectionNum;
         self.curSectionNum = resourceInfo.curSection;
+        self.status = resourceInfo.status;
+        self.serialDes = resourceInfo.serialDes;
+        self.serialTitle = resourceInfo.serialName;
     }
     return self;
 }
@@ -44,11 +51,11 @@
 
 -(void)getSongUrlWithCompletion:(void (^)(NSString *urlString,NSError *error))completion
 {
-    if (self.sourceType == kTagPlaySourceTypeYouku) {
+    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_YOUKU) {
         NSString *urlString = [NSString stringWithFormat:@"http://v.youku.com/player/getRealM3U8/vid/%@/type/mp4/v.m3u8",self.vid];
         completion(urlString,nil);
     }
-    if (self.sourceType == kTagPlaySourceType56) {
+    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_56) {
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
         int timeInteval = (int)[[NSDate date] timeIntervalSince1970];
@@ -67,6 +74,33 @@
             NSLog(@"Error: %@", error);
         }];
     }
+    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_SOHU) {
+        NSString *urlString = self.playUrl;
+        completion(urlString,nil);
+    }
+    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_SHY) {
+        NSLog(@"playurl is %@",self.playUrl);
+        NSString *urlString = self.playUrl;
+        completion(urlString,nil);
+    }
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    AiVideoObject * aiVideoObject = [[AiVideoObject allocWithZone:zone] init];
+    aiVideoObject.playUrl = _playUrl;
+    aiVideoObject.title = _title;
+    aiVideoObject.imageUrl = _imageUrl;
+    aiVideoObject.vid = _vid;
+    aiVideoObject.sourceType = _sourceType;
+    aiVideoObject.videoType = _videoType;
+    aiVideoObject.serialId = _serialId;
+    aiVideoObject.totalSectionNum = _totalSectionNum;
+    aiVideoObject.playUrl = _playUrl;
+    aiVideoObject.status = _status;
+    aiVideoObject.serialDes = _serialDes;
+    aiVideoObject.serialTitle = _serialTitle;
+    return aiVideoObject;
 }
 
 @end

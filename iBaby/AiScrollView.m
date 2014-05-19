@@ -10,7 +10,9 @@
 #import "AiPlayerViewController.h"
 #import "AiVideoPlayerManager.h"
 #import "UMImageView.h"
+#import "AiBannerView.h"
 #import "AiScrollViewController.h"
+#import "AiFirstViewController.h"
 
 @implementation AiScrollView
 
@@ -18,7 +20,6 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
         _videoDatas = [[NSMutableArray alloc] init];
         _queue = [[NSOperationQueue alloc] init];
     }
@@ -27,15 +28,17 @@
 
 -(void)setAiVideoObjects:(NSArray *)aiVideoObjects
 {
-//    NSArray * views = [self subviews];
-//    for (UIView * view in views) {
-//        NSLog(@"view tag is %d",view.tag);
-//        if (view.tag > 3) {
-//            [view removeFromSuperview];
-//        }
-//    }
+    [self.videoDatas removeAllObjects];
     [self.videoDatas addObjectsFromArray:aiVideoObjects];
     [self reloadData];
+    
+    int deltaHeight = ((float)aiVideoObjects.count/ColNum) * _cellHeight;
+    if (aiVideoObjects.count == SearchNum) {
+        _egoFooterView.center = CGPointMake(_egoFooterView.center.x, _egoFooterView.center.y + deltaHeight);
+    }
+    else {
+        [_egoFooterView removeFromSuperview];
+    }
 }
 
 -(void)addAiVideoObjects:(NSArray *)aiVideoObjects
@@ -47,40 +50,123 @@
         cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
     }
     
-    int deltaHeight = ((float)aiVideoObjects.count/ColNum) * _cellHeight;
+    int deltaHeight = ceil((float)aiVideoObjects.count/ColNum) * _cellHeight;
+//    NSLog(@"row is %f int is %d",(float)aiVideoObjects.count/ColNum,(int)((float)aiVideoObjects.count/ColNum));
     [self setContentSize:CGSizeMake(self.frame.size.width, self.contentSize.height + deltaHeight)];
     if (aiVideoObjects.count == SearchNum) {
         _egoFooterView.center = CGPointMake(_egoFooterView.center.x, _egoFooterView.center.y + deltaHeight);
-    } else {
+    }
+    else {
         [_egoFooterView removeFromSuperview];
     }
 }
 
+-(void)addButtonsFromOffSet:(float)offset
+{
+    CGSize size = CGSizeMake(100, 30);
+    int deltaX = 150;
+    UIButton * allButton = [[UIButton alloc] initWithFrame:CGRectMake(0, offset, size.width, size.height)];
+    [allButton addTarget:self action:@selector(searchAll) forControlEvents:UIControlEventTouchUpInside];
+    [allButton setTitle:@"全部" forState:UIControlStateNormal];
+    [self addSubview:allButton];
+    
+    UIButton *songButton = [[UIButton alloc] initWithFrame:CGRectMake(deltaX, offset, size.width, size.height)];
+    [songButton addTarget:self action:@selector(searchSong) forControlEvents:UIControlEventTouchUpInside];
+    [songButton setTitle:@"儿歌" forState:UIControlStateNormal];
+    [self addSubview:songButton];
+    
+    UIButton *catoonButton = [[UIButton alloc] initWithFrame:CGRectMake(deltaX * 2, offset, size.width, size.height)];
+    [catoonButton addTarget:self action:@selector(searchCatoon) forControlEvents:UIControlEventTouchUpInside];
+    [catoonButton setTitle:@"动画" forState:UIControlStateNormal];
+    [self addSubview:catoonButton];
+    
+    UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(deltaX * 3, offset, size.width, size.height)];
+    [videoButton addTarget:self action:@selector(searchVideo) forControlEvents:UIControlEventTouchUpInside];
+    [videoButton setTitle:@"节目" forState:UIControlStateNormal];
+    [self addSubview:videoButton];
+}
+
+-(void)removeAllSubViews
+{
+    NSArray * views = [self subviews];
+    for (UIView * view in views) {
+        NSLog(@"view tag is %d",view.tag);
+        if (view.tag > 3) {
+            [view removeFromSuperview];
+        }
+    }
+}
+
+-(void)searchAll
+{
+    [self removeAllSubViews];
+    [self.scrollViewController clickKeyWords:nil resourceType:-1];
+}
+
+-(void)searchSong
+{
+    [self removeAllSubViews];
+    [self.scrollViewController clickKeyWords:nil resourceType:0];
+}
+
+-(void)searchCatoon
+{
+    [self removeAllSubViews];
+    [self.scrollViewController clickKeyWords:nil resourceType:1];
+}
+
+-(void)searchVideo
+{
+    [self removeAllSubViews];
+    [self.scrollViewController clickKeyWords:nil resourceType:2];
+}
 
 -(void)reloadData
 {
-    self.delegate = self;
-    if (self.videoDatas.count > 0) {
-        NSLog(@"title is %@",[[self.videoDatas objectAtIndex:0] title]);
-    }
-    //测试专辑页面效果
-    if (self.videoDatas.count > 0 && [[[self.videoDatas objectAtIndex:0] title] hasPrefix:@"The"]) {
-        NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiAlbumView" owner:self options:nil];
-
-        AiAlbumView *albumView = [nib objectAtIndex:0];
-        albumView.tag = 2001;
-        albumView.frame = CGRectMake(0, 100, albumView.frame.size.width, albumView.frame.size.height);
-        [self.superview addSubview:albumView];
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y + albumView.frame.size.height - 100, self.frame.size.width, self.frame.size.height);
-    }
-    //测试首页效果
+    //首页效果
     _cellOffSet = 0;
-    if (self.videoDatas.count && [[[self.videoDatas objectAtIndex:0] title] hasPrefix:@"儿歌"]) {
-        SwipeView *bannerView = [[SwipeView alloc] initWithFrame:CGRectMake(100, 0, 500, 250)];
-        bannerView.dataSource = self;
-        [self addSubview:bannerView];
+    
+    self.delegate = self;
+    AiVideoObject *firstVideoObject = nil;
+    if (self.videoDatas.count > 0) {
+        firstVideoObject = [self.videoDatas objectAtIndex:0];
+    }
+
+    //搜索页面推荐效果
+    if (firstVideoObject.status == 1 && self.viewType == kTagViewTypeSearch) {
+        NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiSearchRecommendView" owner:self options:nil];
+        
+        AiSearchRecommendView *searchRecommendView = [nib objectAtIndex:0];
+        searchRecommendView.videoObject = [firstVideoObject copy];
+        searchRecommendView.keyWords = self.scrollViewController.keyWords;
+        //专辑标题
+        [searchRecommendView.albumTitle setText:firstVideoObject.serialTitle];
+        [searchRecommendView.introText setText:firstVideoObject.serialDes];
+        searchRecommendView.tag = 2001;
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:firstVideoObject.imageUrl]];
+        UIImage *image = [UIImage imageWithData:data];
+        [searchRecommendView.albumImage setImage:image];
+        [self addSubview:searchRecommendView];
+        _cellOffSet = searchRecommendView.frame.size.height + 30;
+        
+        [self addButtonsFromOffSet:searchRecommendView.frame.size.height];
+    }
+    else if (self.viewType == kTagViewTypeSearch) {
+        _cellOffSet = 50;
+        [self addButtonsFromOffSet:_cellOffSet - 30];
+    }
+
+    //专辑页面
+    if (self.viewType == kTagViewTypeAlbum) {
         _cellOffSet = 250;
     }
+    
+    if (self.viewType == kTagViewTypeIndex && firstVideoObject.status == 2) {
+        AiBannerView *bannerView = [[AiBannerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 400) videoDatas:self.videoDatas scrollView:self];
+        [self addSubview:bannerView];
+        _cellOffSet = bannerView.frame.size.height;
+    }
+    
     _cellHeight = 0;
     for (int i = 0; i<[self.videoDatas count]; i++) {
         AiScrollViewCell *cell = [self scrollCellWithIndex:i];
@@ -100,20 +186,21 @@
 
 -(AiScrollViewCell *)scrollCellWithIndex:(int)index
 {
-    CGSize size = CGSizeMake(200, 190);
+    UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background_low.png"]];
+    CGSize size = frameImageView.frame.size;
     int startX = 0;
     int startY = 0;
     int colNum = 4;
     
-    int deltaX = 0;
-    int deltaY = 0;
+    int deltaX = 32;
+    int deltaY = 10;
     
     AiScrollViewCell *cell = nil;
     
     if ([self viewWithTag:index + kTagVideoCellStartIndex]) {
         cell = (AiScrollViewCell *)[self viewWithTag:index + kTagVideoCellStartIndex];
     } else {
-        cell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(startX + (size.width + deltaX)*(index%colNum), startY + (size.height+deltaY)*(index/colNum)+_cellOffSet, size.width, size.height)];
+        cell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(startX + (size.width + deltaX)*(index%colNum), startY + (size.height+deltaY)*(index/colNum)+_cellOffSet, size.width, size.height) cellType:kViewCellTypeNormal];
         cell.scrollView = self;
         cell.tag = index + kTagVideoCellStartIndex;
         [self addSubview:cell];
@@ -189,18 +276,55 @@
 
 @end
 
+@implementation AiSearchRecommendView
+
+-(IBAction)playVideo:(id)sender
+{
+    NSString *serialTitle = self.videoObject.serialTitle;
+    NSLog(@"serialTitle is %@ keywords is %@",serialTitle,self.keyWords);
+    //搜索关键字和专辑名字相同的话，打开专辑页面，否则打开播放页面
+    if ([self.keyWords isEqualToString:serialTitle]) {
+        AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithVideoObject:self.videoObject];
+        [scrollViewCell onClickButton:nil];
+    } else {
+        [self.videoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+            if (error == nil) {
+                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
+                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
+                self.videoObject.playUrl = urlString;
+                [AiVideoPlayerManager shareInstance].currentVideoObject = self.videoObject;
+                UIApplication *shareApplication = [UIApplication sharedApplication];
+                [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+            } else {
+                NSLog(@"error is %@",error);
+            }
+        }];
+    }
+}
+
+@end
+
 @implementation AiScrollViewCell
 
--(id)initWithFrame:(CGRect)frame
+-(id)initWithVideoObject:(AiVideoObject *)videoObject
+{
+    self = [super init];
+    if (self) {
+        _aiVideoObject = [[AiVideoObject alloc] init];
+        self.aiVideoObject = [videoObject copy];
+    }
+    return self;
+}
+
+-(id)initWithFrame:(CGRect)frame cellType:(kViewCellType)viewCellType
 {
     self = [super initWithFrame:frame];
     if (self) {
+        if (viewCellType == kViewCellTypeNormal) {
+            UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background_low.png"]];
+            [self addSubview:frameImageView];
+        }
         self.backgroundColor = [UIColor clearColor];
-        
-        CGRect frameRect = CGRectMake(0, 0, frame.size.width, frame.size.height);
-        UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background.png"]];
-        [self addSubview:frameImageView];
-        self.frame = CGRectMake(frame.origin.x, frame.origin.y, frameImageView.frame.size.width, frameImageView.frame.size.height);
         
         CGRect rect = CGRectMake(5, 5, self.frame.size.width - 10, self.frame.size.height - 50);
         UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
@@ -208,13 +332,31 @@
         [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.imageButton];
         
-        CGRect labelRect = CGRectMake(20, rect.size.height + 10, rect.size.width, 30);
-        UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
-        label_.font = [UIFont systemFontOfSize:12];
-        label_.backgroundColor = [UIColor clearColor];
-        [label_ setTextColor:[UIColor whiteColor]];
-        self.titleLabel = label_;
-        [self addSubview:self.titleLabel];
+        
+        if (viewCellType == kViewCellTypeHot || viewCellType == kViewCellTypeRecommend) {
+            CGRect backGroundRect = CGRectMake(5, rect.size.height - 25, rect.size.width, 30);
+            UIView *textBackgroundView = [[UIView alloc] initWithFrame:backGroundRect];
+            [textBackgroundView setBackgroundColor:[UIColor grayColor]];
+            textBackgroundView.alpha = 0.5;
+            [self addSubview:textBackgroundView];
+            
+            CGRect labelRect = CGRectMake(20, backGroundRect.origin.y, backGroundRect.size.width, backGroundRect.size.height);
+            UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
+            label_.font = [UIFont systemFontOfSize:18];
+            label_.backgroundColor = [UIColor clearColor];
+            [label_ setTextColor:[UIColor whiteColor]];
+            self.titleLabel = label_;
+            [self addSubview:self.titleLabel];
+
+        } else if(viewCellType == kViewCellTypeNormal) {
+            CGRect labelRect = CGRectMake(20, rect.size.height + 10, rect.size.width, 30);
+            UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
+            label_.font = [UIFont systemFontOfSize:12];
+            label_.backgroundColor = [UIColor clearColor];
+            [label_ setTextColor:[UIColor whiteColor]];
+            self.titleLabel = label_;
+            [self addSubview:self.titleLabel];
+        }
         
         _aiVideoObject = [[AiVideoObject alloc] init];
     }
@@ -223,15 +365,12 @@
 
 -(void)onClickButton:(UIButton *)button
 {
-    NSLog(@"vid is %@ sourceType is %d videoType is %d",self.aiVideoObject.vid,self.aiVideoObject.sourceType,self.aiVideoObject.videoType);
-    if (self.aiVideoObject.videoType == RESOURCE_TYPE_CARTOON) {
-        AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:self.aiVideoObject.vid]];
-        self.aiVideoObject.playUrl = self.aiVideoObject.vid;
-        [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
-        [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
-        UIApplication *shareApplication = [UIApplication sharedApplication];
-        [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
-    } else if (self.aiVideoObject.videoType == RESOURCE_TYPE_SONG) {
+    NSLog(@"vid is %@ sourceType is %d videoType is %d serialId is %@ url is %@",self.aiVideoObject.vid,self.aiVideoObject.sourceType,self.aiVideoObject.videoType,self.aiVideoObject.serialId,self.aiVideoObject.playUrl);
+    
+    if (![self.aiVideoObject.serialId isEqualToString:@"0"]  && self.scrollView.viewType == kTagViewTypeIndex) {
+        AiFirstViewController *firstViewController = (AiFirstViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+        [firstViewController presentAlbumViewController:self.aiVideoObject.serialId];
+    } else {
         [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
             if (error == nil) {
                 AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
@@ -249,29 +388,24 @@
 
 -(void)setAiVideoObject:(AiVideoObject *)aiVideoObject
 {
-    self.aiVideoObject.title = aiVideoObject.title;
-    self.aiVideoObject.imageUrl = aiVideoObject.imageUrl;
-    self.aiVideoObject.vid = aiVideoObject.vid;
-    self.aiVideoObject.sourceType = aiVideoObject.sourceType;
-    self.aiVideoObject.videoType = aiVideoObject.videoType;
-    self.aiVideoObject.serialId = aiVideoObject.serialId;
-    self.aiVideoObject.totalSectionNum = aiVideoObject.totalSectionNum;
+    _aiVideoObject = [aiVideoObject copy];
     UMImageView *imageView = [[UMImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"icon"]];
     [imageView setImageURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
+    
     if ( !imageView.isCache) {
         [self.scrollView.queue addOperationWithBlock:^(void){
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
             UIImage *image = [UIImage imageWithData:imageData];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.imageButton setBackgroundImage:image forState:UIControlStateNormal];
-                //                [self.imageButton setImage:image forState:UIControlStateNormal];
             });
         }];
     } else {
-        [self.imageButton setBackgroundImage:imageView.image forState:UIControlStateNormal];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.imageButton setBackgroundImage:imageView.image forState:UIControlStateNormal];
+        });
     }
     self.titleLabel.text = aiVideoObject.title;
-    [self setNeedsDisplay];
 }
 
 @end

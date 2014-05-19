@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AiGridView.h"
 #import "AiScrollView.h"
 #import "SwipeView.h"
 #import "MZFormSheetController.h"
@@ -32,14 +31,6 @@
 
 @property (nonatomic, strong) MZFormSheetController *formSheetController;
 
-
-
-//@property (nonatomic, strong) SwipeView *songGridView;
-//
-//@property (nonatomic, strong) SwipeView *catoonGridView;
-//
-//@property (nonatomic, strong) SwipeView *videoGridView;
-
 @property (nonatomic, strong) AiScrollView *songScrollView;
 
 @property (nonatomic, strong) AiScrollView *catoonScrollView;
@@ -53,6 +44,8 @@
 -(IBAction)onClickSearch:(id)sender;
 
 -(IBAction)onClickHistory:(id)sender;
+
+-(void)presentAlbumViewController:(NSString *)serialId;
 
 -(IBAction)closeSheetController;
 @end

@@ -13,12 +13,15 @@
 
 @class AiScrollViewController;
 
-@interface AiScrollView : UIScrollView<SwipeViewDataSource,EGORefreshTableHeaderDelegate,UIScrollViewDelegate>
+@interface AiScrollView : UIScrollView
+<SwipeViewDataSource,EGORefreshTableHeaderDelegate,UIScrollViewDelegate>
 {
     EGORefreshTableHeaderView * _egoFooterView;
     int _cellHeight;
     int _cellOffSet;
 }
+
+@property (nonatomic, assign) kTagViewType viewType;
 
 @property (nonatomic, strong) NSMutableArray * videoDatas;
 
@@ -35,6 +38,23 @@
 
 @interface AiAlbumView : UIView
 
+@property (nonatomic, strong) IBOutlet UILabel *albumTitle;
+
+@end
+
+@interface AiSearchRecommendView : UIView
+
+@property (nonatomic, strong) IBOutlet UILabel *albumTitle;
+
+@property (nonatomic, strong) IBOutlet UIImageView *albumImage;
+
+@property (nonatomic, strong) IBOutlet UILabel *introText;
+
+@property (nonatomic, strong) AiVideoObject *videoObject;
+
+@property (nonatomic, copy) NSString *keyWords;
+
+-(IBAction)playVideo:(id)sender;
 @end
 
 @interface AiScrollViewCell : UIView
@@ -47,4 +67,9 @@
 
 @property (nonatomic, assign) AiScrollView *scrollView;
 
+-(void)onClickButton:(UIButton *)button;
+
+-(id)initWithVideoObject:(AiVideoObject *)videoObject;
+
+-(id)initWithFrame:(CGRect)frame cellType:(kViewCellType)viewCellType;
 @end

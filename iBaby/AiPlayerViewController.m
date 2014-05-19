@@ -37,6 +37,7 @@
 
 -(void)finishVideo
 {
+    NSLog(@"finish video!!");
     if (_timer) {
         [_timer invalidate];
     }
@@ -45,7 +46,6 @@
 
 -(void)updateTime:(NSTimer *)timer
 {
-    NSLog(@"update !!");
     self.playControlView.slider.minimumValue = 0;
     self.playControlView.slider.maximumValue = self.moviePlayer.duration;
     int currentTime = self.moviePlayer.currentPlaybackTime;
@@ -99,38 +99,65 @@
     }
 }
 
+-(void)reloadVideoList:(NSArray *)result videoListView:(UIScrollView *)videoListView
+{
+    int rowNum = 5;
+    int totalNum = result.count;
+    UIImage *videoFrame = [UIImage imageNamed:@"video_frame"];
+    CGSize size = videoFrame.size;
+    self.videoArray = result;
+    NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
+    for (int i = 0; i < totalNum; i++) {
+        UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(i%rowNum * size.width, i/rowNum * size.height, size.width , size.height)];
+        videoButton.tag = i;
+        [videoButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
+        ResourceInfo *resourceInfo = (ResourceInfo *)[result objectAtIndex:i];
+        //获取同一专辑下的列表
+        if (![serialId isEqualToString:@"0"]) {
+            int sectionNum = resourceInfo.curSection;
+            [videoButton setTitle:[NSString stringWithFormat:@"%d",sectionNum] forState:UIControlStateNormal];
+        } else {
+            [videoButton setTitle:resourceInfo.title forState:UIControlStateNormal];
+        }
+        [videoButton setBackgroundImage:[UIImage imageNamed:@"video_frame"] forState:UIControlStateNormal];
+        [videoListView addSubview:videoButton];
+    }
+    CGSize contentSize = CGSizeMake(videoListView.frame.size.width, ceil((float)totalNum/rowNum) * size.height);
+    [videoListView setContentSize:contentSize];
+    if (contentSize.height > videoListView.frame.size.height) {
+        UIView * backGroundView = [videoListView viewWithTag:2000];
+        backGroundView.frame = CGRectMake(0, 0, backGroundView.frame.size.width, contentSize.height);
+    }
+}
+
 -(IBAction)onClickSelectVideos:(UIButton *)button
 {
     if (self.playControlView.videoListView == nil) {
         NSLog(@"video is %@",[AiVideoPlayerManager shareInstance].currentVideoObject);
         NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
+        if ([serialId isEqualToString:@"0"]) {
+            sectionNum = AlbumNum;
+        }
         
         [button setBackgroundImage:[UIImage imageNamed:@"episode_select"] forState:UIControlStateNormal];
         UIImage *videoListBackgroundImage = [UIImage imageNamed:@"videoList_background"];
-        UIView *videoListView = [[UIView alloc] initWithFrame:CGRectMake(500, 80, videoListBackgroundImage.size.width, videoListBackgroundImage.size.height)];
+        UIScrollView *videoListView = [[UIScrollView alloc] initWithFrame:CGRectMake(500, 80, videoListBackgroundImage.size.width, videoListBackgroundImage.size.height)];
         videoListView.tag = 10;
         UIImageView *videoListBackgroundView = [[UIImageView alloc] initWithImage:videoListBackgroundImage];
+        videoListBackgroundView.tag = 2000;
         [videoListView addSubview:videoListBackgroundView];
-        
-        NSLog(@"serialId is %@  %d",serialId,sectionNum);
-        
-        [[AiDataRequestManager shareInstance] requestGetResourcesWithSerialId:serialId totalSectionNum:sectionNum completion:^(NSArray *result, NSError *error) {
-            int rowNum = 5;
-            int totalNum = result.count;
-            UIImage *videoFrame = [UIImage imageNamed:@"video_frame"];
-            CGSize size = videoFrame.size;
-            self.videoArray = result;
-            for (int i = 0; i < totalNum; i++) {
-                UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(i%rowNum * size.width, i/rowNum * size.height, size.width , size.height)];
-                videoButton.tag = i;
-                [videoButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
-                int sectionNum = [(ResourceInfo *)[result objectAtIndex:i] curSection];
-                [videoButton setTitle:[NSString stringWithFormat:@"%d",sectionNum] forState:UIControlStateNormal];
-                [videoButton setBackgroundImage:[UIImage imageNamed:@"video_frame"] forState:UIControlStateNormal];
-                [videoListView addSubview:videoButton];
-            }
+                
+        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum completion:^(NSArray *result, NSError *error) {
             NSLog(@"result is %@",result);
+            int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
+            if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
+                [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum completion:^(NSArray *resultArray, NSError *error) {
+                    [self reloadVideoList:resultArray videoListView:videoListView];
+                }];
+            } else{
+                [self reloadVideoList:result videoListView:videoListView];
+            }
         }];
         
         self.playControlView.videoListView = videoListView;
@@ -151,9 +178,16 @@
     AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
     [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
     
-    NSLog(@"url is %@",resourceInfo.url);
-    [self.moviePlayer setContentURL:[NSURL URLWithString:resourceInfo.url]];
-    [self.moviePlayer play];
+    self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
+    
+    [videoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+        if (error == nil) {
+            [self.moviePlayer setContentURL:[NSURL URLWithString:urlString]];
+            [self.moviePlayer play];
+        } else {
+            NSLog(@"error is %@",error);
+        }
+    }];
 }
 
 -(IBAction)onClickLike:(UIButton *)button

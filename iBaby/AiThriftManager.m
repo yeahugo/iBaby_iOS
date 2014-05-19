@@ -28,6 +28,11 @@
 //        NSString *hostString = @"172.16.62.144";
 //        int port = HOST_PORT;    //9089
         [self reConnect];
+        
+        NSOperationQueue *queue = [NSOperationQueue mainQueue];
+//        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+        [queue setMaxConcurrentOperationCount:1];
+        self.queue = queue;
     }
     return self;
 }
@@ -40,9 +45,12 @@
     TMultiplexedProtocol *resourceManagerProtocol = [[TMultiplexedProtocol alloc] initWithProtocol:protocol serviceName:@"ResourceManagerProcessor"];
     ResourceManagerClient * resourceClient = [[ResourceManagerClient alloc] initWithProtocol:resourceManagerProtocol];
     self.resourceClient = resourceClient;
-    TMultiplexedProtocol *recommendManagerProtocol = [[TMultiplexedProtocol alloc]initWithProtocol:protocol serviceName:@"RecommendManagerProcessor"];
-    self.recommendClient = [[RecommendManagerClient alloc] initWithProtocol:recommendManagerProtocol];
+
     TMultiplexedProtocol *userManagerProtocol = [[TMultiplexedProtocol alloc] initWithProtocol:protocol serviceName:@"UserManagerProcessor"];
     self.userClient = [[UserManagerClient alloc] initWithProtocol:userManagerProtocol];
+    
+    TMultiplexedProtocol *reportManagerProtocol = [[TMultiplexedProtocol alloc] initWithProtocol:protocol serviceName:@"ReportManagerProcessor"];
+    self.reportClient = [[ReportManagerClient alloc] initWithProtocol:reportManagerProtocol];
+
 }
 @end

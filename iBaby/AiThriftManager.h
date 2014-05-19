@@ -15,13 +15,17 @@
 #import "TFramedTransport.h"
 #import "TMultiplexedProtocol.h"
 
-#import "shy_server.h"
+#import "shy.h"
+
+//#import "shy_server.h"
 
 @interface AiThriftManager : NSObject
 
+@property (nonatomic, strong) NSOperationQueue *queue;
+
 @property (nonatomic, strong) ResourceManagerClient * resourceClient;
 
-@property (nonatomic, strong) RecommendManagerClient * recommendClient;
+@property (nonatomic, strong) ReportManagerClient *reportClient;
 
 @property (nonatomic, strong) UserManagerClient *userClient;
 

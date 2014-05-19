@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "AiDefine.h"
 #import "AiScrollView.h"
-#import "AiGridViewController.h"
+//#import "AiGridViewController.h"
 
-//typedef enum {
-//    kDataSourceTypeWeb,
-//    kDataSourceTypeDatabase,
-//} kDataSourceType;
+typedef enum {
+    kDataSourceTypeWeb,
+    kDataSourceTypeDatabase,
+} kDataSourceType;
 
 @interface AiScrollViewController : NSObject<UIScrollViewDelegate>
 {
@@ -27,14 +27,25 @@
 
 @property (nonatomic, assign) kDataSourceType sourceType;
 
--(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
+@property (nonatomic, assign) kTagViewType viewType;
 
--(void)clickKeyWords:(NSString *)keyWords;
+@property (nonatomic, assign) int resourceType;
 
--(void)getMoreData;
+@property (nonatomic, copy) NSString *serialId;
 
 @property (nonatomic, strong) AiScrollView *scrollView;
 
 @property (nonatomic, copy) NSString *keyWords;
+
+
+-(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
+
+-(id)initWithFrame:(CGRect)frame recommend:(int)resourceType;
+
+-(id)initWithFrame:(CGRect)frame serialId:(NSString *)serialId completion:(void (^)(NSArray * resultArray, NSError * error))completion;
+
+-(void)clickKeyWords:(NSString *)keyWords resourceType:(int)resourceType;
+
+-(void)getMoreData;
 
 @end

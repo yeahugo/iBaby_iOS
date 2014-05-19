@@ -8,6 +8,7 @@
 
 #import "AiDataRequestManager.h"
 #import "AiThriftManager.h"
+#import "AiUserManager.h"
 
 @implementation AiDataRequestManager
 
@@ -27,153 +28,223 @@
     self = [super init];
     if (self) {
         _reConnectNum = 0;
-        _queue = [[NSOperationQueue alloc] init];
-//        _queue = [NSOperationQueue currentQueue];
-        [_queue setMaxConcurrentOperationCount:1];
-        _reqHead = [[ReqHead alloc] initWithBabyId:123 guid:@"123" version:@"1.0"];
-    }
-    return self;
-}
-
--(void)setBabyId:(int)babyId
-{
-    _reqHead = [[ReqHead alloc] initWithBabyId:babyId guid:@"123" version:@"1.0"];
-}
-
--(id)initWithBabyId:(int)babyId
-{
-    self = [super init];
-    if (self) {
-        _babyId = babyId;
-        _reqHead = [[ReqHead alloc] initWithBabyId:_babyId guid:@"123" version:@"1.0"];
-        
-        _queue = [[NSOperationQueue alloc] init];
-        [_queue setMaxConcurrentOperationCount:1];
-    }
-    return self;
-}
-
--(void)getRecommend
-{
-    RecommendReq * recommendReq = [[RecommendReq alloc] initWithHead:_reqHead startId:0 recordNum:RecommendNum];
-    @try {
-        RecommendResp *resp = [[AiThriftManager shareInstance].resourceClient getRecommendResources:recommendReq];
-        if (resp.resCode == 200) {
-            NSArray * resultArray = resp.recommends;
-            self.completion(resultArray,nil);
+        int babyId = [AiUserManager shareInstance].babyId;
+        NSString *openUdid = [AiUserManager shareInstance].openUdid;
+        if (babyId == -1) {
+            [[AiUserManager shareInstance] userRegistWithCompletion:^(RegisterResp *result, NSError *error) {
+                if (error == nil) {
+                    int babyId = [AiUserManager shareInstance].babyId;
+                    _reqHead = [[ReqHead alloc] initWithBabyId:babyId guid:openUdid version:VERSION];
+                    
+                    [[AiUserManager shareInstance] userLogin:^(int result) {
+                        NSLog(@"user login is %d",result);
+                    }];
+                }
+            }];
         } else {
-            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
-            self.completion(nil,error);
+            _reqHead = [[ReqHead alloc] initWithBabyId:babyId guid:openUdid version:VERSION];
+            [[AiUserManager shareInstance] userLogin:^(int result) {
+                NSLog(@"user login is %d",result);
+            }];
+        }
+
+    }
+    return self;
+}
+
+-(void)doRequestAlbumWithSericalId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum completion:(void (^)(NSArray *resultArray,NSError *error))completion
+{
+    @try {
+        AlbumReq *albumReq = [[AlbumReq alloc] initWithHead:_reqHead serialId:serialId startId:startId recordNum:recordNum];
+        ResourceResp *resouceResp = [[AiThriftManager shareInstance].resourceClient getAlbum:albumReq];
+        if (resouceResp.resCode == ResponseCodeSuccess) {
+            completion(resouceResp.resList,nil);
+        } else {
+            NSError *error = [NSError errorWithDomain:@"server error" code:resouceResp.resCode userInfo:nil];
+            completion(nil,error);
         }
     }
     @catch (NSException *exception) {
-        [[AiThriftManager shareInstance] reConnect];
-        [self getRecommend];
         NSLog(@"exception is %@",exception);
     }
 }
 
--(void)requestRecommendWithCompletion:(void (^)(NSArray *, NSError *))completion
+-(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum completion:(void (^)(NSArray *resultArray,NSError *error))completion
 {
-    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(getRecommend) object:nil];
-    self.completion = completion;
-    [_queue addOperation:operation];
-}
-
--(void)doResouceWithRequest:(ResourcesReq *)resourcesReq completion:(void (^)(NSArray *, NSError *))completion
-{
-    ResourceResp *resp = [[AiThriftManager shareInstance].resourceClient getResources:resourcesReq];
-    
-    if (resp.resCode == 200) {
-        NSArray * resultArray = resp.resList;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(resultArray,nil);
-        });
-    } else {
-        NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(nil,error);
-        });
-    }
-}
-
--(void)doSearchWithRequest:(SearchReq *)searchReq completion:(void (^)(NSArray *, NSError *))completion
-{
-    NSLog(@"doSearchWithRequest with keyWords is %@",searchReq);
-    SearchResp *resp = [[AiThriftManager shareInstance].resourceClient search:searchReq];
-        
-    if (resp.resCode == 200) {
-        NSArray * resultArray = resp.result;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(resultArray,nil);
-        });
-    } else {
-        NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(nil,error);
-        });
-    }
-}
-
--(void)requestGetResourcesWithSerialId:(NSString *)serialId totalSectionNum:(int)totalNum completion:(void (^)(NSArray * result, NSError * error))completion
-{
-    [_queue addOperationWithBlock:^(void){
-        ResourcesReq * resourcesReq = [[ResourcesReq alloc] initWithHead:_reqHead name:nil serialId:serialId startId:0 recordNum:totalNum resourceType:RESOURCE_TYPE_CARTOON];
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
-            [self doResouceWithRequest:resourcesReq completion:completion];
+            [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum completion:completion];
         }
         @catch (NSException *exception) {
             [[AiThriftManager shareInstance] reConnect];
-            NSLog(@"exception is %@",exception);
+            [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum completion:completion];
+        }
+    }];
+}
+
+-(void)requestReportWithString:(NSString *)reportString completion:(void (^)(NSArray *resultArray , NSError * error))completion
+{
+    ReportReq *reportReq = [[ReportReq alloc] initWithHead:_reqHead rptItem:reportString];
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
+        @try {
+            [[AiThriftManager shareInstance].reportClient report:reportReq];
+        }
+        @catch (NSException *exception) {
+            [[AiThriftManager shareInstance] reConnect];
             @try {
-                [self doResouceWithRequest:resourcesReq completion:completion];
+                [[AiThriftManager shareInstance].reportClient report:reportReq];
             }
             @catch (NSException *exception) {
                 NSLog(@"exception is %@",exception);
             }
         }
-        
     }];
+}
+
+
+-(void)doRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion
+{
+    @try {
+        RecommendReq * recommendReq = [[RecommendReq alloc] initWithHead:_reqHead startId:startId recordNum:RecommendNum];
+        NSLog(@"recommendReq is %@",recommendReq);
+        ResourceResp *resp = nil;
+        if (resourceType == RESOURCE_TYPE_SONG) {
+            resp = [[AiThriftManager shareInstance].resourceClient getRecommendSongs:recommendReq];
+        }
+        if (resourceType == RESOURCE_TYPE_CARTOON) {
+            resp = [[AiThriftManager shareInstance].resourceClient getRecommendCartoons:recommendReq];
+        }
+        if (resourceType == RESOURCE_TYPE_TV) {
+            resp = [[AiThriftManager shareInstance].resourceClient getRecommendTVs:recommendReq];
+        }
+        if (resp.resCode == ResponseCodeSuccess) {
+            NSArray * resultArray = resp.resList;
+            if (completion) {
+                completion(resultArray,nil);
+            }
+        } else {
+            NSLog(@"error resp is %@",resp);
+            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+            if (completion) {
+                completion(nil,error);
+            }
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception is %@",exception);
+    }
+}
+
+-(void)requestRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion
+{
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
+        NSLog(@"startId is %d",startId);
+        @try {
+            [self doRecommendWithType:resourceType startId:startId completion:completion];
+        }
+        @catch (NSException *exception) {
+            [[AiThriftManager shareInstance] reConnect];
+            [self doRecommendWithType:resourceType startId:startId completion:completion];
+        }
+    }];
+}
+
+-(void)doResouceWithRequest:(SearchReq *)resourcesReq completion:(void (^)(NSArray *, NSError *))completion
+{
+    @try {
+        ResourceResp *resp = [[AiThriftManager shareInstance].resourceClient search:resourcesReq];
+        if (resp.resCode == ResponseCodeSuccess) {
+            NSArray * resultArray = resp.resList;
+            completion(resultArray,nil);
+        } else {
+            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+            completion(nil,error);
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception is %@",exception);
+    }
 }
 
 -(void)requestGetResourcesWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId totalSectionNum:(int)sectionNum completion:(void (^)(NSArray *, NSError *))completion
 {
-    [_queue addOperationWithBlock:^(void){
-        ResourcesReq * resourcesReq = [[ResourcesReq alloc] initWithHead:_reqHead name:keyWords serialId:@"" startId:0 recordNum:sectionNum resourceType:RESOURCE_TYPE_CARTOON];
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^(void){
+        SearchReq * searchReq = [[SearchReq alloc] initWithHead:_reqHead searchKeys:keyWords startId:0 recordNum:sectionNum resourceType:RESOURCE_TYPE_CARTOON serialId:nil];
         @try {
-            [self doResouceWithRequest:resourcesReq completion:completion];
+            [self doResouceWithRequest:searchReq completion:completion];
         }
         @catch (NSException *exception) {
             [[AiThriftManager shareInstance] reConnect];
-            NSLog(@"exception is %@",exception);
-            @try {
-                [self doResouceWithRequest:resourcesReq completion:completion];
-            }
-            @catch (NSException *exception) {
-                NSLog(@"exception is %@",exception);
-            }
+            [self doResouceWithRequest:searchReq completion:completion];
         }
     }];
 }
 
--(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId completion:(void (^)(NSArray *, NSError *))completion
+-(void)doSearchWithRequest:(SearchReq *)searchReq completion:(void (^)(NSArray *, NSError *))completion
 {
-    [_queue addOperationWithBlock:^(void){
-        SearchReq *searchReq = [[SearchReq alloc] initWithHead:_reqHead searchKeys:keyWords resourceType:0 startId:[startId integerValue] recordNum:SearchNum];
+    @try {
+        ResourceResp *resp = [[AiThriftManager shareInstance].resourceClient search:searchReq];
+        
+        if (resp.resCode == ResponseCodeSuccess) {
+            NSArray * resultArray = resp.resList;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(resultArray,nil);
+            });
+        } else {
+            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil,error);
+            });
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception is %@",exception);
+    }
+}
+
+-(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId resourceType:(int)resourceType completion:(void (^)(NSArray *, NSError *))completion
+{
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^(void){
+        SearchReq *searchReq = [[SearchReq alloc] initWithHead:_reqHead searchKeys:keyWords startId:[startId intValue] recordNum:SearchNum resourceType:resourceType serialId:nil];
         @try {
             [self doSearchWithRequest:searchReq completion:completion];
         }
         @catch (NSException *exception) {
             [[AiThriftManager shareInstance] reConnect];
-            NSLog(@"exception is %@",exception);
-            @try {
-                [self doSearchWithRequest:searchReq completion:completion];
-            }
-            @catch (NSException *exception) {
-                NSLog(@"exception is %@",exception);
-            }
+            [self doSearchWithRequest:searchReq completion:completion];
         }
+    }];
+}
 
+-(void)doSearchRecommend:(void (^)(NSArray * resultArray,NSError *error))completion{
+    @try {
+        ResourceResp *resp = [[AiThriftManager shareInstance].resourceClient getSearchRecommend:_reqHead];
+        if (resp.resCode == ResponseCodeSuccess) {
+            if (completion) {
+                completion(resp.resList,nil);
+            }
+        } else {
+            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil,error);
+            });
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception is %@",exception);
+    }
+}
+
+-(void)requestSearchRecommend:(void (^)(NSArray * resultArray,NSError *error))completion
+{
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^(void){
+        @try {
+            [self doSearchRecommend:completion];
+        }
+        @catch (NSException *exception) {
+            [[AiThriftManager shareInstance] reConnect];
+            [self doSearchRecommend:completion];
+        }
     }];
 }
 @end

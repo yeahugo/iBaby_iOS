@@ -10,7 +10,7 @@
 #import "AiDefine.h"
 #import "AiThriftManager.h"
 
-@interface AiVideoObject : NSObject
+@interface AiVideoObject : NSObject<NSCopying>
 
 @property (nonatomic, copy) NSString *title;
 
@@ -22,7 +22,9 @@
 
 @property (nonatomic, copy) NSString *serialId;
 
-@property (nonatomic, assign) kTagPlaySourceType sourceType;
+@property (nonatomic, assign) int resourceType;
+
+@property (nonatomic, assign) int sourceType;
 
 @property (nonatomic, copy) NSString *playUrl;
 
@@ -31,6 +33,12 @@
 @property (nonatomic, assign) int totalSectionNum;
 
 @property (nonatomic, assign) int videoType;        //RESOURCE_TYPE
+
+@property (nonatomic, assign) int status;
+
+@property (nonatomic, copy) NSString *serialTitle;
+
+@property (nonatomic, copy) NSString *serialDes;
 
 -(void)getSongUrlWithCompletion:(void (^)(NSString *urlString,NSError *error))completion;
 

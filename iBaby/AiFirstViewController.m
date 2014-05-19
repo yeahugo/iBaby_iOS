@@ -7,12 +7,14 @@
 //
 
 #import "AiFirstViewController.h"
-#import "AiGridView.h"
+//#import "AiGridView.h"
 #import "AiVideoObject.h"
 #import "AiDefine.h"
 #import "AiDataRequestManager.h"
-#import "AiGridViewController.h"
+//#import "AiGridViewController.h"
 #import "AiScrollViewController.h"
+#import "AiAlbumViewController.h"
+#import "AiUserManager.h"
 
 #import "MZFormSheetController.h"
 #import "SwipeView.h"
@@ -21,9 +23,6 @@
 {
     AiDataRequestManager *_dataManager;
     NSMutableArray *_songListArray;
-//    AiGridViewController *_songViewController;
-//    AiGridViewController *_catoonViewController;
-//    AiGridViewController *_videoViewController;
     
     AiScrollViewController *_songViewController;
     AiScrollViewController *_catoonViewController;
@@ -41,6 +40,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [AiUserManager shareInstance];
     [self setUI];
     _isPresentView = NO;
     _isOnClickButton = NO;
@@ -55,34 +55,42 @@
     
     CGRect backGroundRect = self.backgroundView.frame;
     
-    _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"儿歌"];
+//    [AiUserManager shareInstance];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"middle_background"]];
+    imageView.frame = backGroundRect;
+    [self.view addSubview:imageView];
+    
+    _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_SONG];
     _songViewController.videoType = kTagButtonTypeSong;
     _songViewController.sourceType = kDataSourceTypeWeb;
     self.songScrollView = _songViewController.scrollView;
     self.songScrollView.tag = kTagButtonTypeSong;
-    _catoonViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"卡通"];
-    self.catoonScrollView = _catoonViewController.scrollView;
-    self.catoonScrollView.tag = kTagButtonTypeCatoon;
+    
+    _catoonViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_CARTOON];
     _catoonViewController.videoType = kTagButtonTypeCatoon;
     _catoonViewController.sourceType = kDataSourceTypeWeb;
-    _videoViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect keyWords:@"节目"];
-    self.videoScrollView = _videoViewController.scrollView;
-    self.videoScrollView.tag = kTagButtonTypeVideo;
+    self.catoonScrollView = _catoonViewController.scrollView;
+    self.catoonScrollView.tag = kTagButtonTypeCatoon;
+//
+    _videoViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_TV];
     _videoViewController.videoType = kTagButtonTypeVideo;
     _videoViewController.sourceType = kDataSourceTypeWeb;
-    
+    self.videoScrollView = _videoViewController.scrollView;
+    self.videoScrollView.tag = kTagButtonTypeVideo;
+
     SwipeView *swipeView = [[SwipeView alloc] initWithFrame:backGroundRect];
     swipeView.delegate = self;
     swipeView.dataSource = self;
     swipeView.pagingEnabled = NO;
     swipeView.scrollEnabled = NO;
     self.swipeview = swipeView;
-    [self.view addSubview:swipeView];
+    [self.view addSubview:self.swipeview];
     [self setCurrentButton:_currentType];
     
+//    [self.view addSubview:self.catoonScrollView];
     //下面的代码防止滑动过程出现左右偏移
-    [self.swipeview setScrollOffset:1];
-    [self.swipeview scrollToItemAtIndex:0 duration:0.5];
+//    [self.swipeview scrollToItemAtIndex:0 duration:0.5];
 }
 
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
@@ -111,10 +119,10 @@
         showView = self.songScrollView;
     }
     if (index == 1) {
-        showView = self.catoonScrollView;
+        showView = _catoonViewController.scrollView;
     }
     if (index == 2) {
-        showView = self.videoScrollView;
+        showView = _videoViewController.scrollView;
     }
     return showView;
 }
@@ -139,6 +147,19 @@
     formSheet.shouldDismissOnBackgroundViewTap = NO;
     formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
     return formSheet;
+}
+
+-(void)presentAlbumViewController:(NSString *)serialId
+{
+    if (_isPresentView == NO) {
+        _isPresentView = YES;
+        AiAlbumViewController *albumViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"album"];
+        albumViewController.serialId = serialId;
+        [self mz_presentFormSheetController:[self makeMZFormSheetController:albumViewController] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+            NSLog(@"finish!!");
+            _isPresentView = NO;
+        }];
+    }
 }
 
 -(IBAction)onClickSearch:(id)sender
@@ -201,6 +222,8 @@
     _isOnClickButton = YES;
     [self setCurrentButton:_currentType];
     [self.swipeview scrollToItemAtIndex:_currentType duration:0.5];
+    
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",_currentType] completion:nil];
 }
 
 

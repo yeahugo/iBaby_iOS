@@ -8,8 +8,6 @@
 
 #import "AiHistoryViewController.h"
 #import "AiDataBaseManager.h"
-#import "AiGridView.h"
-#import "AiGridViewController.h"
 #import "AiFirstViewController.h"
 
 @interface AiHistoryViewController ()
@@ -32,20 +30,14 @@
     [super viewDidLoad];
     
     _scrollViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+    _scrollViewController.scrollView.viewType = kTagViewTypeHistory;
     _scrollViewController.sourceType = kDataSourceTypeDatabase;
     [self.view addSubview:_scrollViewController.scrollView];
-//    _historyViewController = [[AiGridViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
-//    _historyViewController.sourceType = kDataSourceTypeDatabase;
-//    [self.view addSubview:_historyViewController.swipeView];
     
     [[AiDataBaseManager shareInstance] getVideoListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
             [_scrollViewController.scrollView setVideoDatas:videoList];
             [_scrollViewController.scrollView reloadData];
-//            NSArray *videos = [self makeVideoArrays:videoList];
-//            [_scrollViewController.songListArray addObjectsFromArray:videoList];
-//            [_historyViewController.songListArray addObjectsFromArray:videos];
-//            [_historyViewController.swipeView reloadData];
         } else {
             NSLog(@"getVideoList error is %@",error);
         }

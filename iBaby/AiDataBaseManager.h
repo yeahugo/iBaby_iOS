@@ -16,6 +16,8 @@
     NSOperationQueue *_queue;
 }
 
+@property (nonatomic, copy) NSString *passwd;
+
 + (AiDataBaseManager *)shareInstance;
 
 -(void)getRecommendListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
