@@ -136,9 +136,9 @@
         NSLog(@"video is %@",[AiVideoPlayerManager shareInstance].currentVideoObject);
         NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
-        if ([serialId isEqualToString:@"0"]) {
-            sectionNum = AlbumNum;
-        }
+//        if ([serialId isEqualToString:@"0"]) {
+//            sectionNum = AlbumNum;
+//        }
         
         [button setBackgroundImage:[UIImage imageNamed:@"episode_select"] forState:UIControlStateNormal];
         UIImage *videoListBackgroundImage = [UIImage imageNamed:@"videoList_background"];

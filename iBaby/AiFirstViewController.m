@@ -199,20 +199,20 @@
 -(void)setCurrentButton:(kTagButtonType)buttonType
 {
     if (buttonType == kTagButtonTypeSong) {
-        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon_off"] forState:UIControlStateNormal];
-        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"tv_off"] forState:UIControlStateNormal];
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon_normal"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"play_normal"] forState:UIControlStateNormal];
         
-        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song"] forState:UIControlStateNormal];
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song_pressed"] forState:UIControlStateNormal];
     } else if (buttonType == kTagButtonTypeCatoon){
-        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song_off"] forState:UIControlStateNormal];
-        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"tv_off"] forState:UIControlStateNormal];
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song_normal"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"play_normal"] forState:UIControlStateNormal];
         
-        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon"] forState:UIControlStateNormal];
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon_pressed"] forState:UIControlStateNormal];
     } else if (buttonType == kTagButtonTypeVideo){
-        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song_off"] forState:UIControlStateNormal];
-        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon_off"] forState:UIControlStateNormal];
+        [self.songButton setBackgroundImage:[UIImage imageNamed:@"song_normal"] forState:UIControlStateNormal];
+        [self.catoonButton setBackgroundImage:[UIImage imageNamed:@"cartoon_normal"] forState:UIControlStateNormal];
         
-        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"tv"] forState:UIControlStateNormal];
+        [self.videoButton setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateNormal];
     }
 }
 

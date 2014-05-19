@@ -66,8 +66,9 @@
 
 -(IBAction)close:(id)sender
 {
-    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-    [rootViewController closeSheetController];
+    [self dismissFormSheetControllerAnimated:YES completionHandler:nil];
+//    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+//    [rootViewController closeSheetController];
 }
 
 - (void)didReceiveMemoryWarning
