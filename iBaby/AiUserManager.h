@@ -10,9 +10,6 @@
 #import "AiThriftManager.h"
 
 @interface AiUserManager : NSObject
-{
-    NSOperationQueue * _queue;
-}
 
 @property (nonatomic, copy) NSString *passwd;
 
@@ -26,5 +23,4 @@
 
 -(void)userLogin:(void (^)(int result))completion;
 
--(void)loginWithCompletion:(void (^)(int result))completion;
 @end

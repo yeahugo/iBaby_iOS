@@ -16,7 +16,6 @@
 -(id)initWithResourceInfo:(ResourceInfo *)resourceInfo
 {
     if (self = [super init]) {
-//        NSLog(@"resourceInfo is %@",resourceInfo);
         self.title = resourceInfo.title;
         self.playUrl = resourceInfo.url;
         self.imageUrl = resourceInfo.img;

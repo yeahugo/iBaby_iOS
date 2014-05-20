@@ -31,11 +31,32 @@
     if (self) {
         self.openUdid = [UMOpenUDID value];
         self.babyId = -1;
-
+        self.passwd = nil;
     }
     return self;
 }
 
+-(int)babyId
+{
+    int returnBabyId  = _babyId;
+    if (returnBabyId == -1 && [[NSUserDefaults standardUserDefaults] valueForKey:@"babyId"]) {
+        returnBabyId = [[[NSUserDefaults standardUserDefaults] valueForKey:@"babyId"] intValue];
+        _babyId = returnBabyId;
+    }
+    return returnBabyId;
+}
+
+-(NSString *)passwd
+{
+    NSString *returnPasswd = nil;
+    if (_passwd) {
+        returnPasswd = _passwd;
+    } else if([[NSUserDefaults standardUserDefaults] valueForKey:@"passwd"]){
+        returnPasswd = [[NSUserDefaults standardUserDefaults] valueForKey:@"passwd"];
+        _passwd = returnPasswd;
+    }
+    return returnPasswd;
+}
 
 -(void)userRegistWithCompletion:(void (^)(RegisterResp *result , NSError * error))completion
 {
@@ -61,31 +82,6 @@
             NSLog(@"regist error!!");
         }
     }];
-}
-
--(void)loginWithCompletion:(void (^)(int result))completion{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"passwd"]) {
-        self.passwd = [[NSUserDefaults standardUserDefaults] valueForKey:@"passwd"];
-        
-        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"babyId"]) {
-            self.babyId = [[[NSUserDefaults standardUserDefaults] valueForKey:@"babyId"] intValue];
-        }
-        [self userLogin:^(int result) {
-            if (completion) {
-                completion(result);
-            };
-        }];
-    } else {
-        NSLog(@"loginWithCompletion here!!");
-        NSString *openUdid = self.openUdid;
-        [self userRegistWithCompletion:^(RegisterResp *result, NSError *error) {
-            [self userLogin:^(int result) {
-                if (completion) {
-                    completion(result);
-                };
-            }];
-        }];
-    }
 }
 
 -(void)userLogin:(void (^)(int result))completion

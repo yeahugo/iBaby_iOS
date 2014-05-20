@@ -29,8 +29,8 @@
 //        int port = HOST_PORT;    //9089
         [self reConnect];
         
-        NSOperationQueue *queue = [NSOperationQueue mainQueue];
-//        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+//        NSOperationQueue *queue = [NSOperationQueue mainQueue];
+        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
         [queue setMaxConcurrentOperationCount:1];
         self.queue = queue;
     }
