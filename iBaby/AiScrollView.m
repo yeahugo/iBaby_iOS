@@ -32,12 +32,10 @@
     [self.videoDatas addObjectsFromArray:aiVideoObjects];
     [self reloadData];
     
-    int deltaHeight = ((float)aiVideoObjects.count/ColNum) * _cellHeight;
-    if (aiVideoObjects.count == SearchNum) {
-        _egoFooterView.center = CGPointMake(_egoFooterView.center.x, _egoFooterView.center.y + deltaHeight);
-    }
-    else {
-        [_egoFooterView removeFromSuperview];
+    if (self.videoDatas.count % SearchNum == 0 && self.videoDatas.count > 0) {
+        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width, 60)];
+        _egoFooterView.delegate = self;
+        [self addSubview:_egoFooterView];
     }
 }
 
@@ -51,7 +49,7 @@
     }
     
     int deltaHeight = ceil((float)aiVideoObjects.count/ColNum) * _cellHeight;
-//    NSLog(@"row is %f int is %d",(float)aiVideoObjects.count/ColNum,(int)((float)aiVideoObjects.count/ColNum));
+
     [self setContentSize:CGSizeMake(self.frame.size.width, self.contentSize.height + deltaHeight)];
     if (aiVideoObjects.count == SearchNum) {
         _egoFooterView.center = CGPointMake(_egoFooterView.center.x, _egoFooterView.center.y + deltaHeight);
@@ -173,14 +171,8 @@
         cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
         _cellHeight = cell.frame.size.height + 10;
     }
-    float height = (self.videoDatas.count / ColNum) * _cellHeight + _cellOffSet;
+    float height = ceil((float)self.videoDatas.count / ColNum) * _cellHeight + _cellOffSet;
     [self setContentSize:CGSizeMake(self.frame.size.width, height)];
-    
-    if (self.videoDatas.count % SearchNum == 0 && self.videoDatas.count > 0) {
-        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width, 60)];
-        _egoFooterView.delegate = self;
-        [self addSubview:_egoFooterView];
-    }
 }
 
 
@@ -210,45 +202,14 @@
 }
 
 #pragma EGOFooterView
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
-{
-    NSLog(@"egoRefreshTableHeaderDidTriggerRefresh");
-}
-
 - (void)egoRefreshTableHeaderDidTriggerGetMore:(EGORefreshTableHeaderView*)view
 {
     NSLog(@"egoRefreshTableHeaderDidTriggerGetMore");
     [self.scrollViewController getMoreData];
 }
 
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
-{
-    return 0;
-}
-
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     [_egoFooterView egoRefreshScrollViewDidEndDragging:scrollView];
-}
-
-#pragma SwipeDataSource
-- (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
-{
-    return 3;
-}
-
-- (UIView *)swipeView:(SwipeView *)swipeView viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
-{
-    AiScrollViewCell *scrollViewCell = nil;
-    if (index == 0) {
-        scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(120 * index, 0, 50, 50)];
-    }
-    if (index == 1) {
-        scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(120 * index, 0, 150, 150)];
-    }
-    if (index == 2) {
-        scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(300, 0, 50, 50)];
-    }
-    return scrollViewCell;
 }
 
 

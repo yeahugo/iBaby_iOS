@@ -37,6 +37,7 @@ typedef enum {
 
 @property (nonatomic, copy) NSString *keyWords;
 
+@property (nonatomic, strong) UIActivityIndicatorView *activityView;
 
 -(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
 

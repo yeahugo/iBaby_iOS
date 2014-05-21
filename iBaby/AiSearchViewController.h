@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 //#import "AiGridViewController.h"
 #import "AiScrollViewController.h"
+#import "SuggestiveTextField.h"
 
 @interface AiSearchViewController : UIViewController<UITextFieldDelegate>
 
@@ -16,13 +17,13 @@
 
 @property (nonatomic, strong) AiScrollViewController *scrollViewController;
 
-@property (nonatomic, strong) UIActivityIndicatorView *activityView;
-
-@property (nonatomic, assign) IBOutlet UITextField *textField;
+@property (nonatomic, strong) IBOutlet SuggestiveTextField *textField;
 
 @property (nonatomic, assign) id firstViewController;
 
 -(IBAction)onClickSearchField;
+
+-(IBAction)onClickSearchWords:(NSString *)keyWords;
 
 -(IBAction)close:(id)sender;
 @end

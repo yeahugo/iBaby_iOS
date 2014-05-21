@@ -19,6 +19,8 @@
 #import "MZFormSheetController.h"
 #import "SwipeView.h"
 
+#import "Reachability.h"
+
 @interface AiFirstViewController ()
 {
     AiDataRequestManager *_dataManager;
@@ -37,9 +39,48 @@
 
 @implementation AiFirstViewController
 
+- (void)checkNetwork
+{
+    Reachability* reach = [Reachability reachabilityWithHostName:@"http://www.aijingang.com/"];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name:kReachabilityChangedNotification
+                                               object:nil];
+    
+    reach.reachableBlock = ^(Reachability*reach)
+    {
+        NSLog(@"REACHABLE!");
+    };
+    reach.unreachableBlock = ^(Reachability*reach)
+    {
+        NSLog(@"REACHABLE!");
+    };
+    [reach startNotifier];
+}
+
+-(void)reachabilityChanged:(NSNotification *)note{
+    Reachability * reach = [note object];
+    
+    if(![reach isReachable])
+    {
+        return;
+    }
+    
+    if (reach.isReachableViaWiFi) {
+    } else {
+    }
+    
+    if (reach.isReachableViaWWAN) {
+    } else {
+        
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self checkNetwork];
     [AiUserManager shareInstance];
     [self setUI];
     _isPresentView = NO;

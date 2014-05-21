@@ -14,10 +14,11 @@
 
 -(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords
 {
-    _songListArray = [[NSMutableArray alloc] init];
-    self.songListArray = _songListArray;
-    self.viewType = kTagViewTypeSearch;
     if (self) {
+        _songListArray = [[NSMutableArray alloc] init];
+        self.songListArray = _songListArray;
+        self.viewType = kTagViewTypeSearch;
+
         _startId = 0;
         AiScrollView *scrollView = [[AiScrollView alloc] initWithFrame:frame];
         scrollView.viewType = kTagViewTypeSearch;
@@ -25,6 +26,11 @@
         scrollView.scrollViewController = self;
         self.scrollView = scrollView;
         _songListArray = [[NSMutableArray alloc] init];
+        
+        _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityView.center = CGPointMake(200, 120);
+        [self.scrollView addSubview:_activityView];
+        
         if (keyWords) {
             self.resourceType = -1;
             [self clickKeyWords:keyWords resourceType:-1];
@@ -102,7 +108,6 @@
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
     [dataManager requestRecommendWithType:resourceType startId:_startId completion:^(NSArray *resultArray,NSError *error){
         if (error == nil) {
-//            NSLog(@"resultArray is %@ count is %d",resultArray,[resultArray count]);
             _startId = _startId + (int)resultArray.count;
             NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
             for (int i = 0; i < resultArray.count; i++) {
@@ -128,7 +133,15 @@
     self.resourceType = resourceType;
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
     [dataManager requestSearchWithKeyWords:self.keyWords startId:[NSNumber numberWithInt:_startId] resourceType:resourceType completion:^(NSArray *resultArray,NSError *error){
+        [self.activityView stopAnimating];
         if (error == nil) {
+            if (resultArray.count == 0) {
+                UIImageView *noResultImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no_results"]];
+                noResultImage.center = CGPointMake(self.scrollView.frame.size.width/2, self.scrollView.frame.size.height/2);
+                [self.scrollView addSubview:noResultImage];
+                return;
+            }
+            
             _startId = _startId + resultArray.count;
             NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
             for (int i = 0; i < resultArray.count; i++) {
@@ -138,11 +151,6 @@
             }
             [_songListArray addObjectsFromArray:saveSongArray];
             [self.scrollView setAiVideoObjects:_songListArray];
-            
-            if (resultArray.count == 0) {
-                UIImageView *noResultImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no_results"]];
-                [self.scrollView addSubview:noResultImage];
-            }
         }
     }];
 }

@@ -125,7 +125,7 @@
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (resp.resCode == ResponseCodeSuccess) {
-            NSLog(@"success resp is %@",resp);
+//            NSLog(@"success resp is %@",resp);
             NSArray * resultArray = resp.resList;
             if (completion) {
                 completion(resultArray,nil);
@@ -194,17 +194,20 @@
 {
     ResourceResp *resp = [[AiThriftManager shareInstance].resourceClient search:searchReq];
     
-    if (resp.resCode == ResponseCodeSuccess) {
-        NSArray * resultArray = resp.resList;
-        if (completion) {
-            completion(resultArray,nil);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (resp.resCode == ResponseCodeSuccess) {
+            NSLog(@"resp is %@",resp);
+            NSArray * resultArray = resp.resList;
+            if (completion) {
+                completion(resultArray,nil);
+            }
+        } else {
+            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+            if (completion) {
+                completion(nil,error);
+            }
         }
-    } else {
-        NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
-        if (completion) {
-            completion(nil,error);
-        }
-    }
+    });
 }
 
 -(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId resourceType:(int)resourceType completion:(void (^)(NSArray *, NSError *))completion
@@ -228,17 +231,19 @@
 
 -(void)doSearchRecommend:(void (^)(NSArray * resultArray,NSError *error))completion{
     ResourceResp *resp = [[AiThriftManager shareInstance].resourceClient getSearchRecommend:_reqHead];
-    NSLog(@"requestSearchRecommend is %@",resp);
-    if (resp.resCode == ResponseCodeSuccess) {
-        if (completion) {
-            completion(resp.resList,nil);
+//    NSLog(@"requestSearchRecommend is %@",resp);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (resp.resCode == ResponseCodeSuccess) {
+            if (completion) {
+                completion(resp.resList,nil);
+            }
+        } else {
+            NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+            if (completion) {
+                completion(nil,error);
+            }
         }
-    } else {
-        NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
-        if (completion) {
-            completion(nil,error);
-        }
-    }
+    });
 }
 
 -(void)requestSearchRecommend:(void (^)(NSArray * resultArray,NSError *error))completion

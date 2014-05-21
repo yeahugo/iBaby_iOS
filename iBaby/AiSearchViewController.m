@@ -30,15 +30,31 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    _activityView.center = CGPointMake(200, 120);
-    [self.view addSubview:_activityView];
     self.textField.delegate = self;
+    self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.textField.searchViewController = self;
+    [self.textField addTarget:self
+                  action:@selector(editingChanged:)
+        forControlEvents:UIControlEventEditingChanged];
+    NSString *path1 = [[NSBundle mainBundle] pathForResource:@"search" ofType:@"plist"];
+    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"search2" ofType:@"plist"];
+    NSString *path3 = [[NSBundle mainBundle] pathForResource:@"search4" ofType:@"plist"];
+    NSArray *suggestionArray = [NSArray arrayWithContentsOfFile:path1];
+    NSArray *suggestArray2 = [NSArray arrayWithContentsOfFile:path2];
+    NSArray *suggestArray3 = [NSArray arrayWithContentsOfFile:path3];
+    
+    NSMutableArray *suggestArrayAll = [[NSMutableArray alloc] init];
+    [suggestArrayAll addObjectsFromArray:suggestionArray];
+    [suggestArrayAll addObjectsFromArray:suggestArray2];
+    [suggestArrayAll addObjectsFromArray:suggestArray3];
+    
+    [self.textField setSuggestions:suggestArrayAll];
 
     NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiDefaultSearchView" owner:self options:nil];
     AiDefaultSearchView *defaultSearchView = [nib objectAtIndex:0];
     NSArray *subViews = [defaultSearchView subviews];
     [[AiDataRequestManager shareInstance] requestSearchRecommend:^(NSArray *resultArray, NSError *error) {
+        NSLog(@"requestSearchRecommend resultArray is %@",resultArray);
         for (int i= 0; i<resultArray.count; i++) {
             ResourceInfo *resourceInfo = [resultArray objectAtIndex:i];
             AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
@@ -72,8 +88,6 @@
 -(IBAction)close:(id)sender
 {
     [self dismissFormSheetControllerAnimated:YES completionHandler:nil];
-//    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-//    [rootViewController closeSheetController];
 }
 
 -(void)removeAllSubView
@@ -83,14 +97,16 @@
     }
 }
 
--(IBAction)onClickSearchField
+-(IBAction)onClickSearchWords:(NSString *)keyWords
 {
+    [self.scrollViewController.activityView startAnimating];
+    [self.textField.popOver dismissPopoverAnimated:YES];
     [self removeAllSubView];
     NSString *keywords = nil;
-    if (self.textField.text == nil) {
+    if (keyWords == nil) {
         keywords = @"";
     } else {
-        keywords = self.textField.text;
+        keywords = keyWords;
     }
     [self.textField resignFirstResponder];
     
@@ -109,43 +125,28 @@
     [self.view addSubview:self.scrollViewController.scrollView];
 }
 
+-(IBAction)onClickSearchField
+{
+    [self onClickSearchWords:self.textField.text];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+-(void)editingChanged:(UITextField *)textField
 {
-    AiFirstViewController *firstViewController = (AiFirstViewController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-    if (firstViewController.closeButton) {
-        UIButton * closeButton = firstViewController.closeButton;
-        closeButton.center = CGPointMake(closeButton.center.x, closeButton.center.y - 50);
-    }
+    [self.textField matchStrings:textField.text];
+    [self.textField showPopOverList];
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    AiFirstViewController *firstViewController = (AiFirstViewController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-    UIButton * closeButton = firstViewController.closeButton;
-    closeButton.center = CGPointMake(closeButton.center.x, closeButton.center.y + 50);
-}
-
+#pragma mark - TextField Delegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self onClickSearchField];
     return YES;
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
