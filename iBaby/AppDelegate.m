@@ -7,12 +7,15 @@
 //
 
 #import "AppDelegate.h"
+#import "AiDefine.h"
+#import "MobClick.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    [MobClick startWithAppkey:UmengAppkey];
     return YES;
 }
 							

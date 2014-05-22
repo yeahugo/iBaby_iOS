@@ -27,7 +27,7 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
 
 + (AiDataRequestManager *)shareInstance;
 
--(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId  recordNum:(int)recordNum completion:(void (^)(NSArray *resultArray,NSError *error))completion;
+-(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId  recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion;
 
 -(void)requestRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion;
 

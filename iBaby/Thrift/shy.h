@@ -164,6 +164,50 @@ enum RESOURCE_SOURCE_TYPE {
 
 @end
 
+@interface UserConfig : NSObject <TBase, NSCoding> {
+  ReqHead * __head;
+  NSString * __appKey56;
+  int32_t __reportFlag;
+
+  BOOL __head_isset;
+  BOOL __appKey56_isset;
+  BOOL __reportFlag_isset;
+}
+
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+@property (nonatomic, retain, getter=head, setter=setHead:) ReqHead * head;
+@property (nonatomic, retain, getter=appKey56, setter=setAppKey56:) NSString * appKey56;
+@property (nonatomic, getter=reportFlag, setter=setReportFlag:) int32_t reportFlag;
+#endif
+
+- (id) init;
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag;
+
+- (void) read: (id <TProtocol>) inProtocol;
+- (void) write: (id <TProtocol>) outProtocol;
+
+- (void) validate;
+
+#if !__has_feature(objc_arc)
+- (ReqHead *) head;
+- (void) setHead: (ReqHead *) head;
+#endif
+- (BOOL) headIsSet;
+
+#if !__has_feature(objc_arc)
+- (NSString *) appKey56;
+- (void) setAppKey56: (NSString *) appKey56;
+#endif
+- (BOOL) appKey56IsSet;
+
+#if !__has_feature(objc_arc)
+- (int32_t) reportFlag;
+- (void) setReportFlag: (int32_t) reportFlag;
+#endif
+- (BOOL) reportFlagIsSet;
+
+@end
+
 @interface ResourceInfo : NSObject <TBase, NSCoding> {
   int32_t __shyId;
   NSString * __url;
@@ -462,11 +506,13 @@ enum RESOURCE_SOURCE_TYPE {
   NSString * __serialId;
   int32_t __startId;
   int32_t __recordNum;
+  NSString * __sectionName;
 
   BOOL __head_isset;
   BOOL __serialId_isset;
   BOOL __startId_isset;
   BOOL __recordNum_isset;
+  BOOL __sectionName_isset;
 }
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
@@ -474,10 +520,11 @@ enum RESOURCE_SOURCE_TYPE {
 @property (nonatomic, retain, getter=serialId, setter=setSerialId:) NSString * serialId;
 @property (nonatomic, getter=startId, setter=setStartId:) int32_t startId;
 @property (nonatomic, getter=recordNum, setter=setRecordNum:) int32_t recordNum;
+@property (nonatomic, retain, getter=sectionName, setter=setSectionName:) NSString * sectionName;
 #endif
 
 - (id) init;
-- (id) initWithHead: (ReqHead *) head serialId: (NSString *) serialId startId: (int32_t) startId recordNum: (int32_t) recordNum;
+- (id) initWithHead: (ReqHead *) head serialId: (NSString *) serialId startId: (int32_t) startId recordNum: (int32_t) recordNum sectionName: (NSString *) sectionName;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -507,6 +554,12 @@ enum RESOURCE_SOURCE_TYPE {
 - (void) setRecordNum: (int32_t) recordNum;
 #endif
 - (BOOL) recordNumIsSet;
+
+#if !__has_feature(objc_arc)
+- (NSString *) sectionName;
+- (void) setSectionName: (NSString *) sectionName;
+#endif
+- (BOOL) sectionNameIsSet;
 
 @end
 
@@ -639,6 +692,7 @@ enum RESOURCE_SOURCE_TYPE {
 - (int32_t) login: (LoginReq *) req;  // throws TException
 - (NSString *) getAuthSeed: (ReqHead *) req;  // throws TException
 - (void) logout: (ReqHead *) req;  // throws TException
+- (UserConfig *) updateConfig: (ReqHead *) req;  // throws TException
 @end
 
 @interface UserManagerClient : NSObject <UserManager> {

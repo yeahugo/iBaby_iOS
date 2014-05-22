@@ -98,9 +98,9 @@
     
 //    [AiUserManager shareInstance];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"middle_background"]];
-    imageView.frame = backGroundRect;
-    [self.view addSubview:imageView];
+//    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"main background"]];
+//    imageView.frame = backGroundRect;
+//    [self.view addSubview:imageView];
     
     _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_SONG];
     _songViewController.videoType = kTagButtonTypeSong;
@@ -203,6 +203,13 @@
     }
 }
 
+-(void)resetButtons
+{
+    [self.searchButton setBackgroundImage:[UIImage imageNamed:@"search_normal"] forState:UIControlStateNormal];
+    [self.historyButton setBackgroundImage:[UIImage imageNamed:@"history_normal"] forState:UIControlStateNormal];
+    [self.searchButton setBackgroundImage:[UIImage imageNamed:@"favourite_normal"] forState:UIControlStateNormal];
+}
+
 -(IBAction)onClickSearch:(id)sender
 {
     if (_isPresentView == NO) {
@@ -212,6 +219,7 @@
             NSLog(@"finish!!");
             _isPresentView = NO;
         }];
+        [self.searchButton setBackgroundImage:[UIImage imageNamed:@"search_pressed"] forState:UIControlStateNormal];
     }
 }
 
@@ -223,6 +231,8 @@
         [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
             _isPresentView = NO;
         }];
+        
+        [self.historyButton setBackgroundImage:[UIImage imageNamed:@"history_pressed"] forState:UIControlStateNormal];
     }
 }
 
@@ -234,6 +244,8 @@
         [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
             _isPresentView = NO;
         }];
+        
+        [self.settingButton setBackgroundImage:[UIImage imageNamed:@"favourite_pressed"] forState:UIControlStateNormal];
     }
 }
 

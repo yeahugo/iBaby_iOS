@@ -18,7 +18,8 @@
 {
     EGORefreshTableHeaderView * _egoFooterView;
     int _cellHeight;
-    int _cellOffSet;
+    int _cellOffSetY;
+    int _cellOffSetX;
 }
 
 @property (nonatomic, assign) kTagViewType viewType;

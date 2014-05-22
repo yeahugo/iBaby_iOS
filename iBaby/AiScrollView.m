@@ -33,7 +33,7 @@
     [self reloadData];
     
     if (self.videoDatas.count % SearchNum == 0 && self.videoDatas.count > 0) {
-        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width, 60)];
+        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
         _egoFooterView.delegate = self;
         [self addSubview:_egoFooterView];
     }
@@ -122,7 +122,8 @@
 -(void)reloadData
 {
     //首页效果
-    _cellOffSet = 0;
+    _cellOffSetY = 0;
+    _cellOffSetX = 0;
     
     self.delegate = self;
     AiVideoObject *firstVideoObject = nil;
@@ -145,24 +146,24 @@
         UIImage *image = [UIImage imageWithData:data];
         [searchRecommendView.albumImage setImage:image];
         [self addSubview:searchRecommendView];
-        _cellOffSet = searchRecommendView.frame.size.height + 30;
+        _cellOffSetY = searchRecommendView.frame.size.height + 30;
         
         [self addButtonsFromOffSet:searchRecommendView.frame.size.height];
     }
     else if (self.viewType == kTagViewTypeSearch) {
-        _cellOffSet = 50;
-        [self addButtonsFromOffSet:_cellOffSet - 30];
+        _cellOffSetY = 50;
+        [self addButtonsFromOffSet:_cellOffSetY - 30];
     }
 
     //专辑页面
     if (self.viewType == kTagViewTypeAlbum) {
-        _cellOffSet = 250;
+        _cellOffSetY = 250;
     }
     
     if (self.viewType == kTagViewTypeIndex && firstVideoObject.status == 2) {
-        AiBannerView *bannerView = [[AiBannerView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 400) videoDatas:self.videoDatas scrollView:self];
+        AiBannerView *bannerView = [[AiBannerView alloc] initWithFrame:CGRectMake( _cellOffSetX, 0, self.frame.size.width, 296) videoDatas:self.videoDatas scrollView:self];
         [self addSubview:bannerView];
-        _cellOffSet = bannerView.frame.size.height;
+        _cellOffSetY = bannerView.frame.size.height + 40;
     }
     
     _cellHeight = 0;
@@ -171,7 +172,7 @@
         cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
         _cellHeight = cell.frame.size.height + 10;
     }
-    float height = ceil((float)self.videoDatas.count / ColNum) * _cellHeight + _cellOffSet;
+    float height = ceil((float)self.videoDatas.count / ColNum) * _cellHeight + _cellOffSetY;
     [self setContentSize:CGSizeMake(self.frame.size.width, height)];
 }
 
@@ -180,7 +181,6 @@
 {
     UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background_low.png"]];
     CGSize size = frameImageView.frame.size;
-    int startX = 0;
     int startY = 0;
     int colNum = 4;
     
@@ -192,7 +192,7 @@
     if ([self viewWithTag:index + kTagVideoCellStartIndex]) {
         cell = (AiScrollViewCell *)[self viewWithTag:index + kTagVideoCellStartIndex];
     } else {
-        cell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(startX + (size.width + deltaX)*(index%colNum), startY + (size.height+deltaY)*(index/colNum)+_cellOffSet, size.width, size.height) cellType:kViewCellTypeNormal];
+        cell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_cellOffSetX + (size.width + deltaX)*(index%colNum), startY + (size.height+deltaY)*(index/colNum)+_cellOffSetY, size.width, size.height) cellType:kViewCellTypeNormal];
         cell.scrollView = self;
         cell.tag = index + kTagVideoCellStartIndex;
         [self addSubview:cell];
@@ -287,15 +287,14 @@
         }
         self.backgroundColor = [UIColor clearColor];
         
-        CGRect rect = CGRectMake(5, 5, self.frame.size.width - 10, self.frame.size.height - 50);
-        UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
-        self.imageButton = imageButton_;
-        [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:self.imageButton];
-        
-        
         if (viewCellType == kViewCellTypeHot || viewCellType == kViewCellTypeRecommend) {
-            CGRect backGroundRect = CGRectMake(5, rect.size.height - 25, rect.size.width, 30);
+            CGRect rect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+            UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
+            self.imageButton = imageButton_;
+            [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.imageButton];
+            
+            CGRect backGroundRect = CGRectMake(0, rect.size.height - 25, rect.size.width, 30);
             UIView *textBackgroundView = [[UIView alloc] initWithFrame:backGroundRect];
             [textBackgroundView setBackgroundColor:[UIColor grayColor]];
             textBackgroundView.alpha = 0.5;
@@ -310,6 +309,12 @@
             [self addSubview:self.titleLabel];
 
         } else if(viewCellType == kViewCellTypeNormal) {
+            CGRect rect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height - 50);
+            UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
+            self.imageButton = imageButton_;
+            [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.imageButton];
+
             CGRect labelRect = CGRectMake(20, rect.size.height + 10, rect.size.width, 30);
             UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
             label_.font = [UIFont systemFontOfSize:12];

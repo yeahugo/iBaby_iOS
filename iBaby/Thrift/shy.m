@@ -646,6 +646,232 @@
 
 @end
 
+@implementation UserConfig
+
+- (id) init
+{
+  self = [super init];
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+#endif
+  return self;
+}
+
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag
+{
+  self = [super init];
+  __head = [head retain_stub];
+  __head_isset = YES;
+  __appKey56 = [appKey56 retain_stub];
+  __appKey56_isset = YES;
+  __reportFlag = reportFlag;
+  __reportFlag_isset = YES;
+  return self;
+}
+
+- (id) initWithCoder: (NSCoder *) decoder
+{
+  self = [super init];
+  if ([decoder containsValueForKey: @"head"])
+  {
+    __head = [[decoder decodeObjectForKey: @"head"] retain_stub];
+    __head_isset = YES;
+  }
+  if ([decoder containsValueForKey: @"appKey56"])
+  {
+    __appKey56 = [[decoder decodeObjectForKey: @"appKey56"] retain_stub];
+    __appKey56_isset = YES;
+  }
+  if ([decoder containsValueForKey: @"reportFlag"])
+  {
+    __reportFlag = [decoder decodeInt32ForKey: @"reportFlag"];
+    __reportFlag_isset = YES;
+  }
+  return self;
+}
+
+- (void) encodeWithCoder: (NSCoder *) encoder
+{
+  if (__head_isset)
+  {
+    [encoder encodeObject: __head forKey: @"head"];
+  }
+  if (__appKey56_isset)
+  {
+    [encoder encodeObject: __appKey56 forKey: @"appKey56"];
+  }
+  if (__reportFlag_isset)
+  {
+    [encoder encodeInt32: __reportFlag forKey: @"reportFlag"];
+  }
+}
+
+- (void) dealloc
+{
+  [__head release_stub];
+  [__appKey56 release_stub];
+  [super dealloc_stub];
+}
+
+- (ReqHead *) head {
+  return [[__head retain_stub] autorelease_stub];
+}
+
+- (void) setHead: (ReqHead *) head {
+  [head retain_stub];
+  [__head release_stub];
+  __head = head;
+  __head_isset = YES;
+}
+
+- (BOOL) headIsSet {
+  return __head_isset;
+}
+
+- (void) unsetHead {
+  [__head release_stub];
+  __head = nil;
+  __head_isset = NO;
+}
+
+- (NSString *) appKey56 {
+  return [[__appKey56 retain_stub] autorelease_stub];
+}
+
+- (void) setAppKey56: (NSString *) appKey56 {
+  [appKey56 retain_stub];
+  [__appKey56 release_stub];
+  __appKey56 = appKey56;
+  __appKey56_isset = YES;
+}
+
+- (BOOL) appKey56IsSet {
+  return __appKey56_isset;
+}
+
+- (void) unsetAppKey56 {
+  [__appKey56 release_stub];
+  __appKey56 = nil;
+  __appKey56_isset = NO;
+}
+
+- (int32_t) reportFlag {
+  return __reportFlag;
+}
+
+- (void) setReportFlag: (int32_t) reportFlag {
+  __reportFlag = reportFlag;
+  __reportFlag_isset = YES;
+}
+
+- (BOOL) reportFlagIsSet {
+  return __reportFlag_isset;
+}
+
+- (void) unsetReportFlag {
+  __reportFlag_isset = NO;
+}
+
+- (void) read: (id <TProtocol>) inProtocol
+{
+  NSString * fieldName;
+  int fieldType;
+  int fieldID;
+
+  [inProtocol readStructBeginReturningName: NULL];
+  while (true)
+  {
+    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
+    if (fieldType == TType_STOP) { 
+      break;
+    }
+    switch (fieldID)
+    {
+      case 1:
+        if (fieldType == TType_STRUCT) {
+          ReqHead *fieldValue = [[ReqHead alloc] init];
+          [fieldValue read: inProtocol];
+          [self setHead: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      case 2:
+        if (fieldType == TType_STRING) {
+          NSString * fieldValue = [inProtocol readString];
+          [self setAppKey56: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      case 3:
+        if (fieldType == TType_I32) {
+          int32_t fieldValue = [inProtocol readI32];
+          [self setReportFlag: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      default:
+        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        break;
+    }
+    [inProtocol readFieldEnd];
+  }
+  [inProtocol readStructEnd];
+}
+
+- (void) write: (id <TProtocol>) outProtocol {
+  [outProtocol writeStructBeginWithName: @"UserConfig"];
+  if (__head_isset) {
+    if (__head != nil) {
+      [outProtocol writeFieldBeginWithName: @"head" type: TType_STRUCT fieldID: 1];
+      [__head write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  if (__appKey56_isset) {
+    if (__appKey56 != nil) {
+      [outProtocol writeFieldBeginWithName: @"appKey56" type: TType_STRING fieldID: 2];
+      [outProtocol writeString: __appKey56];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  if (__reportFlag_isset) {
+    [outProtocol writeFieldBeginWithName: @"reportFlag" type: TType_I32 fieldID: 3];
+    [outProtocol writeI32: __reportFlag];
+    [outProtocol writeFieldEnd];
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+}
+
+- (void) validate {
+  // check for required fields
+  if (!__head_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'head' is not set."];
+  }
+  if (!__appKey56_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'appKey56' is not set."];
+  }
+}
+
+- (NSString *) description {
+  NSMutableString * ms = [NSMutableString stringWithString: @"UserConfig("];
+  [ms appendString: @"head:"];
+  [ms appendFormat: @"%@", __head];
+  [ms appendString: @",appKey56:"];
+  [ms appendFormat: @"\"%@\"", __appKey56];
+  [ms appendString: @",reportFlag:"];
+  [ms appendFormat: @"%i", __reportFlag];
+  [ms appendString: @")"];
+  return [NSString stringWithString: ms];
+}
+
+@end
+
 @implementation ResourceInfo
 
 - (id) init
@@ -2179,7 +2405,7 @@
   return self;
 }
 
-- (id) initWithHead: (ReqHead *) head serialId: (NSString *) serialId startId: (int32_t) startId recordNum: (int32_t) recordNum
+- (id) initWithHead: (ReqHead *) head serialId: (NSString *) serialId startId: (int32_t) startId recordNum: (int32_t) recordNum sectionName: (NSString *) sectionName
 {
   self = [super init];
   __head = [head retain_stub];
@@ -2190,6 +2416,8 @@
   __startId_isset = YES;
   __recordNum = recordNum;
   __recordNum_isset = YES;
+  __sectionName = [sectionName retain_stub];
+  __sectionName_isset = YES;
   return self;
 }
 
@@ -2216,6 +2444,11 @@
     __recordNum = [decoder decodeInt32ForKey: @"recordNum"];
     __recordNum_isset = YES;
   }
+  if ([decoder containsValueForKey: @"sectionName"])
+  {
+    __sectionName = [[decoder decodeObjectForKey: @"sectionName"] retain_stub];
+    __sectionName_isset = YES;
+  }
   return self;
 }
 
@@ -2237,12 +2470,17 @@
   {
     [encoder encodeInt32: __recordNum forKey: @"recordNum"];
   }
+  if (__sectionName_isset)
+  {
+    [encoder encodeObject: __sectionName forKey: @"sectionName"];
+  }
 }
 
 - (void) dealloc
 {
   [__head release_stub];
   [__serialId release_stub];
+  [__sectionName release_stub];
   [super dealloc_stub];
 }
 
@@ -2322,6 +2560,27 @@
   __recordNum_isset = NO;
 }
 
+- (NSString *) sectionName {
+  return [[__sectionName retain_stub] autorelease_stub];
+}
+
+- (void) setSectionName: (NSString *) sectionName {
+  [sectionName retain_stub];
+  [__sectionName release_stub];
+  __sectionName = sectionName;
+  __sectionName_isset = YES;
+}
+
+- (BOOL) sectionNameIsSet {
+  return __sectionName_isset;
+}
+
+- (void) unsetSectionName {
+  [__sectionName release_stub];
+  __sectionName = nil;
+  __sectionName_isset = NO;
+}
+
 - (void) read: (id <TProtocol>) inProtocol
 {
   NSString * fieldName;
@@ -2371,6 +2630,14 @@
           [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         }
         break;
+      case 5:
+        if (fieldType == TType_STRING) {
+          NSString * fieldValue = [inProtocol readString];
+          [self setSectionName: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -2406,6 +2673,13 @@
     [outProtocol writeI32: __recordNum];
     [outProtocol writeFieldEnd];
   }
+  if (__sectionName_isset) {
+    if (__sectionName != nil) {
+      [outProtocol writeFieldBeginWithName: @"sectionName" type: TType_STRING fieldID: 5];
+      [outProtocol writeString: __sectionName];
+      [outProtocol writeFieldEnd];
+    }
+  }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
 }
@@ -2415,10 +2689,6 @@
   if (!__head_isset) {
     @throw [TProtocolException exceptionWithName: @"TProtocolException"
                                reason: @"Required field 'head' is not set."];
-  }
-  if (!__serialId_isset) {
-    @throw [TProtocolException exceptionWithName: @"TProtocolException"
-                               reason: @"Required field 'serialId' is not set."];
   }
 }
 
@@ -2432,6 +2702,8 @@
   [ms appendFormat: @"%i", __startId];
   [ms appendString: @",recordNum:"];
   [ms appendFormat: @"%i", __recordNum];
+  [ms appendString: @",sectionName:"];
+  [ms appendFormat: @"\"%@\"", __sectionName];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }
@@ -4120,6 +4392,309 @@
 
 @end
 
+@interface updateConfig_args : NSObject <TBase, NSCoding> {
+  ReqHead * __req;
+
+  BOOL __req_isset;
+}
+
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+@property (nonatomic, retain, getter=req, setter=setReq:) ReqHead * req;
+#endif
+
+- (id) init;
+- (id) initWithReq: (ReqHead *) req;
+
+- (void) read: (id <TProtocol>) inProtocol;
+- (void) write: (id <TProtocol>) outProtocol;
+
+- (void) validate;
+
+#if !__has_feature(objc_arc)
+- (ReqHead *) req;
+- (void) setReq: (ReqHead *) req;
+#endif
+- (BOOL) reqIsSet;
+
+@end
+
+@implementation updateConfig_args
+
+- (id) init
+{
+  self = [super init];
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+#endif
+  return self;
+}
+
+- (id) initWithReq: (ReqHead *) req
+{
+  self = [super init];
+  __req = [req retain_stub];
+  __req_isset = YES;
+  return self;
+}
+
+- (id) initWithCoder: (NSCoder *) decoder
+{
+  self = [super init];
+  if ([decoder containsValueForKey: @"req"])
+  {
+    __req = [[decoder decodeObjectForKey: @"req"] retain_stub];
+    __req_isset = YES;
+  }
+  return self;
+}
+
+- (void) encodeWithCoder: (NSCoder *) encoder
+{
+  if (__req_isset)
+  {
+    [encoder encodeObject: __req forKey: @"req"];
+  }
+}
+
+- (void) dealloc
+{
+  [__req release_stub];
+  [super dealloc_stub];
+}
+
+- (ReqHead *) req {
+  return [[__req retain_stub] autorelease_stub];
+}
+
+- (void) setReq: (ReqHead *) req {
+  [req retain_stub];
+  [__req release_stub];
+  __req = req;
+  __req_isset = YES;
+}
+
+- (BOOL) reqIsSet {
+  return __req_isset;
+}
+
+- (void) unsetReq {
+  [__req release_stub];
+  __req = nil;
+  __req_isset = NO;
+}
+
+- (void) read: (id <TProtocol>) inProtocol
+{
+  NSString * fieldName;
+  int fieldType;
+  int fieldID;
+
+  [inProtocol readStructBeginReturningName: NULL];
+  while (true)
+  {
+    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
+    if (fieldType == TType_STOP) { 
+      break;
+    }
+    switch (fieldID)
+    {
+      case 1:
+        if (fieldType == TType_STRUCT) {
+          ReqHead *fieldValue = [[ReqHead alloc] init];
+          [fieldValue read: inProtocol];
+          [self setReq: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      default:
+        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        break;
+    }
+    [inProtocol readFieldEnd];
+  }
+  [inProtocol readStructEnd];
+}
+
+- (void) write: (id <TProtocol>) outProtocol {
+  [outProtocol writeStructBeginWithName: @"updateConfig_args"];
+  if (__req_isset) {
+    if (__req != nil) {
+      [outProtocol writeFieldBeginWithName: @"req" type: TType_STRUCT fieldID: 1];
+      [__req write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+}
+
+- (void) validate {
+  // check for required fields
+}
+
+- (NSString *) description {
+  NSMutableString * ms = [NSMutableString stringWithString: @"updateConfig_args("];
+  [ms appendString: @"req:"];
+  [ms appendFormat: @"%@", __req];
+  [ms appendString: @")"];
+  return [NSString stringWithString: ms];
+}
+
+@end
+
+@interface UpdateConfig_result : NSObject <TBase, NSCoding> {
+  UserConfig * __success;
+
+  BOOL __success_isset;
+}
+
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+@property (nonatomic, retain, getter=success, setter=setSuccess:) UserConfig * success;
+#endif
+
+- (id) init;
+- (id) initWithSuccess: (UserConfig *) success;
+
+- (void) read: (id <TProtocol>) inProtocol;
+- (void) write: (id <TProtocol>) outProtocol;
+
+- (void) validate;
+
+#if !__has_feature(objc_arc)
+- (UserConfig *) success;
+- (void) setSuccess: (UserConfig *) success;
+#endif
+- (BOOL) successIsSet;
+
+@end
+
+@implementation UpdateConfig_result
+
+- (id) init
+{
+  self = [super init];
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+#endif
+  return self;
+}
+
+- (id) initWithSuccess: (UserConfig *) success
+{
+  self = [super init];
+  __success = [success retain_stub];
+  __success_isset = YES;
+  return self;
+}
+
+- (id) initWithCoder: (NSCoder *) decoder
+{
+  self = [super init];
+  if ([decoder containsValueForKey: @"success"])
+  {
+    __success = [[decoder decodeObjectForKey: @"success"] retain_stub];
+    __success_isset = YES;
+  }
+  return self;
+}
+
+- (void) encodeWithCoder: (NSCoder *) encoder
+{
+  if (__success_isset)
+  {
+    [encoder encodeObject: __success forKey: @"success"];
+  }
+}
+
+- (void) dealloc
+{
+  [__success release_stub];
+  [super dealloc_stub];
+}
+
+- (UserConfig *) success {
+  return [[__success retain_stub] autorelease_stub];
+}
+
+- (void) setSuccess: (UserConfig *) success {
+  [success retain_stub];
+  [__success release_stub];
+  __success = success;
+  __success_isset = YES;
+}
+
+- (BOOL) successIsSet {
+  return __success_isset;
+}
+
+- (void) unsetSuccess {
+  [__success release_stub];
+  __success = nil;
+  __success_isset = NO;
+}
+
+- (void) read: (id <TProtocol>) inProtocol
+{
+  NSString * fieldName;
+  int fieldType;
+  int fieldID;
+
+  [inProtocol readStructBeginReturningName: NULL];
+  while (true)
+  {
+    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
+    if (fieldType == TType_STOP) { 
+      break;
+    }
+    switch (fieldID)
+    {
+      case 0:
+        if (fieldType == TType_STRUCT) {
+          UserConfig *fieldValue = [[UserConfig alloc] init];
+          [fieldValue read: inProtocol];
+          [self setSuccess: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      default:
+        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        break;
+    }
+    [inProtocol readFieldEnd];
+  }
+  [inProtocol readStructEnd];
+}
+
+- (void) write: (id <TProtocol>) outProtocol {
+  [outProtocol writeStructBeginWithName: @"UpdateConfig_result"];
+
+  if (__success_isset) {
+    if (__success != nil) {
+      [outProtocol writeFieldBeginWithName: @"success" type: TType_STRUCT fieldID: 0];
+      [__success write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+}
+
+- (void) validate {
+  // check for required fields
+}
+
+- (NSString *) description {
+  NSMutableString * ms = [NSMutableString stringWithString: @"UpdateConfig_result("];
+  [ms appendString: @"success:"];
+  [ms appendFormat: @"%@", __success];
+  [ms appendString: @")"];
+  return [NSString stringWithString: ms];
+}
+
+@end
+
 @implementation UserManagerClient
 - (id) initWithProtocol: (id <TProtocol>) protocol
 {
@@ -4281,6 +4856,46 @@
   [self send_logout : req];
 }
 
+- (void) send_updateConfig: (ReqHead *) req
+{
+  [outProtocol writeMessageBeginWithName: @"updateConfig" type: TMessageType_CALL sequenceID: 0];
+  [outProtocol writeStructBeginWithName: @"updateConfig_args"];
+  if (req != nil)  {
+    [outProtocol writeFieldBeginWithName: @"req" type: TType_STRUCT fieldID: 1];
+    [req write: outProtocol];
+    [outProtocol writeFieldEnd];
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+  [outProtocol writeMessageEnd];
+  [[outProtocol transport] flush];
+}
+
+- (UserConfig *) recv_updateConfig
+{
+  int msgType = 0;
+  [inProtocol readMessageBeginReturningName: nil type: &msgType sequenceID: NULL];
+  if (msgType == TMessageType_EXCEPTION) {
+    TApplicationException * x = [TApplicationException read: inProtocol];
+    [inProtocol readMessageEnd];
+    @throw x;
+  }
+  UpdateConfig_result * result = [[[UpdateConfig_result alloc] init] autorelease_stub];
+  [result read: inProtocol];
+  [inProtocol readMessageEnd];
+  if ([result successIsSet]) {
+    return [result success];
+  }
+  @throw [TApplicationException exceptionWithType: TApplicationException_MISSING_RESULT
+                                           reason: @"updateConfig failed: unknown result"];
+}
+
+- (UserConfig *) updateConfig: (ReqHead *) req
+{
+  [self send_updateConfig : req];
+  return [self recv_updateConfig];
+}
+
 @end
 
 @implementation UserManagerProcessor
@@ -4324,6 +4939,14 @@
     [invocation setSelector: s];
     [invocation retainArguments];
     [mMethodMap setValue: invocation forKey: @"logout"];
+  }
+  {
+    SEL s = @selector(process_updateConfig_withSequenceID:inProtocol:outProtocol:);
+    NSMethodSignature * sig = [self methodSignatureForSelector: s];
+    NSInvocation * invocation = [NSInvocation invocationWithMethodSignature: sig];
+    [invocation setSelector: s];
+    [invocation retainArguments];
+    [mMethodMap setValue: invocation forKey: @"updateConfig"];
   }
   return self;
 }
@@ -4423,6 +5046,23 @@
   [args read: inProtocol];
   [inProtocol readMessageEnd];
   [mService logout: [args req]];
+  [args release_stub];
+}
+
+- (void) process_updateConfig_withSequenceID: (int32_t) seqID inProtocol: (id<TProtocol>) inProtocol outProtocol: (id<TProtocol>) outProtocol
+{
+  updateConfig_args * args = [[updateConfig_args alloc] init];
+  [args read: inProtocol];
+  [inProtocol readMessageEnd];
+  UpdateConfig_result * result = [[UpdateConfig_result alloc] init];
+  [result setSuccess: [mService updateConfig: [args req]]];
+  [outProtocol writeMessageBeginWithName: @"updateConfig"
+                                    type: TMessageType_REPLY
+                              sequenceID: seqID];
+  [result write: outProtocol];
+  [outProtocol writeMessageEnd];
+  [[outProtocol transport] flush];
+  [result release_stub];
   [args release_stub];
 }
 

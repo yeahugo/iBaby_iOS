@@ -107,6 +107,7 @@
     CGSize size = videoFrame.size;
     self.videoArray = result;
     NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
+    int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
     for (int i = 0; i < totalNum; i++) {
         UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(i%rowNum * size.width, i/rowNum * size.height, size.width , size.height)];
         videoButton.tag = i;
@@ -119,7 +120,11 @@
         } else {
             [videoButton setTitle:resourceInfo.title forState:UIControlStateNormal];
         }
-        [videoButton setBackgroundImage:[UIImage imageNamed:@"video_frame"] forState:UIControlStateNormal];
+        if (curSectionNum == i+1) {
+            [videoButton setBackgroundImage:[UIImage imageNamed:@"video_current"] forState:UIControlStateNormal];
+        } else {
+            [videoButton setBackgroundImage:[UIImage imageNamed:@"video_frame"] forState:UIControlStateNormal];
+        }
         [videoListView addSubview:videoButton];
     }
     CGSize contentSize = CGSizeMake(videoListView.frame.size.width, ceil((float)totalNum/rowNum) * size.height);
@@ -136,9 +141,10 @@
         NSLog(@"video is %@",[AiVideoPlayerManager shareInstance].currentVideoObject);
         NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
-//        if ([serialId isEqualToString:@"0"]) {
-//            sectionNum = AlbumNum;
-//        }
+        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
+        if ([serialId isEqualToString:@"0"]) {
+            sectionNum = AlbumNum;
+        }
         
         [button setBackgroundImage:[UIImage imageNamed:@"episode_select"] forState:UIControlStateNormal];
         UIImage *videoListBackgroundImage = [UIImage imageNamed:@"videoList_background"];
@@ -147,12 +153,11 @@
         UIImageView *videoListBackgroundView = [[UIImageView alloc] initWithImage:videoListBackgroundImage];
         videoListBackgroundView.tag = 2000;
         [videoListView addSubview:videoListBackgroundView];
-                
-        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum completion:^(NSArray *result, NSError *error) {
-            NSLog(@"result is %@",result);
+        
+        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
             int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
             if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
-                [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum completion:^(NSArray *resultArray, NSError *error) {
+                [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
                     [self reloadVideoList:resultArray videoListView:videoListView];
                 }];
             } else{

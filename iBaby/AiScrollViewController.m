@@ -84,7 +84,7 @@
 {
     [_songListArray removeAllObjects];
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
-    [dataManager requestAlbumWithSerialId:serialId startId:_startId recordNum:SearchNum completion:^(NSArray *resultArray, NSError *error) {
+    [dataManager requestAlbumWithSerialId:serialId startId:_startId recordNum:SearchNum videoTitle:@"" completion:^(NSArray *resultArray, NSError *error) {
         if (error == nil) {
             _startId = _startId + (int)resultArray.count;
             NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
@@ -189,7 +189,7 @@
         }];
     }
     if (self.scrollView.viewType == kTagViewTypeAlbum) {
-        [dataManager requestAlbumWithSerialId:self.serialId startId:_startId recordNum:SearchNum completion:^(NSArray *resultArray, NSError *error) {
+        [dataManager requestAlbumWithSerialId:self.serialId startId:_startId recordNum:SearchNum videoTitle:@"" completion:^(NSArray *resultArray, NSError *error) {
             if (error == nil) {
                 _startId = _startId + resultArray.count;
                 NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];

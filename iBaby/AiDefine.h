@@ -35,6 +35,9 @@ typedef enum {
 #define kTagVideoCellStartIndex 1000
 
 #define AI_HOST_IP @"115.28.213.143"
+
+#define UmengAppkey @"537d712556240b75fb0a2645"
+
 //#define AI_HOST_IP @"10.0.2.15"
 
 //#define AI_HOST_PORT 9090

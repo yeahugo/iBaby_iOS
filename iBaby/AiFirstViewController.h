@@ -48,4 +48,6 @@
 -(void)presentAlbumViewController:(NSString *)serialId;
 
 -(IBAction)closeSheetController;
+
+-(void)resetButtons;
 @end

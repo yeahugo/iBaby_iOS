@@ -13,12 +13,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background.png" id="uQg-Bc-Vz0">
+                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background with main window.png" id="uQg-Bc-Vz0">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="b9Z-mX-Dak">
-                                <rect key="frame" x="296" y="640" width="103" height="108"/>
+                                <rect key="frame" x="306" y="657" width="93" height="91"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="song.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -82,7 +82,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="i0c-ZO-b1c">
-                                <rect key="frame" x="150" y="100" width="780" height="550"/>
+                                <rect key="frame" x="138" y="130" width="779" height="504"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
@@ -167,7 +167,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="wex-qE-Adh">
-                                <rect key="frame" x="30" y="56" width="1080" height="394"/>
+                                <rect key="frame" x="31" y="112" width="1080" height="449"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VrR-JS-EzF">
@@ -178,7 +178,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" id="apg-dd-xAM">
-                                        <rect key="frame" x="-45" y="36" width="540" height="197"/>
+                                        <rect key="frame" x="-45" y="0.0" width="540" height="197"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="数量：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wsw-GQ-Tf8">
@@ -275,8 +275,8 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="i watched.png" id="ZoW-FJ-KHR">
-                                <rect key="frame" x="52" y="51" width="215" height="51"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="67" y="33" width="160" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -385,7 +385,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="with red heart.png" id="X43-Q8-PKT">
-                                <rect key="frame" x="45" y="58" width="222" height="44"/>
+                                <rect key="frame" x="30" y="47" width="198" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -403,9 +403,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="background.png" width="1024" height="768"/>
+        <image name="background with main window.png" width="1023" height="768"/>
         <image name="cartoon.png" width="66" height="79"/>
-        <image name="close.png" width="128" height="128"/>
+        <image name="close.png" width="62" height="59"/>
         <image name="favourite_normal.png" width="119" height="123"/>
         <image name="fengzheng.png" width="273" height="77"/>
         <image name="history_normal.png" width="122" height="114"/>
@@ -417,10 +417,10 @@
         <image name="search_normal.png" width="119" height="147"/>
         <image name="shu.png" width="112" height="219"/>
         <image name="song.png" width="65" height="77"/>
-        <image name="sun.png" width="124" height="90"/>
+        <image name="sun.png" width="141" height="100"/>
         <image name="tizhi.png" width="139" height="554"/>
         <image name="tv.png" width="59" height="79"/>
-        <image name="with red heart.png" width="281" height="68"/>
+        <image name="with red heart.png" width="141" height="34"/>
         <image name="xianhua.png" width="93" height="300"/>
         <image name="xiaohai.png" width="145" height="139"/>
         <image name="xiaoniao.png" width="94" height="66"/>

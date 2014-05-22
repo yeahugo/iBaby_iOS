@@ -54,9 +54,11 @@
     return self;
 }
 
--(void)doRequestAlbumWithSericalId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum completion:(void (^)(NSArray *resultArray,NSError *error))completion
+-(void)doRequestAlbumWithSericalId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion
 {
-    AlbumReq *albumReq = [[AlbumReq alloc] initWithHead:_reqHead serialId:serialId startId:startId recordNum:recordNum];
+//    AlbumReq *albumReq = [[AlbumReq alloc] initWithHead:_reqHead serialId:serialId startId:startId recordNum:recordNum];
+    AlbumReq *albumReq = [[AlbumReq alloc] initWithHead:_reqHead serialId:serialId startId:startId recordNum:recordNum sectionName:videoTitle];
+    NSLog(@"albumreq is %@",albumReq);
     ResourceResp *resouceResp = [[AiThriftManager shareInstance].resourceClient getAlbum:albumReq];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -70,16 +72,16 @@
     });
 }
 
--(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum completion:(void (^)(NSArray *resultArray,NSError *error))completion
+-(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion
 {
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
-            [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum completion:completion];
+            [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum videoTitle:videoTitle completion:completion];
         }
         @catch (NSException *exception) {
             [[AiThriftManager shareInstance] reConnect];
             @try {
-                [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum completion:completion];
+                [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum videoTitle:videoTitle completion:completion];
             }
             @catch (NSException *exception) {
                 NSLog(@"exception is %@",exception);

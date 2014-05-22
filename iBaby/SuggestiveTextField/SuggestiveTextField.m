@@ -57,13 +57,16 @@
     
     _controller.tableView.delegate = self;
     _controller.tableView.dataSource = self;
+    _controller.view.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
 
     self.popOver = [[UIPopoverController alloc] initWithContentViewController:_controller];
     
     // Default values
 //    _popOver.popoverContentSize = DEFAULT_POPOVER_SIZE;
     _popOver.popoverContentSize = CGSizeMake(self.frame.size.width, 300);
-    _popOver.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
+    if ([_popOver respondsToSelector:@selector(setBackgroundColor:)]) {
+        _popOver.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
+    }
     self.shouldHideOnSelection = NO;
     _cellHeight = 70;
 }
@@ -82,7 +85,7 @@
 - (void)matchStrings:(NSString *)letters {
     if (_stringsArray.count > 0) {
         NSLog(@"string is %@",letters);
-        self.matchedStrings = [_stringsArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self contains[cd] %@",letters]];
+        self.matchedStrings = [_stringsArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self BEGINSWITH[cd] %@",letters]];
         [_controller.tableView reloadData];
     }
 }

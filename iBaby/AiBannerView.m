@@ -25,8 +25,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         int bigVideoNum = 7;
-        _scrollViewWidth = 500;
-        UIScrollView * scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, _scrollViewWidth, self.frame.size.height)];
+        _scrollViewWidth = 490;
+        UIScrollView * scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, _scrollViewWidth, frame.size.height)];
+        scrollView.backgroundColor = [UIColor blackColor];
         scrollView.pagingEnabled = YES;
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.contentSize = CGSizeMake(bigVideoNum * scrollView.frame.size.width, scrollView.frame.size.height);
@@ -48,8 +49,13 @@
             scrollViewCell.aiVideoObject = [videoDatas objectAtIndex:i];
             [scrollView addSubview:scrollViewCell];
         }
+        
+        int deltaX = 30;
+        int height = 140;
+        int deltaY = 20;
+        
         for (int i = 0; i < 2; i++) {
-            AiScrollViewCell *scrollViewCellRecommend = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_scrollViewWidth, i*self.frame.size.height/2, self.frame.size.width - _scrollViewWidth, self.frame.size.height/2) cellType:kViewCellTypeRecommend];
+            AiScrollViewCell *scrollViewCellRecommend = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_scrollViewWidth + deltaX, i*(height+deltaY), self.frame.size.width - (_scrollViewWidth + deltaX), height) cellType:kViewCellTypeRecommend];
             scrollViewCellRecommend.scrollView = aiScrollView;
             scrollViewCellRecommend.aiVideoObject = [videoDatas objectAtIndex:bigVideoNum + i];
             [self addSubview:scrollViewCellRecommend];
