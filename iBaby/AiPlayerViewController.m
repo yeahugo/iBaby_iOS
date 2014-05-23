@@ -177,6 +177,7 @@
 
 -(void)selectVideo:(UIButton *)button
 {
+    [[AiVideoPlayerManager shareInstance] saveVideoInDatabase];
     [self.playControlView removeFromSuperview];
     [self.moviePlayer pause];
     ResourceInfo *resourceInfo = [self.videoArray objectAtIndex:button.tag];

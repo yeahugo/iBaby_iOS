@@ -34,7 +34,7 @@
         scrollView.delegate = self;
         [self addSubview:scrollView];
         
-        CGRect pageControlRect = CGRectMake(380, frame.size.height - 75, 100, 30);
+        CGRect pageControlRect = CGRectMake(380, frame.size.height - 30, 100, 30);
         _pageControl = [[UIPageControl alloc] initWithFrame:pageControlRect];
         _pageControl.numberOfPages = bigVideoNum;
         _pageControl.currentPage = 0;
@@ -49,13 +49,15 @@
             scrollViewCell.aiVideoObject = [videoDatas objectAtIndex:i];
             [scrollView addSubview:scrollViewCell];
         }
+        scrollView.backgroundColor = [UIColor blackColor];
         
-        int deltaX = 30;
-        int height = 140;
-        int deltaY = 20;
+        int deltaX = 22;
+        int height = 143;
+        int width = 266;
+        int deltaY = 10;
         
         for (int i = 0; i < 2; i++) {
-            AiScrollViewCell *scrollViewCellRecommend = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_scrollViewWidth + deltaX, i*(height+deltaY), self.frame.size.width - (_scrollViewWidth + deltaX), height) cellType:kViewCellTypeRecommend];
+            AiScrollViewCell *scrollViewCellRecommend = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_scrollViewWidth + deltaX, i*(height+deltaY), width, height) cellType:kViewCellTypeRecommend];
             scrollViewCellRecommend.scrollView = aiScrollView;
             scrollViewCellRecommend.aiVideoObject = [videoDatas objectAtIndex:bigVideoNum + i];
             [self addSubview:scrollViewCellRecommend];

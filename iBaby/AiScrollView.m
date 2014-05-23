@@ -32,7 +32,7 @@
     [self.videoDatas addObjectsFromArray:aiVideoObjects];
     [self reloadData];
     
-    if (self.videoDatas.count % SearchNum == 0 && self.videoDatas.count > 0) {
+    if (self.videoDatas.count % self.pageCount == 0 && self.videoDatas.count > 0) {
         _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
         _egoFooterView.delegate = self;
         [self addSubview:_egoFooterView];
@@ -51,7 +51,7 @@
     int deltaHeight = ceil((float)aiVideoObjects.count/ColNum) * _cellHeight;
 
     [self setContentSize:CGSizeMake(self.frame.size.width, self.contentSize.height + deltaHeight)];
-    if (aiVideoObjects.count == SearchNum) {
+    if (aiVideoObjects.count == self.pageCount) {
         _egoFooterView.center = CGPointMake(_egoFooterView.center.x, _egoFooterView.center.y + deltaHeight);
     }
     else {
@@ -123,7 +123,7 @@
 {
     //首页效果
     _cellOffSetY = 0;
-    _cellOffSetX = 0;
+    _cellOffSetX = -1;
     
     self.delegate = self;
     AiVideoObject *firstVideoObject = nil;
@@ -163,7 +163,7 @@
     if (self.viewType == kTagViewTypeIndex && firstVideoObject.status == 2) {
         AiBannerView *bannerView = [[AiBannerView alloc] initWithFrame:CGRectMake( _cellOffSetX, 0, self.frame.size.width, 296) videoDatas:self.videoDatas scrollView:self];
         [self addSubview:bannerView];
-        _cellOffSetY = bannerView.frame.size.height + 40;
+        _cellOffSetY = 322;
     }
     
     _cellHeight = 0;
@@ -179,12 +179,12 @@
 
 -(AiScrollViewCell *)scrollCellWithIndex:(int)index
 {
-    UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background_low.png"]];
+    UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge background_low.png"]];
     CGSize size = frameImageView.frame.size;
     int startY = 0;
     int colNum = 4;
     
-    int deltaX = 32;
+    int deltaX = 35;
     int deltaY = 10;
     
     AiScrollViewCell *cell = nil;
@@ -294,11 +294,16 @@
             [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:self.imageButton];
             
-            CGRect backGroundRect = CGRectMake(0, rect.size.height - 25, rect.size.width, 30);
-            UIView *textBackgroundView = [[UIView alloc] initWithFrame:backGroundRect];
-            [textBackgroundView setBackgroundColor:[UIColor grayColor]];
-            textBackgroundView.alpha = 0.5;
-            [self addSubview:textBackgroundView];
+            CGRect backGroundRect = CGRectMake(0, rect.size.height - 25, rect.size.width, 25);
+            if (viewCellType == kViewCellTypeHot) {
+                UIImageView *textBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"greybar_long"]];
+                textBackgroundView.frame = CGRectMake(0, rect.size.height - textBackgroundView.frame.size.height, textBackgroundView.frame.size.width, textBackgroundView.frame.size.height);
+                [self addSubview:textBackgroundView];
+            } else {
+                UIImageView *textBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"greybar_short"]];
+                textBackgroundView.frame = CGRectMake(0, rect.size.height - textBackgroundView.frame.size.height, textBackgroundView.frame.size.width, textBackgroundView.frame.size.height);
+                [self addSubview:textBackgroundView];
+            }
             
             CGRect labelRect = CGRectMake(20, backGroundRect.origin.y, backGroundRect.size.width, backGroundRect.size.height);
             UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
@@ -309,15 +314,15 @@
             [self addSubview:self.titleLabel];
 
         } else if(viewCellType == kViewCellTypeNormal) {
-            CGRect rect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height - 50);
+            CGRect rect = CGRectMake(2, 2, self.frame.size.width - 6, 122);
             UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
             self.imageButton = imageButton_;
             [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:self.imageButton];
 
-            CGRect labelRect = CGRectMake(20, rect.size.height + 10, rect.size.width, 30);
+            CGRect labelRect = CGRectMake(16, rect.size.height + 4, rect.size.width, 30);
             UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
-            label_.font = [UIFont systemFontOfSize:12];
+            label_.font = [UIFont systemFontOfSize:14];
             label_.backgroundColor = [UIColor clearColor];
             [label_ setTextColor:[UIColor whiteColor]];
             self.titleLabel = label_;

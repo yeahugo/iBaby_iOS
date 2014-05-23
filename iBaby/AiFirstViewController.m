@@ -207,7 +207,7 @@
 {
     [self.searchButton setBackgroundImage:[UIImage imageNamed:@"search_normal"] forState:UIControlStateNormal];
     [self.historyButton setBackgroundImage:[UIImage imageNamed:@"history_normal"] forState:UIControlStateNormal];
-    [self.searchButton setBackgroundImage:[UIImage imageNamed:@"favourite_normal"] forState:UIControlStateNormal];
+    [self.favouriteButton setBackgroundImage:[UIImage imageNamed:@"favourite_normal"] forState:UIControlStateNormal];
 }
 
 -(IBAction)onClickSearch:(id)sender
@@ -245,7 +245,7 @@
             _isPresentView = NO;
         }];
         
-        [self.settingButton setBackgroundImage:[UIImage imageNamed:@"favourite_pressed"] forState:UIControlStateNormal];
+        [self.favouriteButton setBackgroundImage:[UIImage imageNamed:@"favourite_pressed"] forState:UIControlStateNormal];
     }
 }
 

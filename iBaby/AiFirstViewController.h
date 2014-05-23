@@ -25,7 +25,7 @@
 
 @property (nonatomic, strong) IBOutlet UIButton *searchButton;
 
-@property (nonatomic, strong) IBOutlet UIButton *settingButton;
+@property (nonatomic, strong) IBOutlet UIButton *favouriteButton;
 
 @property (nonatomic, assign) UIButton *closeButton;
 

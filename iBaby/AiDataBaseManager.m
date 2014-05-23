@@ -83,10 +83,19 @@
     [_queue addOperation:request];
 }
 
--(void)getVideoListsWithStartLimit:(int)startLimit withCompletion:(void(^)(NSArray* videoList, NSError* error))completion{
-    EGODatabaseRequest *request = [_dataBase requestWithQuery:[NSString stringWithFormat:@"SELECT * FROM `PlayedVideos` ORDER BY Id DESC LIMIT %d,%d",startLimit,ShowNum]];
+-(void)getDataFromDataBaseWithType:(kDatabaseType)dataBaseType completion:(void(^)(NSArray* videoList, NSError* error))completion
+{
+    NSString *tableName = nil;
+    if (dataBaseType == kDatabaseTypeHistory) {
+        tableName = @"PlayedVideos";
+    }
+    if (dataBaseType == kDatabaseTypeFavourite) {
+        tableName = @"FavouriteVideos";
+    }
+    EGODatabaseRequest *request = [_dataBase requestWithQuery:[NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY Id DESC LIMIT %d",tableName,HistoryNum]];
     request.completion = ^(EGODatabaseRequest* request, EGODatabaseResult* result, NSError* error){
         if (result.errorCode == 0) {
+            _historyStartId = HistoryNum;
             NSMutableArray *videoArray = [NSMutableArray array];
             for(EGODatabaseRow* row in result) {
                 AiVideoObject *video = [[AiVideoObject alloc] init];
@@ -107,9 +116,31 @@
 
 -(void)getFavouriteListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion
 {
-    EGODatabaseRequest *request = [_dataBase requestWithQuery:[NSString stringWithFormat:@"SELECT * FROM `FavouriteVideos` ORDER BY Id DESC LIMIT %d",HistoryNum]];
+    [self getDataFromDataBaseWithType:kDatabaseTypeFavourite completion:completion];
+}
+
+-(void)getMoreVideoListWithType:(kDatabaseType)dataBaseType completion:(void(^)(NSArray* videoList, NSError* error))completion
+{
+    NSString *tableName = nil;
+    int startId = 0;
+    if (dataBaseType == kDatabaseTypeHistory) {
+        tableName = @"PlayedVideos";
+        startId = _historyStartId;
+    }
+    if (dataBaseType == kDatabaseTypeFavourite) {
+        tableName = @"FavouriteVideos";
+        startId = _favouriteStartId;
+    }
+    
+    NSLog(@"startid is %d",startId);
+    EGODatabaseRequest *request = [_dataBase requestWithQuery:[NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY Id DESC LIMIT %d,%d",tableName,startId,startId+HistoryNum]];
     request.completion = ^(EGODatabaseRequest* request, EGODatabaseResult* result, NSError* error){
         if (result.errorCode == 0) {
+            if (dataBaseType == kDatabaseTypeHistory) {
+                _historyStartId = _historyStartId + HistoryNum;
+            } else {
+                _favouriteStartId = _favouriteStartId + HistoryNum;
+            }
             NSMutableArray *videoArray = [NSMutableArray array];
             for(EGODatabaseRow* row in result) {
                 AiVideoObject *video = [[AiVideoObject alloc] init];
@@ -130,25 +161,7 @@
 
 -(void)getVideoListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion
 {
-    EGODatabaseRequest *request = [_dataBase requestWithQuery:[NSString stringWithFormat:@"SELECT * FROM `PlayedVideos` ORDER BY Id DESC LIMIT %d",HistoryNum]];
-    request.completion = ^(EGODatabaseRequest* request, EGODatabaseResult* result, NSError* error){
-        if (result.errorCode == 0) {
-            NSMutableArray *videoArray = [NSMutableArray array];
-            for(EGODatabaseRow* row in result) {
-                AiVideoObject *video = [[AiVideoObject alloc] init];
-                video.title = [row stringForColumn:@"Title"];
-                video.imageUrl = [row stringForColumn:@"ImageUrl"];
-                video.sourceType = [row intForColumn:@"SourceType"];
-                video.vid = [row stringForColumn:@"Vid"];
-                video.playTime = [row intForColumn:@"PlayTime"];
-                [videoArray addObject:video];
-            }
-            completion(videoArray,error);
-        } else {
-            completion(nil,error);
-        }
-    };
-    [_queue addOperation:request];
+    [self getDataFromDataBaseWithType:kDatabaseTypeHistory completion:completion];
 }
 
 -(void)addRecommendVideo:(AiVideoObject *)videoObject

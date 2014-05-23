@@ -18,9 +18,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="b9Z-mX-Dak">
-                                <rect key="frame" x="306" y="657" width="93" height="91"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="song.png">
+                                <rect key="frame" x="243" y="639" width="160" height="130"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <state key="normal" backgroundImage="song_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -28,9 +28,9 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Vle-m7-BOe">
-                                <rect key="frame" x="462" y="658" width="89" height="90"/>
+                                <rect key="frame" x="447" y="639" width="160" height="130"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="cartoon.png">
+                                <state key="normal" backgroundImage="cartoon_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -38,21 +38,17 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="XOV-Qw-Czm">
-                                <rect key="frame" x="633" y="658" width="87" height="90"/>
+                                <rect key="frame" x="653" y="639" width="160" height="130"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="tv.png">
+                                <state key="normal" backgroundImage="play_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="onClickButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="w8o-MU-8RQ"/>
                                 </connections>
                             </button>
-                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tizhi.png" id="hL3-fd-Cyq">
-                                <rect key="frame" x="0.0" y="212" width="105" height="422"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8Us-SA-z4x">
-                                <rect key="frame" x="8" y="353" width="103" height="100"/>
+                                <rect key="frame" x="0.0" y="302" width="122" height="114"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="history_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -62,7 +58,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="a2b-0B-9kx">
-                                <rect key="frame" x="8" y="509" width="97" height="96"/>
+                                <rect key="frame" x="0.0" y="428" width="119" height="123"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="favourite_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -72,7 +68,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Q2c-Et-gXe">
-                                <rect key="frame" x="5" y="212" width="108" height="118"/>
+                                <rect key="frame" x="0.0" y="127" width="119" height="147"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="search_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -82,56 +78,35 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="i0c-ZO-b1c">
-                                <rect key="frame" x="138" y="130" width="779" height="504"/>
+                                <rect key="frame" x="138" y="130" width="801" height="496"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7R5-Mc-TFU">
-                                <rect key="frame" x="30" y="20" width="90" height="73"/>
+                                <rect key="frame" x="2" y="5" width="142" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="sun.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="i6G-Eu-TAf">
-                                <rect key="frame" x="283" y="28" width="250" height="65"/>
+                                <rect key="frame" x="309" y="22" width="177" height="65"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="fengzheng.png">
+                                <state key="normal" backgroundImage="paper_plane.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="x1P-Qn-hy0">
-                                <rect key="frame" x="625" y="20" width="124" height="81"/>
+                                <rect key="frame" x="679" y="0.0" width="112" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="xiaohai.png">
+                                <state key="normal" backgroundImage="flying babys.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Ptd-fT-Z1R">
-                                <rect key="frame" x="816" y="23" width="96" height="68"/>
+                                <rect key="frame" x="835" y="7" width="94" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="xiaoniao.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="tXJ-zL-JP1">
-                                <rect key="frame" x="942" y="184" width="102" height="225"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="shu.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6r9-12-APB">
-                                <rect key="frame" x="948" y="420" width="76" height="214"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="xianhua.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YDB-hX-3ZA">
-                                <rect key="frame" x="947" y="417" width="63" height="56"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="mifeng.png">
+                                <state key="normal" backgroundImage="birds.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
@@ -143,16 +118,16 @@
                     <connections>
                         <outlet property="backgroundView" destination="i0c-ZO-b1c" id="ngj-ca-xcI"/>
                         <outlet property="catoonButton" destination="Vle-m7-BOe" id="YM1-pR-bKe"/>
+                        <outlet property="favouriteButton" destination="a2b-0B-9kx" id="pzP-xY-O6n"/>
                         <outlet property="historyButton" destination="8Us-SA-z4x" id="2RX-5e-1aQ"/>
                         <outlet property="searchButton" destination="Q2c-Et-gXe" id="ql9-k4-jnh"/>
-                        <outlet property="settingButton" destination="a2b-0B-9kx" id="7Ec-vo-QJZ"/>
                         <outlet property="songButton" destination="b9Z-mX-Dak" id="8L9-Ag-aGA"/>
                         <outlet property="videoButton" destination="XOV-Qw-Czm" id="2Q7-wf-Zk3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-485" y="-528"/>
+            <point key="canvasLocation" x="-475" y="-558"/>
         </scene>
         <!--Ai Album View Controller-->
         <scene sceneID="k5P-ja-idp">
@@ -167,7 +142,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="wex-qE-Adh">
-                                <rect key="frame" x="31" y="112" width="1080" height="449"/>
+                                <rect key="frame" x="31" y="112" width="1080" height="425"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VrR-JS-EzF">
@@ -260,8 +235,8 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="Pba-O5-OfP">
-                                <rect key="frame" x="40" y="130" width="1080" height="320"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="40" y="130" width="1080" height="402"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LGc-P9-6TG">
@@ -275,7 +250,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="i watched.png" id="ZoW-FJ-KHR">
-                                <rect key="frame" x="67" y="33" width="160" height="44"/>
+                                <rect key="frame" x="68" y="66" width="160" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -404,26 +379,22 @@
     </scenes>
     <resources>
         <image name="background with main window.png" width="1023" height="768"/>
-        <image name="cartoon.png" width="66" height="79"/>
+        <image name="birds.png" width="94" height="66"/>
+        <image name="cartoon_normal.png" width="160" height="129"/>
         <image name="close.png" width="62" height="59"/>
         <image name="favourite_normal.png" width="119" height="123"/>
-        <image name="fengzheng.png" width="273" height="77"/>
+        <image name="flying babys.png" width="111" height="72"/>
         <image name="history_normal.png" width="122" height="114"/>
         <image name="i watched.png" width="281" height="68"/>
-        <image name="mifeng.png" width="83" height="65"/>
+        <image name="paper_plane.png" width="177" height="65"/>
+        <image name="play_normal.png" width="160" height="129"/>
         <image name="popup.png" width="807" height="566"/>
         <image name="searchField.png" width="665" height="36"/>
         <image name="searchIcon.png" width="25" height="25"/>
         <image name="search_normal.png" width="119" height="147"/>
-        <image name="shu.png" width="112" height="219"/>
-        <image name="song.png" width="65" height="77"/>
+        <image name="song_normal.png" width="160" height="129"/>
         <image name="sun.png" width="141" height="100"/>
-        <image name="tizhi.png" width="139" height="554"/>
-        <image name="tv.png" width="59" height="79"/>
         <image name="with red heart.png" width="141" height="34"/>
-        <image name="xianhua.png" width="93" height="300"/>
-        <image name="xiaohai.png" width="145" height="139"/>
-        <image name="xiaoniao.png" width="94" height="66"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

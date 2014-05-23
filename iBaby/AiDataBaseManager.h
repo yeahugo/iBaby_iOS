@@ -10,10 +10,17 @@
 #import "EGODatabase.h"
 #import "AiVideoObject.h"
 
+typedef enum {
+    kDatabaseTypeHistory,
+    kDatabaseTypeFavourite
+} kDatabaseType;
+
 @interface AiDataBaseManager : NSObject
 {
     EGODatabase *_dataBase;
     NSOperationQueue *_queue;
+    int _historyStartId;
+    int _favouriteStartId;
 }
 
 @property (nonatomic, copy) NSString *passwd;
@@ -24,9 +31,9 @@
 
 -(void)getFavouriteListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
 
--(void)getVideoListsWithStartLimit:(int)startLimit withCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
-
 -(void)getVideoListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
+
+-(void)getMoreVideoListWithType:(kDatabaseType)dataBaseType completion:(void(^)(NSArray* videoList, NSError* error))completion;
 
 -(void)addVideoRecord:(AiVideoObject *)videoObject;
 

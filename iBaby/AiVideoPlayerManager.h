@@ -18,4 +18,5 @@
 
 + (AiVideoPlayerManager *)shareInstance;
 
+-(void)saveVideoInDatabase;
 @end

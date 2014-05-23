@@ -32,12 +32,14 @@
     _scrollViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
     _scrollViewController.scrollView.viewType = kTagViewTypeHistory;
     _scrollViewController.sourceType = kDataSourceTypeDatabase;
+    _scrollViewController.scrollView.pageCount = HistoryNum;
     [self.view addSubview:_scrollViewController.scrollView];
     
     [[AiDataBaseManager shareInstance] getVideoListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
-            [_scrollViewController.scrollView setVideoDatas:videoList];
-            [_scrollViewController.scrollView reloadData];
+            [_scrollViewController.scrollView setAiVideoObjects:videoList];
+//            [_scrollViewController.scrollView setVideoDatas:videoList];
+//            [_scrollViewController.scrollView reloadData];
         } else {
             NSLog(@"getVideoList error is %@",error);
         }

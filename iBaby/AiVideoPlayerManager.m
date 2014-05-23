@@ -42,8 +42,13 @@
 {
     MPMoviePlayerController *moviePlayer = self.aiPlayerViewController.moviePlayer;
     [moviePlayer stop];
+    [self saveVideoInDatabase];
+}
+
+-(void)saveVideoInDatabase
+{
     AiVideoObject *aiVideoObject = self.currentVideoObject;
-    aiVideoObject.playTime = moviePlayer.currentPlaybackTime;
+    aiVideoObject.playTime = self.aiPlayerViewController.moviePlayer.currentPlaybackTime;
     [[AiDataBaseManager shareInstance] addVideoRecord:aiVideoObject];
 }
 @end

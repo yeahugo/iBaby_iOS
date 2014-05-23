@@ -204,6 +204,8 @@
 		D5E3F0DC192E057500F33827 /* libSocialWechat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E3F0BD192E057400F33827 /* libSocialWechat.a */; };
 		D5E3F0DD192E057500F33827 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E3F0BE192E057400F33827 /* libWeChatSDK.a */; };
 		D5E3F0DE192E057500F33827 /* libSocialYiXin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E3F0C3192E057400F33827 /* libSocialYiXin.a */; };
+		D5E3F0E1192E403E00F33827 /* birds@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E3F0DF192E403E00F33827 /* birds@2x.png */; };
+		D5E3F0E2192E403E00F33827 /* flying babys@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E3F0E0192E403E00F33827 /* flying babys@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -520,6 +522,8 @@
 		D5E3F0C1192E057400F33827 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		D5E3F0C3192E057400F33827 /* libSocialYiXin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSocialYiXin.a; sourceTree = "<group>"; };
 		D5E3F0C4192E057400F33827 /* UMSocialYiXinHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSocialYiXinHandler.h; sourceTree = "<group>"; };
+		D5E3F0DF192E403E00F33827 /* birds@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "birds@2x.png"; sourceTree = "<group>"; };
+		D5E3F0E0192E403E00F33827 /* flying babys@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flying babys@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -677,6 +681,8 @@
 		D5896812192D8267004FA0E4 /* mainview */ = {
 			isa = PBXGroup;
 			children = (
+				D5E3F0DF192E403E00F33827 /* birds@2x.png */,
+				D5E3F0E0192E403E00F33827 /* flying babys@2x.png */,
 				D5896813192D8267004FA0E4 /* banner_focus@2x.png */,
 				D5896814192D8267004FA0E4 /* banner_notfocus@2x.png */,
 				D5896815192D8267004FA0E4 /* cartoon_normal@2x.png */,
@@ -1394,6 +1400,7 @@
 				D5A44A9618E6DEF800B95D22 /* database.db in Resources */,
 				D5896880192D8267004FA0E4 /* search bar input@2x.png in Resources */,
 				D5896861192D8267004FA0E4 /* greybar_long@2x.png in Resources */,
+				D5E3F0E1192E403E00F33827 /* birds@2x.png in Resources */,
 				D5896860192D8267004FA0E4 /* favourite_pressed@2x.png in Resources */,
 				D5896856192D8267004FA0E4 /* edge background_tall@2x.png in Resources */,
 				D5896854192D8267004FA0E4 /* favorites window.png in Resources */,
@@ -1407,6 +1414,7 @@
 				D5A4472A18E45B5300B95D22 /* README in Resources */,
 				D589684E192D8267004FA0E4 /* edge background_low@2x.png in Resources */,
 				D5E3F0C8192E057400F33827 /* UMSCommentDetailController.xib in Resources */,
+				D5E3F0E2192E403E00F33827 /* flying babys@2x.png in Resources */,
 				D5896889192D8267004FA0E4 /* 2-search recommend（location）.png in Resources */,
 				D5E3F0C5192E057400F33827 /* UMSocialLocalizable.strings in Resources */,
 				D5896881192D8267004FA0E4 /* search bar@2x.png in Resources */,

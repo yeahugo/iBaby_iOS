@@ -24,6 +24,7 @@
         scrollView.viewType = kTagViewTypeSearch;
         scrollView.delegate = self;
         scrollView.scrollViewController = self;
+        scrollView.pageCount = SearchNum;
         self.scrollView = scrollView;
         _songListArray = [[NSMutableArray alloc] init];
         
@@ -48,6 +49,7 @@
         
         _startId = 0;
         AiScrollView *scrollView = [[AiScrollView alloc] initWithFrame:frame];
+        scrollView.pageCount = SearchNum;
         self.scrollView = scrollView;
         self.scrollView.viewType = kTagViewTypeIndex;
         self.scrollView.delegate = self;
@@ -71,6 +73,7 @@
         scrollView.viewType = kTagViewTypeAlbum;
         scrollView.delegate = self;
         scrollView.scrollViewController = self;
+        scrollView.pageCount = SearchNum;
         self.scrollView = scrollView;
         self.scrollView.backgroundColor = [UIColor clearColor];
         _songListArray = [[NSMutableArray alloc] init];
@@ -200,6 +203,20 @@
                 }
                 [_songListArray addObjectsFromArray:saveSongArray];
                 [self.scrollView addAiVideoObjects:saveSongArray];
+            }
+        }];
+    }
+    if (self.scrollView.viewType == kTagViewTypeHistory) {
+        [[AiDataBaseManager shareInstance] getMoreVideoListWithType:kDatabaseTypeHistory completion:^(NSArray *videoList, NSError *error) {
+            if (error == nil) {
+                [self.scrollView addAiVideoObjects:videoList];
+            }
+        }];
+    }
+    if (self.scrollView.viewType == kTagViewTypeFavourite) {
+        [[AiDataBaseManager shareInstance] getMoreVideoListWithType:kDatabaseTypeFavourite completion:^(NSArray *videoList, NSError *error) {
+            if (error == nil) {
+                [self.scrollView addAiVideoObjects:videoList];
             }
         }];
     }

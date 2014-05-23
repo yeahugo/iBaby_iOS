@@ -30,6 +30,8 @@
 
 @property (nonatomic, assign) AiScrollViewController * scrollViewController;
 
+@property (nonatomic, assign) int pageCount;
+
 -(void)setAiVideoObjects:(NSArray *)aiVideoObjects;
 
 -(void)addAiVideoObjects:(NSArray *)aiVideoObjects;

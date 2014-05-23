@@ -59,7 +59,7 @@ typedef enum {
 
 #define VideoTypeNum 3
 
-#define HistoryNum 12*6
+#define HistoryNum 12*3
 
 #define VERSION @"1.0"
 
