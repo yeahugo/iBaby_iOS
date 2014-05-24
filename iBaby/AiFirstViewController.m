@@ -7,11 +7,9 @@
 //
 
 #import "AiFirstViewController.h"
-//#import "AiGridView.h"
 #import "AiVideoObject.h"
 #import "AiDefine.h"
 #import "AiDataRequestManager.h"
-//#import "AiGridViewController.h"
 #import "AiScrollViewController.h"
 #import "AiAlbumViewController.h"
 #import "AiUserManager.h"
@@ -20,6 +18,8 @@
 #import "SwipeView.h"
 
 #import "Reachability.h"
+#import "iToast.h"
+#import "AFNetworking.h"
 
 @interface AiFirstViewController ()
 {
@@ -39,24 +39,63 @@
 
 @implementation AiFirstViewController
 
+-(void)addNoNetworkTip
+{
+    UIWindow *window = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
+    if ([window viewWithTag:100]) {
+        return;
+    }
+    UIImage *unreachableImage = [UIImage imageNamed:@"no_network"];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:unreachableImage];
+    if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+        imageView.transform = CGAffineTransformMakeRotation(-M_PI/2);
+    } else {
+        imageView.transform = CGAffineTransformMakeRotation(M_PI/2);
+    }
+    imageView.center = CGPointMake(window.frame.size.width/2, window.frame.size.height/2);
+    imageView.tag = 101;
+    UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.frame];
+    backgroundView.tag = 100;
+    backgroundView.backgroundColor = [UIColor lightGrayColor];
+    backgroundView.alpha = 0.5;
+    [window addSubview:backgroundView];
+    [window addSubview:imageView];
+}
+
+-(void)removeNetworkTip
+{
+    UIWindow *window = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
+    NSArray *subViews = window.subviews;
+    for (UIView *subView in subViews) {
+        if (subView.tag == 100 || subView.tag == 101) {
+            [subView removeFromSuperview];
+        }
+    }
+}
+
 - (void)checkNetwork
 {
-    Reachability* reach = [Reachability reachabilityWithHostName:@"http://www.aijingang.com/"];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reachabilityChanged:)
-                                                 name:kReachabilityChangedNotification
-                                               object:nil];
-    
-    reach.reachableBlock = ^(Reachability*reach)
-    {
-        NSLog(@"REACHABLE!");
-    };
-    reach.unreachableBlock = ^(Reachability*reach)
-    {
-        NSLog(@"REACHABLE!");
-    };
-    [reach startNotifier];
+//    [AFNetworkReachabilityManager managerForDomain:@"www.baidu.com"];
+    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        NSLog(@"Reachability: %@", AFStringFromNetworkReachabilityStatus(status));
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (status == AFNetworkReachabilityStatusNotReachable) {
+                [self addNoNetworkTip];
+            } else {
+                [self removeNetworkTip];
+                if (self.songScrollView.videoDatas.count == 0) {
+                    [self.songScrollView.scrollViewController getRecommendResourceType];
+                }
+                if (self.catoonScrollView.videoDatas.count == 0) {
+                    [self.catoonScrollView.scrollViewController getRecommendResourceType];
+                }
+                if (self.videoScrollView.videoDatas.count == 0) {
+                    [self.videoScrollView.scrollViewController getRecommendResourceType];
+                }
+            }
+        });
+    }];
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
 }
 
 -(void)reachabilityChanged:(NSNotification *)note{
@@ -64,14 +103,23 @@
     
     if(![reach isReachable])
     {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self addNoNetworkTip];
+        });
+        NSLog(@"isReachableViaWiFi close!!");
         return;
     }
     
     if (reach.isReachableViaWiFi) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self removeNetworkTip];
+        });
+        NSLog(@"isReachableViaWiFi recieve!!");
     } else {
     }
     
     if (reach.isReachableViaWWAN) {
+        NSLog(@"isReachableViaWiFi WWAN!!");
     } else {
         
     }
@@ -80,12 +128,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self checkNetwork];
+    
     [AiUserManager shareInstance];
     [self setUI];
     _isPresentView = NO;
     _isOnClickButton = NO;
-	// Do any additional setup after loading the view, typically from a nib.
+    [self checkNetwork];
 }
 
 -(void)setUI
@@ -95,12 +143,6 @@
     self.videoButton.tag = kTagButtonTypeVideo;
     
     CGRect backGroundRect = self.backgroundView.frame;
-    
-//    [AiUserManager shareInstance];
-    
-//    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"main background"]];
-//    imageView.frame = backGroundRect;
-//    [self.view addSubview:imageView];
     
     _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_SONG];
     _songViewController.videoType = kTagButtonTypeSong;
@@ -128,10 +170,6 @@
     self.swipeview = swipeView;
     [self.view addSubview:self.swipeview];
     [self setCurrentButton:_currentType];
-    
-//    [self.view addSubview:self.catoonScrollView];
-    //下面的代码防止滑动过程出现左右偏移
-//    [self.swipeview scrollToItemAtIndex:0 duration:0.5];
 }
 
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
@@ -220,6 +258,7 @@
             _isPresentView = NO;
         }];
         [self.searchButton setBackgroundImage:[UIImage imageNamed:@"search_pressed"] forState:UIControlStateNormal];
+        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeSearch] completion:nil];
     }
 }
 
@@ -233,6 +272,7 @@
         }];
         
         [self.historyButton setBackgroundImage:[UIImage imageNamed:@"history_pressed"] forState:UIControlStateNormal];
+        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeHistory] completion:nil];
     }
 }
 
@@ -246,6 +286,8 @@
         }];
         
         [self.favouriteButton setBackgroundImage:[UIImage imageNamed:@"favourite_pressed"] forState:UIControlStateNormal];
+        
+        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeFavourite] completion:nil];
     }
 }
 

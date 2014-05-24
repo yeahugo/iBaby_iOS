@@ -10,6 +10,15 @@
 #define iBaby_AiDefine_h
 
 typedef enum {
+    kReportTypeSong,
+    kReportTypeCatoon,
+    kReportTypeVideo,
+    kReportTypeSearch,
+    kReportTypeHistory,
+    kReportTypeFavourite
+} kReportType;
+
+typedef enum {
     kTagButtonTypeSong,
     kTagButtonTypeCatoon,
     kTagButtonTypeVideo

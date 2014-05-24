@@ -12,6 +12,8 @@
 
 @implementation AiDataRequestManager
 
+@synthesize searchKeyVer = _searchKeyVer;
+
 + (AiDataRequestManager *)shareInstance {
     static AiDataRequestManager *_instance = nil;
     
@@ -30,6 +32,7 @@
         _reConnectNum = 0;
         int babyId = [AiUserManager shareInstance].babyId;
         NSString *openUdid = [AiUserManager shareInstance].openUdid;
+        
         NSLog(@"baby id is %d",babyId);
         if (babyId == -1) {
             [[AiUserManager shareInstance] userRegistWithCompletion:^(RegisterResp *result, NSError *error) {
@@ -38,7 +41,7 @@
                     _reqHead = [[ReqHead alloc] initWithBabyId:babyId guid:openUdid version:VERSION];
                     
                     [[AiUserManager shareInstance] userLogin:^(int result) {
-                        NSLog(@"user login is %d",result);
+                        [self updateConfig];
                     }];
                 }
             }];
@@ -46,12 +49,42 @@
             _reqHead = [[ReqHead alloc] initWithBabyId:babyId guid:openUdid version:VERSION];
             NSLog(@"[[AiUserManager shareInstance] userLogin:^(int result) here");
             [[AiUserManager shareInstance] userLogin:^(int result) {
+                [self updateConfig];
                 NSLog(@"user login is %d",result);
             }];
         }
 
     }
     return self;
+}
+
+-(void)updateConfig
+{
+    [[AiUserManager shareInstance] updateConfig:^(UserConfig *config) {
+        self.wuliuAppkey = config.appKey56;
+        self.isReportFlag = config.reportFlag;
+        if (self.searchKeyVer != config.searchKeysVer) {
+            [[AiUserManager shareInstance] getSearchSuggestKeys:^(int result) {
+                NSLog(@"result is %d",result);
+            }];
+        }
+        self.searchKeyVer = config.searchKeysVer;
+    }];
+}
+
+-(void)setSearchKeyVer:(int)searchKeyVertion
+{
+    _searchKeyVer = searchKeyVertion;
+    [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInt:_searchKeyVer] forKey:@"searchKeyVer"];
+}
+
+-(int)searchKeyVer
+{
+    int returnKeyVer = 0;
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"searchKeyVer"]) {
+        returnKeyVer = [[[NSUserDefaults standardUserDefaults] valueForKey:@"searchKeyVer"] intValue];
+    }
+    return returnKeyVer;
 }
 
 -(void)doRequestAlbumWithSericalId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion
@@ -95,6 +128,7 @@
     ReportReq *reportReq = [[ReportReq alloc] initWithHead:_reqHead rptItem:reportString];
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
+            NSLog(@"reportReq is %@",reportReq);
             [[AiThriftManager shareInstance].reportClient report:reportReq];
         }
         @catch (NSException *exception) {
@@ -127,7 +161,6 @@
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (resp.resCode == ResponseCodeSuccess) {
-//            NSLog(@"success resp is %@",resp);
             NSArray * resultArray = resp.resList;
             if (completion) {
                 completion(resultArray,nil);

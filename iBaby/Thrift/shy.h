@@ -168,20 +168,23 @@ enum RESOURCE_SOURCE_TYPE {
   ReqHead * __head;
   NSString * __appKey56;
   int32_t __reportFlag;
+  int32_t __searchKeysVer;
 
   BOOL __head_isset;
   BOOL __appKey56_isset;
   BOOL __reportFlag_isset;
+  BOOL __searchKeysVer_isset;
 }
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
 @property (nonatomic, retain, getter=head, setter=setHead:) ReqHead * head;
 @property (nonatomic, retain, getter=appKey56, setter=setAppKey56:) NSString * appKey56;
 @property (nonatomic, getter=reportFlag, setter=setReportFlag:) int32_t reportFlag;
+@property (nonatomic, getter=searchKeysVer, setter=setSearchKeysVer:) int32_t searchKeysVer;
 #endif
 
 - (id) init;
-- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag;
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -205,6 +208,47 @@ enum RESOURCE_SOURCE_TYPE {
 - (void) setReportFlag: (int32_t) reportFlag;
 #endif
 - (BOOL) reportFlagIsSet;
+
+#if !__has_feature(objc_arc)
+- (int32_t) searchKeysVer;
+- (void) setSearchKeysVer: (int32_t) searchKeysVer;
+#endif
+- (BOOL) searchKeysVerIsSet;
+
+@end
+
+@interface SearchSuggestKeys : NSObject <TBase, NSCoding> {
+  int32_t __version;
+  NSString * __suggestKeys;
+
+  BOOL __version_isset;
+  BOOL __suggestKeys_isset;
+}
+
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+@property (nonatomic, getter=version, setter=setVersion:) int32_t version;
+@property (nonatomic, retain, getter=suggestKeys, setter=setSuggestKeys:) NSString * suggestKeys;
+#endif
+
+- (id) init;
+- (id) initWithVersion: (int32_t) version suggestKeys: (NSString *) suggestKeys;
+
+- (void) read: (id <TProtocol>) inProtocol;
+- (void) write: (id <TProtocol>) outProtocol;
+
+- (void) validate;
+
+#if !__has_feature(objc_arc)
+- (int32_t) version;
+- (void) setVersion: (int32_t) version;
+#endif
+- (BOOL) versionIsSet;
+
+#if !__has_feature(objc_arc)
+- (NSString *) suggestKeys;
+- (void) setSuggestKeys: (NSString *) suggestKeys;
+#endif
+- (BOOL) suggestKeysIsSet;
 
 @end
 
@@ -693,6 +737,7 @@ enum RESOURCE_SOURCE_TYPE {
 - (NSString *) getAuthSeed: (ReqHead *) req;  // throws TException
 - (void) logout: (ReqHead *) req;  // throws TException
 - (UserConfig *) updateConfig: (ReqHead *) req;  // throws TException
+- (SearchSuggestKeys *) getSearchSuggestKeys: (ReqHead *) req;  // throws TException
 @end
 
 @interface UserManagerClient : NSObject <UserManager> {

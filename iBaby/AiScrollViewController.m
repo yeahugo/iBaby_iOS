@@ -62,6 +62,11 @@
     return self;
 }
 
+-(void)getRecommendResourceType
+{
+    [self getRecommendResource:self.resourceType];
+}
+
 -(id)initWithFrame:(CGRect)frame serialId:(NSString *)serialId completion:(void (^)(NSArray * resultArray, NSError * error))completion
 {
     _songListArray = [[NSMutableArray alloc] init];

@@ -59,7 +59,7 @@
 		D589686B192D8267004FA0E4 /* song_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5896824192D8267004FA0E4 /* song_normal@2x.png */; };
 		D589686C192D8267004FA0E4 /* song_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5896825192D8267004FA0E4 /* song_pressed@2x.png */; };
 		D589686D192D8267004FA0E4 /* sun@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5896826192D8267004FA0E4 /* sun@2x.png */; };
-		D589686E192D8267004FA0E4 /* no network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5896827192D8267004FA0E4 /* no network@2x.png */; };
+		D589686E192D8267004FA0E4 /* no_network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5896827192D8267004FA0E4 /* no_network@2x.png */; };
 		D589686F192D8267004FA0E4 /* scrollingbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5896828192D8267004FA0E4 /* scrollingbar@2x.png */; };
 		D5896870192D8267004FA0E4 /* breakup line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D589682A192D8267004FA0E4 /* breakup line@2x.png */; };
 		D5896871192D8267004FA0E4 /* aoteman@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D589682C192D8267004FA0E4 /* aoteman@2x.png */; };
@@ -233,6 +233,8 @@
 		D5E3F1F21930549C00F33827 /* volume_bar_bottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E3F1EB1930549C00F33827 /* volume_bar_bottom@2x.png */; };
 		D5E3F1F31930549C00F33827 /* volume_bar_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E3F1EC1930549C00F33827 /* volume_bar_top@2x.png */; };
 		D5E3F1F51930749800F33827 /* try_4.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E3F1F41930749800F33827 /* try_4.png */; };
+		D5E3F1FA1930ABC100F33827 /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = D5E3F1F81930ABC100F33827 /* iToast.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D5E3F1FB1930ABC100F33827 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D5E3F1F91930ABC100F33827 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -304,7 +306,7 @@
 		D5896824192D8267004FA0E4 /* song_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "song_normal@2x.png"; sourceTree = "<group>"; };
 		D5896825192D8267004FA0E4 /* song_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "song_pressed@2x.png"; sourceTree = "<group>"; };
 		D5896826192D8267004FA0E4 /* sun@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sun@2x.png"; sourceTree = "<group>"; };
-		D5896827192D8267004FA0E4 /* no network@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "no network@2x.png"; path = "iBaby/Resources/no network@2x.png"; sourceTree = SOURCE_ROOT; };
+		D5896827192D8267004FA0E4 /* no_network@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "no_network@2x.png"; path = "iBaby/Resources/no_network@2x.png"; sourceTree = SOURCE_ROOT; };
 		D5896828192D8267004FA0E4 /* scrollingbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "scrollingbar@2x.png"; path = "iBaby/Resources/scrollingbar@2x.png"; sourceTree = SOURCE_ROOT; };
 		D589682A192D8267004FA0E4 /* breakup line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "breakup line@2x.png"; sourceTree = "<group>"; };
 		D589682C192D8267004FA0E4 /* aoteman@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aoteman@2x.png"; sourceTree = "<group>"; };
@@ -578,6 +580,9 @@
 		D5E3F1EB1930549C00F33827 /* volume_bar_bottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "volume_bar_bottom@2x.png"; sourceTree = "<group>"; };
 		D5E3F1EC1930549C00F33827 /* volume_bar_top@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "volume_bar_top@2x.png"; sourceTree = "<group>"; };
 		D5E3F1F41930749800F33827 /* try_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = try_4.png; sourceTree = "<group>"; };
+		D5E3F1F71930ABC100F33827 /* iToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iToast.h; sourceTree = "<group>"; };
+		D5E3F1F81930ABC100F33827 /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
+		D5E3F1F91930ABC100F33827 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -677,7 +682,7 @@
 				D5896809192D8267004FA0E4 /* favourite */,
 				D589680D192D8267004FA0E4 /* history */,
 				D5896812192D8267004FA0E4 /* mainview */,
-				D5896827192D8267004FA0E4 /* no network@2x.png */,
+				D5896827192D8267004FA0E4 /* no_network@2x.png */,
 				D5896828192D8267004FA0E4 /* scrollingbar@2x.png */,
 				D5896829192D8267004FA0E4 /* search */,
 			);
@@ -1098,6 +1103,7 @@
 		D5A4474818E45E0100B95D22 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5E3F1F61930ABC100F33827 /* toast-notifications-ios */,
 				D5E3F085192E057400F33827 /* UmengSocial */,
 				D5896895192DA9DA004FA0E4 /* UMAnalytics_Sdk_3.1.2 */,
 				D51CCA50192B6302003244E8 /* SuggestiveTextField */,
@@ -1389,6 +1395,16 @@
 			path = iBaby/Resources/play_window;
 			sourceTree = SOURCE_ROOT;
 		};
+		D5E3F1F61930ABC100F33827 /* toast-notifications-ios */ = {
+			isa = PBXGroup;
+			children = (
+				D5E3F1F71930ABC100F33827 /* iToast.h */,
+				D5E3F1F81930ABC100F33827 /* iToast.m */,
+				D5E3F1F91930ABC100F33827 /* README.md */,
+			);
+			path = "toast-notifications-ios";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1530,10 +1546,11 @@
 				D5896875192D8267004FA0E4 /* Duolaameng@2x.png in Resources */,
 				D5E3F1CE192F891100F33827 /* play interface.png in Resources */,
 				D511B6A519211A82005F3DCA /* grayArrow.png in Resources */,
+				D5E3F1FB1930ABC100F33827 /* README.md in Resources */,
 				D51CCA5F192B99B7003244E8 /* test.plist in Resources */,
 				D511B6A219211A82005F3DCA /* blackArrow@2x.png in Resources */,
 				D589685C192D8267004FA0E4 /* cartoon_normal@2x.png in Resources */,
-				D589686E192D8267004FA0E4 /* no network@2x.png in Resources */,
+				D589686E192D8267004FA0E4 /* no_network@2x.png in Resources */,
 				D5896868192D8267004FA0E4 /* play_pressed@2x.png in Resources */,
 				D51CCA55192B8931003244E8 /* search.plist in Resources */,
 				D5E3F0D0192E057400F33827 /* UMSocialSDKResourcesNew.bundle in Resources */,
@@ -1668,6 +1685,7 @@
 				D5B574C619231A350011D094 /* AiUserManager.m in Sources */,
 				D511B652191E0814005F3DCA /* AiScrollView.m in Sources */,
 				D511B64F191E0724005F3DCA /* AiScrollViewController.m in Sources */,
+				D5E3F1FA1930ABC100F33827 /* iToast.m in Sources */,
 				D5A44A7018E66C4F00B95D22 /* UIImage+Additional.m in Sources */,
 				D5A44A8718E6BB0400B95D22 /* EGODatabaseRequest.m in Sources */,
 				D5A44A7118E66C4F00B95D22 /* UIViewController+TargetViewController.m in Sources */,

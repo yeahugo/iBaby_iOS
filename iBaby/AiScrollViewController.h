@@ -47,6 +47,8 @@ typedef enum {
 
 -(void)clickKeyWords:(NSString *)keyWords resourceType:(int)resourceType;
 
+-(void)getRecommendResourceType;
+
 -(void)getMoreData;
 
 @end

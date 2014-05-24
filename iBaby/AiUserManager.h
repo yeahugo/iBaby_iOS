@@ -23,4 +23,7 @@
 
 -(void)userLogin:(void (^)(int result))completion;
 
+-(void)updateConfig:(void(^)(UserConfig *config))completion;
+
+-(void)getSearchSuggestKeys:(void (^)(int result))completion;
 @end

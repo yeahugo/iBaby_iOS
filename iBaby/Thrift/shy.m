@@ -656,7 +656,7 @@
   return self;
 }
 
-- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer
 {
   self = [super init];
   __head = [head retain_stub];
@@ -665,6 +665,8 @@
   __appKey56_isset = YES;
   __reportFlag = reportFlag;
   __reportFlag_isset = YES;
+  __searchKeysVer = searchKeysVer;
+  __searchKeysVer_isset = YES;
   return self;
 }
 
@@ -686,6 +688,11 @@
     __reportFlag = [decoder decodeInt32ForKey: @"reportFlag"];
     __reportFlag_isset = YES;
   }
+  if ([decoder containsValueForKey: @"searchKeysVer"])
+  {
+    __searchKeysVer = [decoder decodeInt32ForKey: @"searchKeysVer"];
+    __searchKeysVer_isset = YES;
+  }
   return self;
 }
 
@@ -702,6 +709,10 @@
   if (__reportFlag_isset)
   {
     [encoder encodeInt32: __reportFlag forKey: @"reportFlag"];
+  }
+  if (__searchKeysVer_isset)
+  {
+    [encoder encodeInt32: __searchKeysVer forKey: @"searchKeysVer"];
   }
 }
 
@@ -771,6 +782,23 @@
   __reportFlag_isset = NO;
 }
 
+- (int32_t) searchKeysVer {
+  return __searchKeysVer;
+}
+
+- (void) setSearchKeysVer: (int32_t) searchKeysVer {
+  __searchKeysVer = searchKeysVer;
+  __searchKeysVer_isset = YES;
+}
+
+- (BOOL) searchKeysVerIsSet {
+  return __searchKeysVer_isset;
+}
+
+- (void) unsetSearchKeysVer {
+  __searchKeysVer_isset = NO;
+}
+
 - (void) read: (id <TProtocol>) inProtocol
 {
   NSString * fieldName;
@@ -812,6 +840,14 @@
           [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         }
         break;
+      case 4:
+        if (fieldType == TType_I32) {
+          int32_t fieldValue = [inProtocol readI32];
+          [self setSearchKeysVer: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -842,6 +878,11 @@
     [outProtocol writeI32: __reportFlag];
     [outProtocol writeFieldEnd];
   }
+  if (__searchKeysVer_isset) {
+    [outProtocol writeFieldBeginWithName: @"searchKeysVer" type: TType_I32 fieldID: 4];
+    [outProtocol writeI32: __searchKeysVer];
+    [outProtocol writeFieldEnd];
+  }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
 }
@@ -856,6 +897,10 @@
     @throw [TProtocolException exceptionWithName: @"TProtocolException"
                                reason: @"Required field 'appKey56' is not set."];
   }
+  if (!__searchKeysVer_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'searchKeysVer' is not set."];
+  }
 }
 
 - (NSString *) description {
@@ -866,6 +911,182 @@
   [ms appendFormat: @"\"%@\"", __appKey56];
   [ms appendString: @",reportFlag:"];
   [ms appendFormat: @"%i", __reportFlag];
+  [ms appendString: @",searchKeysVer:"];
+  [ms appendFormat: @"%i", __searchKeysVer];
+  [ms appendString: @")"];
+  return [NSString stringWithString: ms];
+}
+
+@end
+
+@implementation SearchSuggestKeys
+
+- (id) init
+{
+  self = [super init];
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+#endif
+  return self;
+}
+
+- (id) initWithVersion: (int32_t) version suggestKeys: (NSString *) suggestKeys
+{
+  self = [super init];
+  __version = version;
+  __version_isset = YES;
+  __suggestKeys = [suggestKeys retain_stub];
+  __suggestKeys_isset = YES;
+  return self;
+}
+
+- (id) initWithCoder: (NSCoder *) decoder
+{
+  self = [super init];
+  if ([decoder containsValueForKey: @"version"])
+  {
+    __version = [decoder decodeInt32ForKey: @"version"];
+    __version_isset = YES;
+  }
+  if ([decoder containsValueForKey: @"suggestKeys"])
+  {
+    __suggestKeys = [[decoder decodeObjectForKey: @"suggestKeys"] retain_stub];
+    __suggestKeys_isset = YES;
+  }
+  return self;
+}
+
+- (void) encodeWithCoder: (NSCoder *) encoder
+{
+  if (__version_isset)
+  {
+    [encoder encodeInt32: __version forKey: @"version"];
+  }
+  if (__suggestKeys_isset)
+  {
+    [encoder encodeObject: __suggestKeys forKey: @"suggestKeys"];
+  }
+}
+
+- (void) dealloc
+{
+  [__suggestKeys release_stub];
+  [super dealloc_stub];
+}
+
+- (int32_t) version {
+  return __version;
+}
+
+- (void) setVersion: (int32_t) version {
+  __version = version;
+  __version_isset = YES;
+}
+
+- (BOOL) versionIsSet {
+  return __version_isset;
+}
+
+- (void) unsetVersion {
+  __version_isset = NO;
+}
+
+- (NSString *) suggestKeys {
+  return [[__suggestKeys retain_stub] autorelease_stub];
+}
+
+- (void) setSuggestKeys: (NSString *) suggestKeys {
+  [suggestKeys retain_stub];
+  [__suggestKeys release_stub];
+  __suggestKeys = suggestKeys;
+  __suggestKeys_isset = YES;
+}
+
+- (BOOL) suggestKeysIsSet {
+  return __suggestKeys_isset;
+}
+
+- (void) unsetSuggestKeys {
+  [__suggestKeys release_stub];
+  __suggestKeys = nil;
+  __suggestKeys_isset = NO;
+}
+
+- (void) read: (id <TProtocol>) inProtocol
+{
+  NSString * fieldName;
+  int fieldType;
+  int fieldID;
+
+  [inProtocol readStructBeginReturningName: NULL];
+  while (true)
+  {
+    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
+    if (fieldType == TType_STOP) { 
+      break;
+    }
+    switch (fieldID)
+    {
+      case 1:
+        if (fieldType == TType_I32) {
+          int32_t fieldValue = [inProtocol readI32];
+          [self setVersion: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      case 2:
+        if (fieldType == TType_STRING) {
+          NSString * fieldValue = [inProtocol readString];
+          [self setSuggestKeys: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      default:
+        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        break;
+    }
+    [inProtocol readFieldEnd];
+  }
+  [inProtocol readStructEnd];
+}
+
+- (void) write: (id <TProtocol>) outProtocol {
+  [outProtocol writeStructBeginWithName: @"SearchSuggestKeys"];
+  if (__version_isset) {
+    [outProtocol writeFieldBeginWithName: @"version" type: TType_I32 fieldID: 1];
+    [outProtocol writeI32: __version];
+    [outProtocol writeFieldEnd];
+  }
+  if (__suggestKeys_isset) {
+    if (__suggestKeys != nil) {
+      [outProtocol writeFieldBeginWithName: @"suggestKeys" type: TType_STRING fieldID: 2];
+      [outProtocol writeString: __suggestKeys];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+}
+
+- (void) validate {
+  // check for required fields
+  if (!__version_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'version' is not set."];
+  }
+  if (!__suggestKeys_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'suggestKeys' is not set."];
+  }
+}
+
+- (NSString *) description {
+  NSMutableString * ms = [NSMutableString stringWithString: @"SearchSuggestKeys("];
+  [ms appendString: @"version:"];
+  [ms appendFormat: @"%i", __version];
+  [ms appendString: @",suggestKeys:"];
+  [ms appendFormat: @"\"%@\"", __suggestKeys];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }
@@ -4695,6 +4916,309 @@
 
 @end
 
+@interface getSearchSuggestKeys_args : NSObject <TBase, NSCoding> {
+  ReqHead * __req;
+
+  BOOL __req_isset;
+}
+
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+@property (nonatomic, retain, getter=req, setter=setReq:) ReqHead * req;
+#endif
+
+- (id) init;
+- (id) initWithReq: (ReqHead *) req;
+
+- (void) read: (id <TProtocol>) inProtocol;
+- (void) write: (id <TProtocol>) outProtocol;
+
+- (void) validate;
+
+#if !__has_feature(objc_arc)
+- (ReqHead *) req;
+- (void) setReq: (ReqHead *) req;
+#endif
+- (BOOL) reqIsSet;
+
+@end
+
+@implementation getSearchSuggestKeys_args
+
+- (id) init
+{
+  self = [super init];
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+#endif
+  return self;
+}
+
+- (id) initWithReq: (ReqHead *) req
+{
+  self = [super init];
+  __req = [req retain_stub];
+  __req_isset = YES;
+  return self;
+}
+
+- (id) initWithCoder: (NSCoder *) decoder
+{
+  self = [super init];
+  if ([decoder containsValueForKey: @"req"])
+  {
+    __req = [[decoder decodeObjectForKey: @"req"] retain_stub];
+    __req_isset = YES;
+  }
+  return self;
+}
+
+- (void) encodeWithCoder: (NSCoder *) encoder
+{
+  if (__req_isset)
+  {
+    [encoder encodeObject: __req forKey: @"req"];
+  }
+}
+
+- (void) dealloc
+{
+  [__req release_stub];
+  [super dealloc_stub];
+}
+
+- (ReqHead *) req {
+  return [[__req retain_stub] autorelease_stub];
+}
+
+- (void) setReq: (ReqHead *) req {
+  [req retain_stub];
+  [__req release_stub];
+  __req = req;
+  __req_isset = YES;
+}
+
+- (BOOL) reqIsSet {
+  return __req_isset;
+}
+
+- (void) unsetReq {
+  [__req release_stub];
+  __req = nil;
+  __req_isset = NO;
+}
+
+- (void) read: (id <TProtocol>) inProtocol
+{
+  NSString * fieldName;
+  int fieldType;
+  int fieldID;
+
+  [inProtocol readStructBeginReturningName: NULL];
+  while (true)
+  {
+    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
+    if (fieldType == TType_STOP) { 
+      break;
+    }
+    switch (fieldID)
+    {
+      case 1:
+        if (fieldType == TType_STRUCT) {
+          ReqHead *fieldValue = [[ReqHead alloc] init];
+          [fieldValue read: inProtocol];
+          [self setReq: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      default:
+        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        break;
+    }
+    [inProtocol readFieldEnd];
+  }
+  [inProtocol readStructEnd];
+}
+
+- (void) write: (id <TProtocol>) outProtocol {
+  [outProtocol writeStructBeginWithName: @"getSearchSuggestKeys_args"];
+  if (__req_isset) {
+    if (__req != nil) {
+      [outProtocol writeFieldBeginWithName: @"req" type: TType_STRUCT fieldID: 1];
+      [__req write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+}
+
+- (void) validate {
+  // check for required fields
+}
+
+- (NSString *) description {
+  NSMutableString * ms = [NSMutableString stringWithString: @"getSearchSuggestKeys_args("];
+  [ms appendString: @"req:"];
+  [ms appendFormat: @"%@", __req];
+  [ms appendString: @")"];
+  return [NSString stringWithString: ms];
+}
+
+@end
+
+@interface GetSearchSuggestKeys_result : NSObject <TBase, NSCoding> {
+  SearchSuggestKeys * __success;
+
+  BOOL __success_isset;
+}
+
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+@property (nonatomic, retain, getter=success, setter=setSuccess:) SearchSuggestKeys * success;
+#endif
+
+- (id) init;
+- (id) initWithSuccess: (SearchSuggestKeys *) success;
+
+- (void) read: (id <TProtocol>) inProtocol;
+- (void) write: (id <TProtocol>) outProtocol;
+
+- (void) validate;
+
+#if !__has_feature(objc_arc)
+- (SearchSuggestKeys *) success;
+- (void) setSuccess: (SearchSuggestKeys *) success;
+#endif
+- (BOOL) successIsSet;
+
+@end
+
+@implementation GetSearchSuggestKeys_result
+
+- (id) init
+{
+  self = [super init];
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+#endif
+  return self;
+}
+
+- (id) initWithSuccess: (SearchSuggestKeys *) success
+{
+  self = [super init];
+  __success = [success retain_stub];
+  __success_isset = YES;
+  return self;
+}
+
+- (id) initWithCoder: (NSCoder *) decoder
+{
+  self = [super init];
+  if ([decoder containsValueForKey: @"success"])
+  {
+    __success = [[decoder decodeObjectForKey: @"success"] retain_stub];
+    __success_isset = YES;
+  }
+  return self;
+}
+
+- (void) encodeWithCoder: (NSCoder *) encoder
+{
+  if (__success_isset)
+  {
+    [encoder encodeObject: __success forKey: @"success"];
+  }
+}
+
+- (void) dealloc
+{
+  [__success release_stub];
+  [super dealloc_stub];
+}
+
+- (SearchSuggestKeys *) success {
+  return [[__success retain_stub] autorelease_stub];
+}
+
+- (void) setSuccess: (SearchSuggestKeys *) success {
+  [success retain_stub];
+  [__success release_stub];
+  __success = success;
+  __success_isset = YES;
+}
+
+- (BOOL) successIsSet {
+  return __success_isset;
+}
+
+- (void) unsetSuccess {
+  [__success release_stub];
+  __success = nil;
+  __success_isset = NO;
+}
+
+- (void) read: (id <TProtocol>) inProtocol
+{
+  NSString * fieldName;
+  int fieldType;
+  int fieldID;
+
+  [inProtocol readStructBeginReturningName: NULL];
+  while (true)
+  {
+    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
+    if (fieldType == TType_STOP) { 
+      break;
+    }
+    switch (fieldID)
+    {
+      case 0:
+        if (fieldType == TType_STRUCT) {
+          SearchSuggestKeys *fieldValue = [[SearchSuggestKeys alloc] init];
+          [fieldValue read: inProtocol];
+          [self setSuccess: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      default:
+        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        break;
+    }
+    [inProtocol readFieldEnd];
+  }
+  [inProtocol readStructEnd];
+}
+
+- (void) write: (id <TProtocol>) outProtocol {
+  [outProtocol writeStructBeginWithName: @"GetSearchSuggestKeys_result"];
+
+  if (__success_isset) {
+    if (__success != nil) {
+      [outProtocol writeFieldBeginWithName: @"success" type: TType_STRUCT fieldID: 0];
+      [__success write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+}
+
+- (void) validate {
+  // check for required fields
+}
+
+- (NSString *) description {
+  NSMutableString * ms = [NSMutableString stringWithString: @"GetSearchSuggestKeys_result("];
+  [ms appendString: @"success:"];
+  [ms appendFormat: @"%@", __success];
+  [ms appendString: @")"];
+  return [NSString stringWithString: ms];
+}
+
+@end
+
 @implementation UserManagerClient
 - (id) initWithProtocol: (id <TProtocol>) protocol
 {
@@ -4896,6 +5420,46 @@
   return [self recv_updateConfig];
 }
 
+- (void) send_getSearchSuggestKeys: (ReqHead *) req
+{
+  [outProtocol writeMessageBeginWithName: @"getSearchSuggestKeys" type: TMessageType_CALL sequenceID: 0];
+  [outProtocol writeStructBeginWithName: @"getSearchSuggestKeys_args"];
+  if (req != nil)  {
+    [outProtocol writeFieldBeginWithName: @"req" type: TType_STRUCT fieldID: 1];
+    [req write: outProtocol];
+    [outProtocol writeFieldEnd];
+  }
+  [outProtocol writeFieldStop];
+  [outProtocol writeStructEnd];
+  [outProtocol writeMessageEnd];
+  [[outProtocol transport] flush];
+}
+
+- (SearchSuggestKeys *) recv_getSearchSuggestKeys
+{
+  int msgType = 0;
+  [inProtocol readMessageBeginReturningName: nil type: &msgType sequenceID: NULL];
+  if (msgType == TMessageType_EXCEPTION) {
+    TApplicationException * x = [TApplicationException read: inProtocol];
+    [inProtocol readMessageEnd];
+    @throw x;
+  }
+  GetSearchSuggestKeys_result * result = [[[GetSearchSuggestKeys_result alloc] init] autorelease_stub];
+  [result read: inProtocol];
+  [inProtocol readMessageEnd];
+  if ([result successIsSet]) {
+    return [result success];
+  }
+  @throw [TApplicationException exceptionWithType: TApplicationException_MISSING_RESULT
+                                           reason: @"getSearchSuggestKeys failed: unknown result"];
+}
+
+- (SearchSuggestKeys *) getSearchSuggestKeys: (ReqHead *) req
+{
+  [self send_getSearchSuggestKeys : req];
+  return [self recv_getSearchSuggestKeys];
+}
+
 @end
 
 @implementation UserManagerProcessor
@@ -4947,6 +5511,14 @@
     [invocation setSelector: s];
     [invocation retainArguments];
     [mMethodMap setValue: invocation forKey: @"updateConfig"];
+  }
+  {
+    SEL s = @selector(process_getSearchSuggestKeys_withSequenceID:inProtocol:outProtocol:);
+    NSMethodSignature * sig = [self methodSignatureForSelector: s];
+    NSInvocation * invocation = [NSInvocation invocationWithMethodSignature: sig];
+    [invocation setSelector: s];
+    [invocation retainArguments];
+    [mMethodMap setValue: invocation forKey: @"getSearchSuggestKeys"];
   }
   return self;
 }
@@ -5057,6 +5629,23 @@
   UpdateConfig_result * result = [[UpdateConfig_result alloc] init];
   [result setSuccess: [mService updateConfig: [args req]]];
   [outProtocol writeMessageBeginWithName: @"updateConfig"
+                                    type: TMessageType_REPLY
+                              sequenceID: seqID];
+  [result write: outProtocol];
+  [outProtocol writeMessageEnd];
+  [[outProtocol transport] flush];
+  [result release_stub];
+  [args release_stub];
+}
+
+- (void) process_getSearchSuggestKeys_withSequenceID: (int32_t) seqID inProtocol: (id<TProtocol>) inProtocol outProtocol: (id<TProtocol>) outProtocol
+{
+  getSearchSuggestKeys_args * args = [[getSearchSuggestKeys_args alloc] init];
+  [args read: inProtocol];
+  [inProtocol readMessageEnd];
+  GetSearchSuggestKeys_result * result = [[GetSearchSuggestKeys_result alloc] init];
+  [result setSuccess: [mService getSearchSuggestKeys: [args req]]];
+  [outProtocol writeMessageBeginWithName: @"getSearchSuggestKeys"
                                     type: TMessageType_REPLY
                               sequenceID: seqID];
   [result write: outProtocol];

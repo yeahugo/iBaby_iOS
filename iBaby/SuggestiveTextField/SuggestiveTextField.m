@@ -85,6 +85,7 @@
     if (_stringsArray.count > 0) {
         NSLog(@"string is %@",letters);
         self.matchedStrings = [_stringsArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self BEGINSWITH[cd] %@",letters]];
+        NSLog(@"self.matchedStrings is %d",self.matchedStrings.count);
         [_controller.tableView reloadData];
     }
 }
@@ -93,8 +94,15 @@
     if (_matchedStrings.count == 0) {
         [_popOver dismissPopoverAnimated:YES];
     }
-    else if (!_popOver.isPopoverVisible){
-        [_popOver presentPopoverFromRect:self.frame inView:self.superview permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    else{
+        if (!_popOver.isPopoverVisible){
+            [_popOver presentPopoverFromRect:self.frame inView:self.superview permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        }
+        int cellNum = _matchedStrings.count;
+        if (cellNum > 10) {
+            cellNum = 10;
+        }
+        [_popOver setPopoverContentSize:CGSizeMake(_popOver.popoverContentSize.width, (_cellHeight+2) * cellNum)];
     }
 }
 

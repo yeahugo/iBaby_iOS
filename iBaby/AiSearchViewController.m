@@ -36,19 +36,14 @@
     [self.textField addTarget:self
                   action:@selector(editingChanged:)
         forControlEvents:UIControlEventEditingChanged];
-    NSString *path1 = [[NSBundle mainBundle] pathForResource:@"search" ofType:@"plist"];
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"search2" ofType:@"plist"];
-    NSString *path3 = [[NSBundle mainBundle] pathForResource:@"search4" ofType:@"plist"];
-    NSArray *suggestionArray = [NSArray arrayWithContentsOfFile:path1];
-    NSArray *suggestArray2 = [NSArray arrayWithContentsOfFile:path2];
-    NSArray *suggestArray3 = [NSArray arrayWithContentsOfFile:path3];
     
-    NSMutableArray *suggestArrayAll = [[NSMutableArray alloc] init];
-    [suggestArrayAll addObjectsFromArray:suggestionArray];
-    [suggestArrayAll addObjectsFromArray:suggestArray2];
-    [suggestArrayAll addObjectsFromArray:suggestArray3];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *keysDirectory = [paths objectAtIndex:0];
+    NSString *filePath = [NSString stringWithFormat:@"%@/keys.plist",keysDirectory];
     
-    [self.textField setSuggestions:suggestArrayAll];
+    NSArray *suggestionArray = [NSArray arrayWithContentsOfFile:filePath];
+
+    [self.textField setSuggestions:suggestionArray];
 
     NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiDefaultSearchView" owner:self options:nil];
     AiDefaultSearchView *defaultSearchView = [nib objectAtIndex:0];

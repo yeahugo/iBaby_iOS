@@ -19,11 +19,19 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
     ReqHead *_reqHead;
         
     int _reConnectNum;
+    
+    int _searchKeyVer;
 }
 
 @property (nonatomic, strong) ReqHead *reqHead;
 
 @property (nonatomic, assign) int babyId;
+
+@property (nonatomic, copy) NSString *wuliuAppkey;
+
+@property (nonatomic, assign) int isReportFlag;
+
+@property (nonatomic, assign) int searchKeyVer;
 
 + (AiDataRequestManager *)shareInstance;
 

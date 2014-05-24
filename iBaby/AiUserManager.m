@@ -84,6 +84,45 @@
     }];
 }
 
+-(void)updateConfig:(void(^)(UserConfig *config))completion
+{
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
+        @try {
+            ReqHead *reqHead = [[ReqHead alloc] initWithBabyId:self.babyId guid:self.openUdid version:VERSION];
+            UserConfig *userConfig = [[AiThriftManager shareInstance].userClient updateConfig:reqHead];
+            NSLog(@"userConfig is %@",userConfig);
+            completion(userConfig);
+        }
+        @catch (NSException *exception) {
+            NSLog(@"update config error");
+        }
+    }];
+}
+
+-(void)getSearchSuggestKeys:(void (^)(int result))completion
+{
+    [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
+        @try {
+            ReqHead *reqHead = [[ReqHead alloc] initWithBabyId:self.babyId guid:self.openUdid version:VERSION];
+            SearchSuggestKeys *keys = [[AiThriftManager shareInstance].userClient getSearchSuggestKeys:reqHead];
+            NSArray *keysArray = [keys.suggestKeys componentsSeparatedByString:@"\n"];
+            NSLog(@"versiont is %d, keysArray is %@",keys.version,keysArray);
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *keysDirectory = [paths objectAtIndex:0];
+            NSString *filePath = [NSString stringWithFormat:@"%@/keys.plist",keysDirectory];
+            [keysArray writeToFile:filePath atomically:YES];
+            if (keysArray.count > 0) {
+                completion(0);
+            } else {
+                completion(-1);
+            }
+        }
+        @catch (NSException *exception) {
+            NSLog(@"getSuggest error!");
+        }
+    }];
+}
+
 -(void)userLogin:(void (^)(int result))completion
 {
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
