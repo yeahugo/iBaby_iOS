@@ -24,6 +24,8 @@
 
 @property (nonatomic, assign) kTagViewType viewType;
 
+@property (nonatomic, assign) kSearchViewType searchViewType;
+
 @property (nonatomic, strong) NSMutableArray * videoDatas;
 
 @property (nonatomic, strong) NSOperationQueue *queue;
@@ -31,6 +33,16 @@
 @property (nonatomic, assign) AiScrollViewController * scrollViewController;
 
 @property (nonatomic, assign) int pageCount;
+
+@property (nonatomic, strong) UIButton *songButton;
+
+@property (nonatomic, strong) UIButton *allButton;
+
+@property (nonatomic, strong) UIButton *cattonButton;
+
+@property (nonatomic, strong) UIButton *videoButton;
+
+@property (nonatomic, strong) UIImageView *chooseView;
 
 -(void)setAiVideoObjects:(NSArray *)aiVideoObjects;
 

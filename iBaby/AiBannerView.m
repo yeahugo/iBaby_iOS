@@ -51,7 +51,7 @@
         }
         scrollView.backgroundColor = [UIColor blackColor];
         
-        int deltaX = 22;
+        int deltaX = 17;
         int height = 143;
         int width = 266;
         int deltaY = 10;

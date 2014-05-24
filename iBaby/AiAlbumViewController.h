@@ -20,6 +20,8 @@
 
 @property (nonatomic, assign) IBOutlet UILabel * serialDescriptionLabel;
 
+@property (nonatomic, assign) IBOutlet UILabel * serialLabel;
+
 @property (nonatomic, assign) IBOutlet UILabel * sectionNumLabel;
 
 @property (nonatomic, assign) IBOutlet UIImageView * serialImageView;
@@ -28,6 +30,9 @@
 
 @property (nonatomic, assign) IBOutlet UILabel * titleLabel;
 
+@property (nonatomic, strong) AiVideoObject *videoObject;
+
 -(IBAction)close:(id)sender;
 
+-(IBAction)playVideo:(id)sender;
 @end

@@ -179,7 +179,7 @@
     MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:viewController];
     self.formSheetController = formSheet;
 
-    formSheet.presentedFormSheetSize = CGSizeMake(self.backgroundView.frame.size.width + 80, self.backgroundView.frame.size.height+ 50);
+    formSheet.presentedFormSheetSize = CGSizeMake(876, 588);
     formSheet.transitionStyle = MZFormSheetTransitionStyleFade;
     formSheet.shadowRadius = 2.0;
     formSheet.shadowOpacity = 0.3;

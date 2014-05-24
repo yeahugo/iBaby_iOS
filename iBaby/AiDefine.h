@@ -30,17 +30,23 @@ typedef enum {
     kTagViewTypeAlbum
 } kTagViewType;
 
+typedef enum {
+    kSearchViewTypeAll,
+    kSearchViewTypeSong,
+    kSearchViewTypeCatoon,
+    kSearchViewTypeVideo
+}kSearchViewType;
+
 #define ResponseCodeSuccess 0
 
 #define kTagVideoCellStartIndex 1000
 
-#define AI_HOST_IP @"115.28.213.143"
+//#define AI_HOST_IP @"115.28.213.143"
+
+#define AI_HOST_IP @"www.aijingang.com"
 
 #define UmengAppkey @"537d712556240b75fb0a2645"
 
-//#define AI_HOST_IP @"10.0.2.15"
-
-//#define AI_HOST_PORT 9090
 #define AI_HOST_PORT 9013
 
 #define ShowNum 12

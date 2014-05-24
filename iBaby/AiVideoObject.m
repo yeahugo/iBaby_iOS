@@ -10,6 +10,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "AFNetworking.h"
 #import "shy.h"
+#import "AiVideoPlayerManager.h"
 
 @implementation AiVideoObject
 
@@ -31,6 +32,22 @@
         self.serialTitle = resourceInfo.serialName;
     }
     return self;
+}
+
+-(void)playVideo
+{
+    [self getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+        if (error == nil) {
+            [AiVideoPlayerManager shareInstance].currentVideoObject = self;
+            AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
+            [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
+            self.playUrl = urlString;
+            UIApplication *shareApplication = [UIApplication sharedApplication];
+            [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+        } else {
+            NSLog(@"error is %@",error);
+        }
+    }];
 }
 
 - (NSString *)md5Value:(NSString *)string {
@@ -99,6 +116,7 @@
     aiVideoObject.status = _status;
     aiVideoObject.serialDes = _serialDes;
     aiVideoObject.serialTitle = _serialTitle;
+    aiVideoObject.curSectionNum = _curSectionNum;
     return aiVideoObject;
 }
 

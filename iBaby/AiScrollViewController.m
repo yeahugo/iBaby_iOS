@@ -25,6 +25,7 @@
         scrollView.delegate = self;
         scrollView.scrollViewController = self;
         scrollView.pageCount = SearchNum;
+        scrollView.searchViewType = kSearchViewTypeAll;
         self.scrollView = scrollView;
         _songListArray = [[NSMutableArray alloc] init];
         

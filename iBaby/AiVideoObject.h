@@ -44,4 +44,6 @@
 
 -(id)initWithResourceInfo:(ResourceInfo *)resourceInfo;
 
+-(void)playVideo;
+
 @end

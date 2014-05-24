@@ -14,6 +14,8 @@
 #import "AiScrollViewController.h"
 #import "AiFirstViewController.h"
 
+#define DeltaY 14
+
 @implementation AiScrollView
 
 - (id)initWithFrame:(CGRect)frame
@@ -61,27 +63,49 @@
 
 -(void)addButtonsFromOffSet:(float)offset
 {
-    CGSize size = CGSizeMake(100, 30);
-    int deltaX = 150;
+    CGSize size = CGSizeMake(55, 31);
+    int deltaX = 10+size.width;
     UIButton * allButton = [[UIButton alloc] initWithFrame:CGRectMake(0, offset, size.width, size.height)];
-    [allButton addTarget:self action:@selector(searchAll) forControlEvents:UIControlEventTouchUpInside];
+    self.allButton = allButton;
+    [self.allButton addTarget:self action:@selector(searchAll:) forControlEvents:UIControlEventTouchUpInside];
     [allButton setTitle:@"全部" forState:UIControlStateNormal];
-    [self addSubview:allButton];
+    
+    [self addSubview:self.allButton];
     
     UIButton *songButton = [[UIButton alloc] initWithFrame:CGRectMake(deltaX, offset, size.width, size.height)];
-    [songButton addTarget:self action:@selector(searchSong) forControlEvents:UIControlEventTouchUpInside];
+     self.songButton = songButton;
+    [self.songButton addTarget:self action:@selector(searchSong:) forControlEvents:UIControlEventTouchUpInside];
     [songButton setTitle:@"儿歌" forState:UIControlStateNormal];
-    [self addSubview:songButton];
+   
+    [self addSubview:self.songButton];
     
     UIButton *catoonButton = [[UIButton alloc] initWithFrame:CGRectMake(deltaX * 2, offset, size.width, size.height)];
-    [catoonButton addTarget:self action:@selector(searchCatoon) forControlEvents:UIControlEventTouchUpInside];
+    self.cattonButton = catoonButton;
+    [self.cattonButton addTarget:self action:@selector(searchCatoon:) forControlEvents:UIControlEventTouchUpInside];
     [catoonButton setTitle:@"动画" forState:UIControlStateNormal];
-    [self addSubview:catoonButton];
+    
+    [self addSubview:self.cattonButton];
     
     UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(deltaX * 3, offset, size.width, size.height)];
-    [videoButton addTarget:self action:@selector(searchVideo) forControlEvents:UIControlEventTouchUpInside];
+    self.videoButton = videoButton;
+    [self.videoButton addTarget:self action:@selector(searchVideo:) forControlEvents:UIControlEventTouchUpInside];
     [videoButton setTitle:@"节目" forState:UIControlStateNormal];
-    [self addSubview:videoButton];
+    
+    [self addSubview:self.videoButton];
+    
+    self.chooseView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"choose"]];
+    if (self.searchViewType == kSearchViewTypeAll) {
+        [self.allButton addSubview:self.chooseView];
+    }
+    if (self.searchViewType == kSearchViewTypeSong) {
+        [self.songButton addSubview:self.chooseView];
+    }
+    if (self.searchViewType == kSearchViewTypeCatoon) {
+        [self.cattonButton addSubview:self.chooseView];
+    }
+    if (self.searchViewType == kSearchViewTypeVideo) {
+        [self.videoButton addSubview:self.chooseView];
+    }
 }
 
 -(void)removeAllSubViews
@@ -95,35 +119,45 @@
     }
 }
 
--(void)searchAll
+
+-(void)searchAll:(UIButton *)button
 {
     [self removeAllSubViews];
+    [self.chooseView removeFromSuperview];
+    self.searchViewType = kSearchViewTypeAll;
     [self.scrollViewController clickKeyWords:nil resourceType:-1];
 }
 
--(void)searchSong
+-(void)searchSong:(UIButton *)button
 {
     [self removeAllSubViews];
+    [self.chooseView removeFromSuperview];
+    self.searchViewType = kSearchViewTypeSong;
     [self.scrollViewController clickKeyWords:nil resourceType:0];
 }
 
--(void)searchCatoon
+-(void)searchCatoon:(UIButton *)button
 {
     [self removeAllSubViews];
+    [self.chooseView removeFromSuperview];
+    self.searchViewType = kSearchViewTypeCatoon;
     [self.scrollViewController clickKeyWords:nil resourceType:1];
 }
 
--(void)searchVideo
+-(void)searchVideo:(UIButton *)button
 {
     [self removeAllSubViews];
+    [self.chooseView removeFromSuperview];
+    self.searchViewType = kSearchViewTypeVideo;
     [self.scrollViewController clickKeyWords:nil resourceType:2];
 }
+
 
 -(void)reloadData
 {
     //首页效果
     _cellOffSetY = 0;
-    _cellOffSetX = -1;
+    _cellOffSetX = 0;
     
     self.delegate = self;
     AiVideoObject *firstVideoObject = nil;
@@ -139,25 +173,34 @@
         searchRecommendView.videoObject = [firstVideoObject copy];
         searchRecommendView.keyWords = self.scrollViewController.keyWords;
         //专辑标题
-        [searchRecommendView.albumTitle setText:firstVideoObject.serialTitle];
+        if ([self.scrollViewController.keyWords isEqualToString:firstVideoObject.serialTitle]) {
+            [searchRecommendView.albumTitle setText:firstVideoObject.serialTitle];
+        } else{
+            [searchRecommendView.albumTitle setText:firstVideoObject.title];
+        }
         [searchRecommendView.introText setText:firstVideoObject.serialDes];
         searchRecommendView.tag = 2001;
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:firstVideoObject.imageUrl]];
         UIImage *image = [UIImage imageWithData:data];
         [searchRecommendView.albumImage setImage:image];
         [self addSubview:searchRecommendView];
-        _cellOffSetY = searchRecommendView.frame.size.height + 30;
+        
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"break line"]];
+        line.center = CGPointMake(self.frame.size.width/2, searchRecommendView.frame.size.height);
+        [self addSubview:line];
+        
+        _cellOffSetY = searchRecommendView.frame.size.height + 40;
         
         [self addButtonsFromOffSet:searchRecommendView.frame.size.height];
     }
     else if (self.viewType == kTagViewTypeSearch) {
         _cellOffSetY = 50;
-        [self addButtonsFromOffSet:_cellOffSetY - 30];
+        [self addButtonsFromOffSet:_cellOffSetY - 45];
     }
 
     //专辑页面
     if (self.viewType == kTagViewTypeAlbum) {
-        _cellOffSetY = 250;
+        _cellOffSetY = 190;
     }
     
     if (self.viewType == kTagViewTypeIndex && firstVideoObject.status == 2) {
@@ -170,7 +213,7 @@
     for (int i = 0; i<[self.videoDatas count]; i++) {
         AiScrollViewCell *cell = [self scrollCellWithIndex:i];
         cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
-        _cellHeight = cell.frame.size.height + 10;
+        _cellHeight = cell.frame.size.height + DeltaY;
     }
     float height = ceil((float)self.videoDatas.count / ColNum) * _cellHeight + _cellOffSetY;
     [self setContentSize:CGSizeMake(self.frame.size.width, height)];
@@ -179,13 +222,13 @@
 
 -(AiScrollViewCell *)scrollCellWithIndex:(int)index
 {
-    UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge background_low.png"]];
+    UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background_low"]];
     CGSize size = frameImageView.frame.size;
     int startY = 0;
     int colNum = 4;
     
-    int deltaX = 35;
-    int deltaY = 10;
+    int deltaX = 17;
+    int deltaY = DeltaY;
     
     AiScrollViewCell *cell = nil;
     
@@ -250,10 +293,10 @@
     } else {
         [self.videoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
             if (error == nil) {
-                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
-                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
                 self.videoObject.playUrl = urlString;
                 [AiVideoPlayerManager shareInstance].currentVideoObject = self.videoObject;
+                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
+                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
                 UIApplication *shareApplication = [UIApplication sharedApplication];
                 [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
             } else {
@@ -305,7 +348,7 @@
                 [self addSubview:textBackgroundView];
             }
             
-            CGRect labelRect = CGRectMake(20, backGroundRect.origin.y, backGroundRect.size.width, backGroundRect.size.height);
+            CGRect labelRect = CGRectMake(20, backGroundRect.origin.y - 3, backGroundRect.size.width, backGroundRect.size.height);
             UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
             label_.font = [UIFont systemFontOfSize:18];
             label_.backgroundColor = [UIColor clearColor];
@@ -314,15 +357,16 @@
             [self addSubview:self.titleLabel];
 
         } else if(viewCellType == kViewCellTypeNormal) {
-            CGRect rect = CGRectMake(2, 2, self.frame.size.width - 6, 122);
+            CGRect rect = CGRectMake(1, 1, self.frame.size.width - 4, 122);
             UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
             self.imageButton = imageButton_;
             [imageButton_ addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:self.imageButton];
 
-            CGRect labelRect = CGRectMake(16, rect.size.height + 4, rect.size.width, 30);
+            CGRect labelRect = CGRectMake(16, rect.size.height , rect.size.width - 10, 45);
             UILabel *label_ = [[UILabel alloc] initWithFrame:labelRect];
-            label_.font = [UIFont systemFontOfSize:14];
+            label_.numberOfLines = 2;
+            label_.font = [UIFont systemFontOfSize:16];
             label_.backgroundColor = [UIColor clearColor];
             [label_ setTextColor:[UIColor whiteColor]];
             self.titleLabel = label_;
@@ -344,10 +388,10 @@
     } else {
         [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
             if (error == nil) {
+                [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
                 AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
                 [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
                 self.aiVideoObject.playUrl = urlString;
-                [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
                 UIApplication *shareApplication = [UIApplication sharedApplication];
                 [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
             } else {

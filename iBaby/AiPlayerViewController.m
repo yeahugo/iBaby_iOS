@@ -31,6 +31,26 @@
         
         _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishVideo) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+        
+        NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
+        int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
+        int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
+        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
+        if ([serialId isEqualToString:@"0"]) {
+            sectionNum = AlbumNum;
+        }
+        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
+            if (result.count > 0) {
+                int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
+                if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
+                    [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
+                        self.videoArray = resultArray;
+                    }];
+                } else{
+                    self.videoArray = result;
+                }                
+            }
+        }];
     }
     return self;
 }
@@ -71,11 +91,11 @@
 {
     NSLog(@"onClickVolumn");
     if (self.isOnVolumn == YES) {
-        [button setBackgroundImage:[UIImage imageNamed:@"volumn_off"] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"mute"] forState:UIControlStateNormal];
         self.moviePlayer.useApplicationAudioSession = NO;
         self.isOnVolumn = NO;
     } else {
-        [button setBackgroundImage:[UIImage imageNamed:@"volumn_on"] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"volume"] forState:UIControlStateNormal];
         self.moviePlayer.useApplicationAudioSession = YES;
         self.isOnVolumn = YES;
     }
@@ -103,13 +123,14 @@
 {
     int rowNum = 5;
     int totalNum = result.count;
-    UIImage *videoFrame = [UIImage imageNamed:@"video_frame"];
+    UIImage *videoFrame = [UIImage imageNamed:@"episode edge"];
     CGSize size = videoFrame.size;
     self.videoArray = result;
     NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
     int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
+    NSLog(@"curSection num is %d",curSectionNum);
     for (int i = 0; i < totalNum; i++) {
-        UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(i%rowNum * size.width, i/rowNum * size.height, size.width , size.height)];
+        UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(i%rowNum * (size.width-2), i/rowNum * (size.height-2), size.width , size.height)];
         videoButton.tag = i;
         [videoButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
         ResourceInfo *resourceInfo = (ResourceInfo *)[result objectAtIndex:i];
@@ -121,9 +142,9 @@
             [videoButton setTitle:resourceInfo.title forState:UIControlStateNormal];
         }
         if (curSectionNum == i+1) {
-            [videoButton setBackgroundImage:[UIImage imageNamed:@"video_current"] forState:UIControlStateNormal];
+            [videoButton setBackgroundImage:[UIImage imageNamed:@"episode current"] forState:UIControlStateNormal];
         } else {
-            [videoButton setBackgroundImage:[UIImage imageNamed:@"video_frame"] forState:UIControlStateNormal];
+            [videoButton setBackgroundImage:[UIImage imageNamed:@"episode edge"] forState:UIControlStateNormal];
         }
         [videoListView addSubview:videoButton];
     }
@@ -146,29 +167,22 @@
             sectionNum = AlbumNum;
         }
         
-        [button setBackgroundImage:[UIImage imageNamed:@"episode_select"] forState:UIControlStateNormal];
-        UIImage *videoListBackgroundImage = [UIImage imageNamed:@"videoList_background"];
-        UIScrollView *videoListView = [[UIScrollView alloc] initWithFrame:CGRectMake(500, 80, videoListBackgroundImage.size.width, videoListBackgroundImage.size.height)];
+        [button setBackgroundImage:[UIImage imageNamed:@"episode_pressed"] forState:UIControlStateNormal];
+        UIImage *videoListBackgroundImage = [UIImage imageNamed:@"episode background"];
+        UIScrollView *videoListView = [[UIScrollView alloc] initWithFrame:CGRectMake(1024 - videoListBackgroundImage.size.width, 89, videoListBackgroundImage.size.width, videoListBackgroundImage.size.height)];
         videoListView.tag = 10;
         UIImageView *videoListBackgroundView = [[UIImageView alloc] initWithImage:videoListBackgroundImage];
         videoListBackgroundView.tag = 2000;
         [videoListView addSubview:videoListBackgroundView];
         
         [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
-            int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
-            if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
-                [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
-                    [self reloadVideoList:resultArray videoListView:videoListView];
-                }];
-            } else{
-                [self reloadVideoList:result videoListView:videoListView];
-            }
+            [self reloadVideoList:self.videoArray videoListView:videoListView];
         }];
         
         self.playControlView.videoListView = videoListView;
         [self.playControlView addSubview:videoListView];
     } else {
-        [button setBackgroundImage:[UIImage imageNamed:@"episode"] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"episode_nomal"] forState:UIControlStateNormal];
         [self.playControlView.videoListView removeFromSuperview];
         self.playControlView.videoListView = nil;
     }
@@ -199,12 +213,12 @@
 -(IBAction)onClickLike:(UIButton *)button
 {
     if (self.isLike == NO) {
-        UIImage *likeImage = [UIImage imageNamed:@"like_select"];
+        UIImage *likeImage = [UIImage imageNamed:@"red_heart_pressed"];
         [button setBackgroundImage:likeImage forState:UIControlStateNormal];
         self.isLike = YES;
         [[AiDataBaseManager shareInstance] addFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
     } else {
-        UIImage *likeImage = [UIImage imageNamed:@"like"];
+        UIImage *likeImage = [UIImage imageNamed:@"red_heart"];
         [button setBackgroundImage:likeImage forState:UIControlStateNormal];
         self.isLike = NO;
         [[AiDataBaseManager shareInstance] deleteFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
@@ -230,25 +244,25 @@
         AiPlayerViewControl *controlView = [nib objectAtIndex:0];
         controlView.playerViewController = self;
         self.playControlView = controlView;
-        [controlView.slider setThumbImage:[UIImage imageNamed:@"slider_point"] forState:UIControlStateNormal];
-        [controlView.slider setMinimumTrackImage:[UIImage imageNamed:@"slider_background_min"] forState:UIControlStateNormal];
-        [controlView.slider setMaximumTrackImage:[UIImage imageNamed:@"slider_background_max"] forState:UIControlStateNormal];
+        [controlView.slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
+        [controlView.slider setMinimumTrackImage:[UIImage imageNamed:@"schedule_bar_schedule"] forState:UIControlStateNormal];
+        [controlView.slider setMaximumTrackImage:[UIImage imageNamed:@"schedule_bar_bottom"] forState:UIControlStateNormal];
         [controlView.slider addTarget:self action:@selector(durationSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
         controlView.slider.minimumValue = 0;
         controlView.slider.maximumValue = self.moviePlayer.duration;
         
-        [controlView.volumn_slider setThumbImage:[UIImage imageNamed:@"slider_point"] forState:UIControlStateNormal];
-        [controlView.volumn_slider setMinimumTrackImage:[UIImage imageNamed:@"slider_volume_min"] forState:UIControlStateNormal];
-        [controlView.volumn_slider setMaximumTrackImage:[UIImage imageNamed:@"slider_volume_max"] forState:UIControlStateNormal];
+        [controlView.volumn_slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
+        [controlView.volumn_slider setMinimumTrackImage:[UIImage imageNamed:@"volume_bar_top"] forState:UIControlStateNormal];
+        [controlView.volumn_slider setMaximumTrackImage:[UIImage imageNamed:@"volume_bar_bottom"] forState:UIControlStateNormal];
         [controlView.volumn_slider addTarget:self action:@selector(volumnSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
         float volume = [MPMusicPlayerController applicationMusicPlayer].volume;
         [controlView.volumn_slider setValue:volume];
         
         BOOL isLike = [[AiDataBaseManager shareInstance] isFavouriteVideo:[AiVideoPlayerManager shareInstance].currentVideoObject];
         if (isLike) {
-            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"like_select"] forState:UIControlStateNormal];
+            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart-pressed"] forState:UIControlStateNormal];
         } else {
-            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal];
+            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart"] forState:UIControlStateNormal];
         }
         
         int currentTime = floor(self.moviePlayer.currentPlaybackTime);

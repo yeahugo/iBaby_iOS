@@ -58,17 +58,16 @@
     _controller.tableView.delegate = self;
     _controller.tableView.dataSource = self;
     _controller.view.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
+    _controller.tableView.separatorColor = [UIColor colorWithRed:(float)0xbb/0xFF green:(float)0xc5/0xff blue:(float)0xc9/0xFF alpha:1];
 
     self.popOver = [[UIPopoverController alloc] initWithContentViewController:_controller];
     
-    // Default values
-//    _popOver.popoverContentSize = DEFAULT_POPOVER_SIZE;
     _popOver.popoverContentSize = CGSizeMake(self.frame.size.width, 300);
     if ([_popOver respondsToSelector:@selector(setBackgroundColor:)]) {
         _popOver.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
     }
     self.shouldHideOnSelection = NO;
-    _cellHeight = 70;
+    _cellHeight = 36;
 }
 
 #pragma mark - Modifiers
@@ -91,7 +90,6 @@
 }
 
 - (void)showPopOverList{
-
     if (_matchedStrings.count == 0) {
         [_popOver dismissPopoverAnimated:YES];
     }
@@ -114,17 +112,28 @@
     return _matchedStrings.count;
 }
 
+-(UIImage *)scaleImage:(UIImage *)img ToSize:(CGSize)itemSize{
+    
+    UIImage *i;
+    UIGraphicsBeginImageContext(itemSize);
+    CGRect imageRect=CGRectMake(0, 0, itemSize.width, itemSize.height);
+    [img drawInRect:imageRect];
+    i=UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return i;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     [cell.textLabel setTextColor:[UIColor whiteColor]];
     cell.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
     cell.textLabel.text = [_matchedStrings objectAtIndex:indexPath.row];
-    cell.imageView.image = [UIImage imageNamed:@"searchIcon"];
+    cell.imageView.image = [self scaleImage:[UIImage imageNamed:@"search"] ToSize:CGSizeMake(20, 20)];
     
     return cell;
 }
