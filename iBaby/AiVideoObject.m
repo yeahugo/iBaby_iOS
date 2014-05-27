@@ -11,6 +11,7 @@
 #import "AFNetworking.h"
 #import "shy.h"
 #import "AiVideoPlayerManager.h"
+#import "AiDataRequestManager.h"
 
 @implementation AiVideoObject
 
@@ -76,9 +77,13 @@
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
         int timeInteval = (int)[[NSDate date] timeIntervalSince1970];
         NSString *vidString = [NSString stringWithFormat:@"vid=%@",self.vid];
-        NSString *signString = [NSString stringWithFormat:@"%@#3000003910#b7ed6e59906c4fa5#%d",[self md5Value:vidString],timeInteval];
+        NSString *appKey56 = [AiDataRequestManager shareInstance].wuliuAppkey;
+        if (appKey56 == nil) {
+            appKey56 = @"3000003910";
+        }
+        NSString *signString = [NSString stringWithFormat:@"%@#%@#b7ed6e59906c4fa5#%d",appKey56,[self md5Value:vidString],timeInteval];
         NSString *md5SignString = [self md5Value:signString];
-        NSString *urlString = [NSString stringWithFormat:@"http://oapi.56.com/video/mobile.json?appkey=3000003910&ts=%d&vid=%@&sign=%@",timeInteval,self.vid,md5SignString];
+        NSString *urlString = [NSString stringWithFormat:@"http://oapi.56.com/video/mobile.json?appkey=%@&ts=%d&vid=%@&sign=%@",appKey56,timeInteval,self.vid,md5SignString];
         [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary * resourceInfo = [responseObject valueForKey:@"info"];
             NSLog(@"rfiles is %@ resourceInfo is %@",[resourceInfo valueForKey:@"rfiles"],resourceInfo);
@@ -91,6 +96,10 @@
         }];
     }
     if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_SOHU) {
+        NSString *urlString = self.playUrl;
+        completion(urlString,nil);
+    }
+    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_CNTV) {
         NSString *urlString = self.playUrl;
         completion(urlString,nil);
     }

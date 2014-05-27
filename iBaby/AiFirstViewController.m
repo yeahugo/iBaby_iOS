@@ -21,6 +21,9 @@
 #import "iToast.h"
 #import "AFNetworking.h"
 
+#import "AiWaitingView.h"
+#import "AiVideoPlayerManager.h"
+
 @interface AiFirstViewController ()
 {
     AiDataRequestManager *_dataManager;
@@ -170,6 +173,8 @@
     self.swipeview = swipeView;
     [self.view addSubview:self.swipeview];
     [self setCurrentButton:_currentType];
+    
+    [AiWaitingView showInView:self.view];
 }
 
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
@@ -228,12 +233,13 @@
     return formSheet;
 }
 
--(void)presentAlbumViewController:(NSString *)serialId
+-(void)presentAlbumViewObject:(AiVideoObject *)videoObject
 {
     if (_isPresentView == NO) {
         _isPresentView = YES;
         AiAlbumViewController *albumViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"album"];
-        albumViewController.serialId = serialId;
+        [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
+//        AiAlbumViewController *albumViewController = [[AiAlbumViewController alloc] initWithVideoObject:videoObject];
         [self mz_presentFormSheetController:[self makeMZFormSheetController:albumViewController] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
             NSLog(@"finish!!");
             _isPresentView = NO;
@@ -248,9 +254,12 @@
     [self.favouriteButton setBackgroundImage:[UIImage imageNamed:@"favourite_normal"] forState:UIControlStateNormal];
 }
 
+#pragma mark OnClick
+
 -(IBAction)onClickSearch:(id)sender
 {
     if (_isPresentView == NO) {
+        [self playWaterSound];
         _isPresentView = YES;
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"search"];
         [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
@@ -265,6 +274,7 @@
 -(IBAction)onClickHistory:(id)sender
 {
     if (_isPresentView == NO) {
+        [self playWaterSound];
         _isPresentView = YES;
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"history"];
         [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
@@ -279,6 +289,7 @@
 -(IBAction)onClickSetting:(id)sender
 {
     if (_isPresentView == NO) {
+        [self playWaterSound];
         _isPresentView = YES;
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"setting"];
         [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
@@ -288,6 +299,25 @@
         [self.favouriteButton setBackgroundImage:[UIImage imageNamed:@"favourite_pressed"] forState:UIControlStateNormal];
         
         [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeFavourite] completion:nil];
+    }
+}
+
+-(IBAction)onClickFeedback:(id)sender
+{
+    if (_isPresentView == NO) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"plane" ofType:@"mp3"];
+        NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
+        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
+        [self.audioPlayer prepareToPlay];
+        [self.audioPlayer play];
+        
+        _isPresentView = YES;
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"feedback"];
+        [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+            _isPresentView = NO;
+        }];
+        
+        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeFeedback] completion:nil];
     }
 }
 
@@ -313,6 +343,7 @@
 
 -(IBAction)onClickButton:(UIButton *)sender
 {
+    [self playWaterSound];
     _currentType = (int)sender.tag;
     _isOnClickButton = YES;
     [self setCurrentButton:_currentType];
@@ -321,7 +352,60 @@
     [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",_currentType] completion:nil];
 }
 
+-(IBAction)onClickSun:(id)sender
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"sun" ofType:@"mp3"];
+    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+}
 
+-(IBAction)onClickBaby:(id)sender
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"baby" ofType:@"mp3"];
+    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+}
+
+-(IBAction)onClickTree:(id)sender
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"tree" ofType:@"mp3"];
+    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+}
+
+-(IBAction)onClickBee:(id)sender
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"bee" ofType:@"mp3"];
+    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+}
+
+-(IBAction)onclickBirds:(id)sender
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"birds" ofType:@"mp3"];
+    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+}
+
+#pragma mark Audio Sound
+-(void)playWaterSound
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"water" ofType:@"mp3"];
+    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+}
 
 - (void)didReceiveMemoryWarning
 {

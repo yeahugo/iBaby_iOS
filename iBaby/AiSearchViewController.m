@@ -11,6 +11,7 @@
 //#import "AiGridViewController.h"
 #import "AiFirstViewController.h"
 #import "AiDefaultSearchView.h"
+#import "AiWaitingView.h"
 
 @interface AiSearchViewController ()
 
@@ -47,13 +48,14 @@
 
     NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiDefaultSearchView" owner:self options:nil];
     AiDefaultSearchView *defaultSearchView = [nib objectAtIndex:0];
-    NSArray *subViews = [defaultSearchView subviews];
+//    NSArray *subViews = [defaultSearchView subviews];
     [[AiDataRequestManager shareInstance] requestSearchRecommend:^(NSArray *resultArray, NSError *error) {
         NSLog(@"requestSearchRecommend resultArray is %@",resultArray);
         for (int i= 0; i<resultArray.count; i++) {
             ResourceInfo *resourceInfo = [resultArray objectAtIndex:i];
             AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
-            UIView *subView = [subViews objectAtIndex:i];
+            UIView *subView = [defaultSearchView viewWithTag:100+i];
+            NSLog(@"subView frame is %@",NSStringFromCGRect(subView.frame));
             AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:subView.frame cellType:kViewCellTypeSearchRecommend];
             scrollViewCell.aiVideoObject = videoObject;
             [self.backGroundView addSubview:scrollViewCell];
@@ -96,7 +98,6 @@
 
 -(IBAction)onClickSearchWords:(NSString *)keyWords
 {
-    [self.scrollViewController.activityView startAnimating];
     [self.textField.popOver dismissPopoverAnimated:YES];
     [self removeAllSubView];
     NSString *keywords = nil;
@@ -120,6 +121,8 @@
     self.scrollViewController = scrollViewController;
     self.scrollViewController.scrollView.tag = 2000;
     [self.view addSubview:self.scrollViewController.scrollView];
+
+    [AiWaitingView showInView:self.view point:CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2)];
 }
 
 -(IBAction)onClickSearchField

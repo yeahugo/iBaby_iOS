@@ -35,7 +35,8 @@
     [self reloadData];
     
     if (self.videoDatas.count % self.pageCount == 0 && self.videoDatas.count > 0) {
-        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
+//        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
+        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithWaitingImage:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
         _egoFooterView.delegate = self;
         [self addSubview:_egoFooterView];
     }
@@ -133,7 +134,7 @@
     [self removeAllSubViews];
     [self.chooseView removeFromSuperview];
     self.searchViewType = kSearchViewTypeSong;
-    [self.scrollViewController clickKeyWords:nil resourceType:0];
+    [self.scrollViewController clickKeyWords:nil resourceType:1];
 }
 
 -(void)searchCatoon:(UIButton *)button
@@ -141,7 +142,7 @@
     [self removeAllSubViews];
     [self.chooseView removeFromSuperview];
     self.searchViewType = kSearchViewTypeCatoon;
-    [self.scrollViewController clickKeyWords:nil resourceType:1];
+    [self.scrollViewController clickKeyWords:nil resourceType:2];
 }
 
 -(void)searchVideo:(UIButton *)button
@@ -149,7 +150,7 @@
     [self removeAllSubViews];
     [self.chooseView removeFromSuperview];
     self.searchViewType = kSearchViewTypeVideo;
-    [self.scrollViewController clickKeyWords:nil resourceType:2];
+    [self.scrollViewController clickKeyWords:nil resourceType:3];
 }
 
 
@@ -371,6 +372,12 @@
             [label_ setTextColor:[UIColor whiteColor]];
             self.titleLabel = label_;
             [self addSubview:self.titleLabel];
+        } else if (viewCellType == kViewCellTypeSearchRecommend){
+            CGRect rect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+            UIButton *imageButton_ = [[UIButton alloc] initWithFrame:rect];
+            self.imageButton = imageButton_;
+            [self.imageButton addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.imageButton];
         }
         
         _aiVideoObject = [[AiVideoObject alloc] init];
@@ -384,7 +391,8 @@
     
     if (![self.aiVideoObject.serialId isEqualToString:@"0"]  && self.scrollView.viewType == kTagViewTypeIndex) {
         AiFirstViewController *firstViewController = (AiFirstViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-        [firstViewController presentAlbumViewController:self.aiVideoObject.serialId];
+        [firstViewController presentAlbumViewObject:self.aiVideoObject];
+//        [firstViewController presentAlbumViewController:self.aiVideoObject.serialId];
     } else {
         [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
             if (error == nil) {

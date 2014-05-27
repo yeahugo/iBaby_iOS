@@ -26,7 +26,6 @@
 
 #import "EGORefreshTableHeaderView.h"
 
-
 #define TEXT_COLOR	 [UIColor colorWithRed:87.0/255.0 green:108.0/255.0 blue:137.0/255.0 alpha:1.0]
 #define FLIP_ANIMATION_DURATION 0.18f
 
@@ -97,6 +96,21 @@
 	
     return self;
 	
+}
+
+-(id)initWithWaitingImage:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        UIImageView *waitingImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"loading_1"]];
+        waitingImage.center = CGPointMake(frame.size.width/2, waitingImage.center.y);
+        NSArray *loadingImages = [NSArray arrayWithObjects:[UIImage imageNamed:@"loading_1"],[UIImage imageNamed:@"loading_2"],[UIImage imageNamed:@"loading_3"],[UIImage imageNamed:@"loading_4"],[UIImage imageNamed:@"loading_5"], nil];
+        [waitingImage setAnimationDuration:1];
+        [waitingImage setAnimationImages:loadingImages];
+        [waitingImage startAnimating];
+        [self addSubview:waitingImage];
+    }
+    return self;
 }
 
 - (id)initWithFrame:(CGRect)frame  {

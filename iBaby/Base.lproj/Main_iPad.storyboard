@@ -88,6 +88,9 @@
                                 <state key="normal" backgroundImage="sun.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="onClickSun:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JKe-RI-vtJ"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="i6G-Eu-TAf">
                                 <rect key="frame" x="309" y="15" width="177" height="65"/>
@@ -95,6 +98,9 @@
                                 <state key="normal" backgroundImage="paper_plane.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="onClickFeedback:" destination="dkx-z0-nzr" eventType="touchUpInside" id="6mG-Up-kuO"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="x1P-Qn-hy0">
                                 <rect key="frame" x="679" y="0.0" width="112" height="72"/>
@@ -102,6 +108,9 @@
                                 <state key="normal" backgroundImage="flying babys.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="onClickBaby:" destination="BYZ-38-t0r" eventType="touchUpInside" id="STC-9z-74C"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Ptd-fT-Z1R">
                                 <rect key="frame" x="835" y="7" width="94" height="66"/>
@@ -109,6 +118,39 @@
                                 <state key="normal" backgroundImage="birds.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="onclickBirds:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NHr-s1-tLw"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="D9P-Dv-R5M">
+                                <rect key="frame" x="907" y="146" width="117" height="276"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="trees.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClickTree:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ACi-rH-lok"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ckk-PM-DwJ">
+                                <rect key="frame" x="924" y="428" width="100" height="205"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="flowers.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClickTree:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jg5-7r-ZS5"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NON-Hy-WIn">
+                                <rect key="frame" x="924" y="428" width="80" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="bees.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClickBee:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LlU-JN-Py0"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -143,7 +185,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" id="wex-qE-Adh">
-                                <rect key="frame" x="69" y="60" width="800" height="468"/>
+                                <rect key="frame" x="69" y="59" width="800" height="468"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VrR-JS-EzF">
@@ -168,13 +210,6 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="222" height="167"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="简介" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dOi-c3-2uC">
-                                                <rect key="frame" x="311" y="51" width="450" height="116"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="视频数量" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="sdl-jn-rpK">
                                                 <rect key="frame" x="311" y="10" width="68" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -193,12 +228,20 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="简介：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wgY-AT-dRo">
-                                                <rect key="frame" x="252" y="56" width="51" height="21"/>
+                                                <rect key="frame" x="252" y="59" width="51" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" id="sJM-Bq-lAJ">
+                                                <rect key="frame" x="307" y="51" width="419" height="137"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
@@ -206,7 +249,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="oS1-eQ-HzO">
-                                <rect key="frame" x="976" y="1" width="44" height="44"/>
+                                <rect key="frame" x="959" y="1" width="62" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="close.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -216,7 +259,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="贝瓦儿歌" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WKz-eK-Reb">
-                                <rect key="frame" x="75" y="14" width="144" height="37"/>
+                                <rect key="frame" x="75" y="14" width="273" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="27"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -231,9 +274,9 @@
                         <outlet property="albumView" destination="apg-dd-xAM" id="r9h-lp-t0g"/>
                         <outlet property="backGroundView" destination="wex-qE-Adh" id="cYw-xm-bnK"/>
                         <outlet property="sectionNumLabel" destination="sdl-jn-rpK" id="nrV-8t-cdB"/>
-                        <outlet property="serialDescriptionLabel" destination="dOi-c3-2uC" id="yFQ-ew-bYL"/>
                         <outlet property="serialImageView" destination="Kjw-VL-OtD" id="m5C-N4-n1G"/>
                         <outlet property="serialLabel" destination="wgY-AT-dRo" id="Azg-gP-hXj"/>
+                        <outlet property="serialTextView" destination="sJM-Bq-lAJ" id="GzH-8X-0iZ"/>
                         <outlet property="titleLabel" destination="WKz-eK-Reb" id="e10-wK-CUV"/>
                     </connections>
                 </viewController>
@@ -259,7 +302,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LGc-P9-6TG">
-                                <rect key="frame" x="976" y="1" width="44" height="44"/>
+                                <rect key="frame" x="959" y="1" width="62" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="close.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -302,15 +345,15 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" background="search bar.png" clearButtonMode="always" id="dcQ-sL-Vza" customClass="SuggestiveTextField">
-                                <rect key="frame" x="70" y="39" width="740" height="35"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" background="search_bar_right.png" clearButtonMode="always" id="dcQ-sL-Vza" customClass="SuggestiveTextField">
+                                <rect key="frame" x="137" y="39" width="673" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" red="0.69803923368453979" green="0.89019614458084106" blue="0.95294123888015747" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="search"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="07J-hf-j4f">
-                                <rect key="frame" x="976" y="1" width="44" height="44"/>
+                                <rect key="frame" x="959" y="1" width="62" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="close.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -319,8 +362,12 @@
                                     <action selector="close:" destination="9SC-Ks-iZW" eventType="touchDown" id="TY9-kg-aWg"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="search_bar_left.png" id="yJo-Ol-MtC">
+                                <rect key="frame" x="82" y="39" width="55" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YiZ-ye-iiq">
-                                <rect key="frame" x="90" y="44" width="25" height="25"/>
+                                <rect key="frame" x="104" y="45" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="search.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -358,14 +405,13 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YAl-UQ-V0c">
-                                <rect key="frame" x="976" y="1" width="44" height="44"/>
+                                <rect key="frame" x="959" y="1" width="62" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="close.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="close:" destination="Wge-u1-sG6" eventType="touchDown" id="2pA-6y-KAs"/>
-                                    <action selector="close:" destination="7ab-zD-Ugq" eventType="touchDown" id="F06-e9-YI6"/>
+                                    <action selector="close:" destination="Wge-u1-sG6" eventType="touchDown" id="twy-Fh-azA"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="with red heart.png" id="X43-Q8-PKT">
@@ -385,24 +431,61 @@
             </objects>
             <point key="canvasLocation" x="-388" y="440"/>
         </scene>
+        <!--Ai Feedback View Controller-->
+        <scene sceneID="FJF-1o-bwC">
+            <objects>
+                <viewController storyboardIdentifier="feedback" id="ezp-ia-GhO" customClass="AiFeedbackViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2yZ-kT-Crq">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="feedback.png" id="unA-qj-IWH">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ZNa-kx-bWO">
+                                <rect key="frame" x="959" y="1" width="62" height="60"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="close.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeFeedback:" destination="ezp-ia-GhO" eventType="touchDown" id="m3C-oe-hMd"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Meq-9A-1v2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-388" y="440"/>
+        </scene>
     </scenes>
     <resources>
         <image name="background with main window.png" width="1023" height="768"/>
+        <image name="bees.png" width="116" height="109"/>
         <image name="birds.png" width="94" height="66"/>
         <image name="cartoon_normal.png" width="160" height="129"/>
         <image name="close.png" width="62" height="59"/>
         <image name="favourite_normal.png" width="119" height="123"/>
+        <image name="feedback.png" width="876" height="588"/>
+        <image name="flowers.png" width="109" height="342"/>
         <image name="flying babys.png" width="111" height="72"/>
         <image name="history.png" width="140" height="34"/>
         <image name="history_normal.png" width="122" height="114"/>
         <image name="paper_plane.png" width="177" height="65"/>
         <image name="play_icon.png" width="46" height="46"/>
         <image name="play_normal.png" width="160" height="129"/>
-        <image name="search bar.png" width="740" height="35"/>
         <image name="search.png" width="25" height="25"/>
+        <image name="search_bar_left.png" width="110" height="70"/>
+        <image name="search_bar_right.png" width="1371" height="70"/>
         <image name="search_normal.png" width="119" height="147"/>
         <image name="song_normal.png" width="160" height="129"/>
         <image name="sun.png" width="141" height="100"/>
+        <image name="trees.png" width="115" height="256"/>
         <image name="window_background.png" width="876" height="588"/>
         <image name="with red heart.png" width="141" height="34"/>
     </resources>

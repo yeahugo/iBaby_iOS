@@ -28,9 +28,9 @@
 {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(saveVideo:)
-                                                     name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(saveVideo:)
+//                                                     name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
         AiPlayerViewController * playerViewController = [[AiPlayerViewController alloc] init];
         self.aiPlayerViewController = playerViewController;
         _currentVideoObject = [[AiVideoObject alloc] init];
@@ -40,8 +40,17 @@
 
 -(void)saveVideo:(NSNotification *)notification
 {
-    MPMoviePlayerController *moviePlayer = self.aiPlayerViewController.moviePlayer;
-    [moviePlayer stop];
+    NSLog(@"--------- saveVideo !!!!!!!!");
+    if (![self.currentVideoObject.serialId isEqualToString:@"0"]) {
+        int sectionNum = self.currentVideoObject.curSectionNum;
+        if (self.aiPlayerViewController.videoArray.count > sectionNum + 2) {
+            NSLog(@"-----play here !!!!!!!!");
+            [self.aiPlayerViewController playVideoAtSection:sectionNum + 1];
+        }
+    } else {
+        MPMoviePlayerController *moviePlayer = self.aiPlayerViewController.moviePlayer;
+        [moviePlayer stop];
+    }
     [self saveVideoInDatabase];
 }
 

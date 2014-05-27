@@ -169,11 +169,13 @@ enum RESOURCE_SOURCE_TYPE {
   NSString * __appKey56;
   int32_t __reportFlag;
   int32_t __searchKeysVer;
+  int32_t __searchImgVer;
 
   BOOL __head_isset;
   BOOL __appKey56_isset;
   BOOL __reportFlag_isset;
   BOOL __searchKeysVer_isset;
+  BOOL __searchImgVer_isset;
 }
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
@@ -181,10 +183,11 @@ enum RESOURCE_SOURCE_TYPE {
 @property (nonatomic, retain, getter=appKey56, setter=setAppKey56:) NSString * appKey56;
 @property (nonatomic, getter=reportFlag, setter=setReportFlag:) int32_t reportFlag;
 @property (nonatomic, getter=searchKeysVer, setter=setSearchKeysVer:) int32_t searchKeysVer;
+@property (nonatomic, getter=searchImgVer, setter=setSearchImgVer:) int32_t searchImgVer;
 #endif
 
 - (id) init;
-- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer;
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer searchImgVer: (int32_t) searchImgVer;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -214,6 +217,12 @@ enum RESOURCE_SOURCE_TYPE {
 - (void) setSearchKeysVer: (int32_t) searchKeysVer;
 #endif
 - (BOOL) searchKeysVerIsSet;
+
+#if !__has_feature(objc_arc)
+- (int32_t) searchImgVer;
+- (void) setSearchImgVer: (int32_t) searchImgVer;
+#endif
+- (BOOL) searchImgVerIsSet;
 
 @end
 

@@ -38,8 +38,6 @@
     [[AiDataBaseManager shareInstance] getVideoListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
             [_scrollViewController.scrollView setAiVideoObjects:videoList];
-//            [_scrollViewController.scrollView setVideoDatas:videoList];
-//            [_scrollViewController.scrollView reloadData];
         } else {
             NSLog(@"getVideoList error is %@",error);
         }

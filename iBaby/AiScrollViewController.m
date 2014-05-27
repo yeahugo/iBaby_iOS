@@ -9,6 +9,7 @@
 #import "AiScrollViewController.h"
 #import "AiDataRequestManager.h"
 #import "AiDataBaseManager.h"
+#import "AiWaitingView.h"
 
 @implementation AiScrollViewController
 
@@ -28,10 +29,6 @@
         scrollView.searchViewType = kSearchViewTypeAll;
         self.scrollView = scrollView;
         _songListArray = [[NSMutableArray alloc] init];
-        
-        _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activityView.center = CGPointMake(200, 120);
-        [self.scrollView addSubview:_activityView];
         
         if (keyWords) {
             self.resourceType = -1;
@@ -116,6 +113,7 @@
     [_songListArray removeAllObjects];
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
     [dataManager requestRecommendWithType:resourceType startId:_startId completion:^(NSArray *resultArray,NSError *error){
+        [AiWaitingView dismiss];    //移除菊花
         if (error == nil) {
             _startId = _startId + (int)resultArray.count;
             NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
@@ -142,7 +140,7 @@
     self.resourceType = resourceType;
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
     [dataManager requestSearchWithKeyWords:self.keyWords startId:[NSNumber numberWithInt:_startId] resourceType:resourceType completion:^(NSArray *resultArray,NSError *error){
-        [self.activityView stopAnimating];
+        [AiWaitingView dismiss];
         if (error == nil) {
             if (resultArray.count == 0) {
                 UIImageView *noResultImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no_results"]];

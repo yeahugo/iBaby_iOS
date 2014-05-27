@@ -18,7 +18,7 @@
 
 @property (nonatomic, assign) IBOutlet UIView * backGroundView;
 
-@property (nonatomic, assign) IBOutlet UILabel * serialDescriptionLabel;
+@property (nonatomic, assign) IBOutlet UITextView *serialTextView;
 
 @property (nonatomic, assign) IBOutlet UILabel * serialLabel;
 

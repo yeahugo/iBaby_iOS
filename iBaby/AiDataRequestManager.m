@@ -63,6 +63,7 @@
     [[AiUserManager shareInstance] updateConfig:^(UserConfig *config) {
         self.wuliuAppkey = config.appKey56;
         self.isReportFlag = config.reportFlag;
+        self.searchDefaultVer = config.searchImgVer;
         if (self.searchKeyVer != config.searchKeysVer) {
             [[AiUserManager shareInstance] getSearchSuggestKeys:^(int result) {
                 NSLog(@"result is %d",result);
@@ -96,7 +97,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (resouceResp.resCode == ResponseCodeSuccess) {
-            NSLog(@"result is %@",resouceResp);
+//            NSLog(@"result is %@",resouceResp);
             completion(resouceResp.resList,nil);
         } else {
             NSError *error = [NSError errorWithDomain:@"server error" code:resouceResp.resCode userInfo:nil];
@@ -125,6 +126,9 @@
 
 -(void)requestReportWithString:(NSString *)reportString completion:(void (^)(NSArray *resultArray , NSError * error))completion
 {
+    if (self.isReportFlag == 0) {
+        return;
+    }
     ReportReq *reportReq = [[ReportReq alloc] initWithHead:_reqHead rptItem:reportString];
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
@@ -168,6 +172,13 @@
         } else {
             NSLog(@"error resp is %@",resp);
             NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
+            if (resp.resCode == -1) {
+                [[AiUserManager shareInstance] userLogin:^(int result){
+                    if (result == 0) {
+                        [self doRecommendWithType:resourceType startId:startId completion:completion];
+                    }
+                }];
+            }
             if (completion) {
                 completion(nil,error);
             }
@@ -249,6 +260,7 @@
 {
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^(void){
         SearchReq *searchReq = [[SearchReq alloc] initWithHead:_reqHead searchKeys:keyWords startId:[startId intValue] recordNum:SearchNum resourceType:resourceType serialId:nil];
+        NSLog(@"------ search Req is %@",searchReq);
         @try {
             [self doSearchWithRequest:searchReq completion:completion];
         }

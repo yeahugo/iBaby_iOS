@@ -9,6 +9,7 @@
 #import "AiAlbumViewController.h"
 #import "AiFirstViewController.h"
 #import "UMImageView.h"
+#import "AiVideoPlayerManager.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface AiAlbumViewController ()
@@ -27,25 +28,23 @@
 }
 
 - (void)viewDidLoad
-{
+{    
     [super viewDidLoad];
-    _albumViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame serialId:self.serialId completion:^(NSArray *resultArray, NSError *error) {
+    self.videoObject = [AiVideoPlayerManager shareInstance].currentVideoObject;
+    [self.sectionNumLabel setText:[NSString stringWithFormat:@"%d",self.videoObject.totalSectionNum]];
+    [self.titleLabel setText:self.videoObject.serialTitle];
+    if (self.videoObject.serialDes.length > 0) {
+        [self.serialTextView setText:self.videoObject.serialDes];
+    }
+    
+    self.serialImageView.layer.cornerRadius = 6;
+    self.serialImageView.layer.masksToBounds = YES;
+    
+    _albumViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame serialId:self.videoObject.serialId completion:^(NSArray *resultArray, NSError *error) {
         if (error == nil) {
+            [_albumViewController.scrollView addSubview:_albumView];
             ResourceInfo *resourceInfo = [resultArray objectAtIndex:0];
             self.videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
-            NSMutableString *serialDescription = [[NSMutableString alloc] init];
-            if (resourceInfo.serialDes.length > 0) {
-                [serialDescription appendString:resourceInfo.serialDes];
-            }
-            [self.serialDescriptionLabel setText:serialDescription];
-            [self.sectionNumLabel setText:[NSString stringWithFormat:@"%d首",resourceInfo.sectionNum]];
-            [self.titleLabel setText:resourceInfo.serialName];
-            
-            CGSize labelSize = self.serialDescriptionLabel.frame.size;
-            UIFont *font = [UIFont fontWithName:@"Helvetica" size:16];
-            CGSize newLabelSize = [self.serialDescriptionLabel.text sizeWithFont:font constrainedToSize:labelSize lineBreakMode:self.serialDescriptionLabel.lineBreakMode];
-            self.serialDescriptionLabel.frame = CGRectMake(self.serialDescriptionLabel.frame.origin.x, self.serialDescriptionLabel.frame.origin.y, newLabelSize.width, newLabelSize.height);
-            
             UMImageView *imageView = [[UMImageView alloc] initWithFrame:self.serialImageView.frame];
             [imageView setImageURL:[NSURL URLWithString:resourceInfo.img]];
             if (imageView.isCache) {
@@ -54,10 +53,8 @@
                 NSData * data = [NSData dataWithContentsOfURL:[NSURL URLWithString:resourceInfo.url]];
                 UIImage *image = [UIImage imageWithData:data];
                 self.serialImageView.image = image;
+                [self.serialImageView setNeedsDisplay];
             }
-            self.serialImageView.layer.cornerRadius = 6;
-            self.serialImageView.layer.masksToBounds = YES;
-            [_albumViewController.scrollView addSubview:_albumView];
         }
     }];
     _albumViewController.sourceType = kDataSourceTypeWeb;
@@ -71,6 +68,7 @@
 
 -(IBAction)close:(id)sender
 {
+    NSLog(@"close album!!");
     [self dismissFormSheetControllerAnimated:YES completionHandler:nil];
 //    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
 //    [rootViewController closeSheetController];

@@ -15,7 +15,8 @@ typedef enum {
     kReportTypeVideo,
     kReportTypeSearch,
     kReportTypeHistory,
-    kReportTypeFavourite
+    kReportTypeFavourite,
+    kReportTypeFeedback
 } kReportType;
 
 typedef enum {
@@ -62,7 +63,7 @@ typedef enum {
 
 #define SearchNum 12*3
 
-#define AlbumNum 35
+#define AlbumNum 12
 
 #define RecommendNum SearchNum
 

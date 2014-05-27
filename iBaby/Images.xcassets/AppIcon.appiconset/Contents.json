@@ -53,18 +53,18 @@
     {
       "size" : "72x72",
       "idiom" : "ipad",
-      "filename" : "final_1(1).png",
+      "filename" : "logo_144@2x.png",
       "scale" : "2x"
     },
     {
-      "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "icon@2x.png",
+      "size" : "76x76",
       "scale" : "1x"
     },
     {
-      "idiom" : "ipad",
       "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "logo_152@2x.png",
       "scale" : "2x"
     }
   ],

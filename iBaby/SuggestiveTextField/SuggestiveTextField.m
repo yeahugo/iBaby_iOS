@@ -104,6 +104,13 @@
         }
         [_popOver setPopoverContentSize:CGSizeMake(_popOver.popoverContentSize.width, (_cellHeight+2) * cellNum)];
     }
+    //兼容iOS 7以下
+    if (![_popOver respondsToSelector:@selector(setBackgroundColor:)]) {
+        NSArray* subviews = ((UIView*)[_popOver.contentViewController.view.superview.superview.superview.subviews objectAtIndex:0]).subviews;
+        for(UIView *subview in subviews){
+            subview.hidden = YES;
+        }
+    }
 }
 
 

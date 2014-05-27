@@ -656,7 +656,7 @@
   return self;
 }
 
-- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer searchImgVer: (int32_t) searchImgVer
 {
   self = [super init];
   __head = [head retain_stub];
@@ -667,6 +667,8 @@
   __reportFlag_isset = YES;
   __searchKeysVer = searchKeysVer;
   __searchKeysVer_isset = YES;
+  __searchImgVer = searchImgVer;
+  __searchImgVer_isset = YES;
   return self;
 }
 
@@ -693,6 +695,11 @@
     __searchKeysVer = [decoder decodeInt32ForKey: @"searchKeysVer"];
     __searchKeysVer_isset = YES;
   }
+  if ([decoder containsValueForKey: @"searchImgVer"])
+  {
+    __searchImgVer = [decoder decodeInt32ForKey: @"searchImgVer"];
+    __searchImgVer_isset = YES;
+  }
   return self;
 }
 
@@ -713,6 +720,10 @@
   if (__searchKeysVer_isset)
   {
     [encoder encodeInt32: __searchKeysVer forKey: @"searchKeysVer"];
+  }
+  if (__searchImgVer_isset)
+  {
+    [encoder encodeInt32: __searchImgVer forKey: @"searchImgVer"];
   }
 }
 
@@ -799,6 +810,23 @@
   __searchKeysVer_isset = NO;
 }
 
+- (int32_t) searchImgVer {
+  return __searchImgVer;
+}
+
+- (void) setSearchImgVer: (int32_t) searchImgVer {
+  __searchImgVer = searchImgVer;
+  __searchImgVer_isset = YES;
+}
+
+- (BOOL) searchImgVerIsSet {
+  return __searchImgVer_isset;
+}
+
+- (void) unsetSearchImgVer {
+  __searchImgVer_isset = NO;
+}
+
 - (void) read: (id <TProtocol>) inProtocol
 {
   NSString * fieldName;
@@ -848,6 +876,14 @@
           [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         }
         break;
+      case 5:
+        if (fieldType == TType_I32) {
+          int32_t fieldValue = [inProtocol readI32];
+          [self setSearchImgVer: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -883,6 +919,11 @@
     [outProtocol writeI32: __searchKeysVer];
     [outProtocol writeFieldEnd];
   }
+  if (__searchImgVer_isset) {
+    [outProtocol writeFieldBeginWithName: @"searchImgVer" type: TType_I32 fieldID: 5];
+    [outProtocol writeI32: __searchImgVer];
+    [outProtocol writeFieldEnd];
+  }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
 }
@@ -901,6 +942,10 @@
     @throw [TProtocolException exceptionWithName: @"TProtocolException"
                                reason: @"Required field 'searchKeysVer' is not set."];
   }
+  if (!__searchImgVer_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'searchImgVer' is not set."];
+  }
 }
 
 - (NSString *) description {
@@ -913,6 +958,8 @@
   [ms appendFormat: @"%i", __reportFlag];
   [ms appendString: @",searchKeysVer:"];
   [ms appendFormat: @"%i", __searchKeysVer];
+  [ms appendString: @",searchImgVer:"];
+  [ms appendFormat: @"%i", __searchImgVer];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }

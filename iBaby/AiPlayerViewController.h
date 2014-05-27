@@ -42,6 +42,10 @@
 
 @property (nonatomic, strong) AiPlayerViewControl *playControlView;
 
+@property (nonatomic, strong) MPMoviePlayerController *playerController;
+
+@property (nonatomic, assign) float volume;
+
 @property (nonatomic, unsafe_unretained) BOOL isLike;
 
 @property (nonatomic, assign) BOOL isOnVolumn;
@@ -55,5 +59,7 @@
 -(IBAction)onClickSelectVideos:(UIButton *)button;
 
 -(IBAction)onClickVolumn:(id)sender;
+
+-(void)playVideoAtSection:(int)section;
 
 @end
