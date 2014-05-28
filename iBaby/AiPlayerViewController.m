@@ -28,31 +28,14 @@
     if ([super init]) {
         [self.moviePlayer stop];
         self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
+        self.moviePlayer.repeatMode = MPMovieRepeatModeOne;
         [self.moviePlayer prepareToPlay];
+        NSLog(@"contentUrl is %@",contentURL);
         [self.moviePlayer setContentURL:contentURL];
         _videoArray = [[NSArray alloc] init];
         _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishVideo) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeVideo:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
-        
-        NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
-        int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
-        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
-        if ([serialId isEqualToString:@"0"]) {
-            sectionNum = AlbumNum;
-        }
-        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
-            if (result.count > 0) {
-                int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
-                if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
-                    [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
-                        self.videoArray = resultArray;
-                    }];
-                } else{
-                    self.videoArray = result;
-                }                
-            }
-        }];
         
         if ([MPMusicPlayerController applicationMusicPlayer].volume > 0) {
             self.isOnVolumn = YES;
@@ -65,6 +48,35 @@
     return self;
 }
 
+-(void)viewDidLoad{
+    NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
+    int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
+    if ([serialId isEqualToString:@"0"]) {
+        sectionNum = AlbumNum;
+    }
+    NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
+        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
+                if (result.count > 0) {
+                    int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
+                    if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
+                        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
+//                            NSLog(@"result Array is %@",resultArray);
+                            self.videoArray = resultArray;
+                        }];
+                    } else{
+//                        NSLog(@"result Array is %@",result);
+                        self.videoArray = result;
+                    }
+                }
+        }];
+    self.moviePlayer.controlStyle = MPMovieControlStyleNone;
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addControllView)];
+    gesture.delegate = self;
+    [self.moviePlayer.view addGestureRecognizer:gesture];
+    
+    [super viewDidLoad];
+}
+
 -(void)viewDidDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -73,7 +85,6 @@
 
 - (void)didChangeVideo:(NSNotification *)notification
 {
-    NSLog(@"didChangeVideo state is %d",self.moviePlayer.playbackState);
     if (self.moviePlayer.playbackState == MPMoviePlaybackStatePlaying)
     {
         [AiWaitingView dismiss];
@@ -106,11 +117,19 @@
     NSString *time = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
     self.playControlView.slider.value = currentTime;
     self.playControlView.currentTimeLabel.text = [NSString stringWithFormat:@"%@",time];
-        
+    
     int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
+    
     if ((int)(self.moviePlayer.currentPlaybackTime + 1) == (int)(self.moviePlayer.duration)) {
-        if (curSectionNum + 1 < [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum) {
+        if (curSectionNum + 1 < [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum && ![[AiVideoPlayerManager shareInstance].currentVideoObject.serialId isEqualToString:@"0"]) {
             [self playVideoAtSection:curSectionNum+1];
+        }
+        if([[AiVideoPlayerManager shareInstance].currentVideoObject.serialId isEqualToString:@"0"]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.moviePlayer pause];
+                [self onClickSelectVideos:nil];
+            });
+            [_timer invalidate];
         }
     }
 }
@@ -148,6 +167,7 @@
 {
     [_timer invalidate];
     _timer = nil;
+    [[AiVideoPlayerManager shareInstance] saveVideoInDatabase];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -168,11 +188,11 @@
     UIImage *videoFrame = [UIImage imageNamed:@"episode edge"];
     CGSize size = videoFrame.size;
     self.videoArray = result;
-    NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
+
     int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
-    NSLog(@"curSection num is %d",curSectionNum);
+    NSLog(@"-----resource type is %d",[AiVideoPlayerManager shareInstance].currentVideoObject.resourceType);
     
-    if (![serialId isEqualToString:@"0"]) {
+    if ([AiVideoPlayerManager shareInstance].currentVideoObject.resourceType == RESOURCE_TYPE_CARTOON) {
         int rowNum = 5;
         for (int i = 0; i < totalNum; i++) {
             UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(i%rowNum * (size.width-2), i/rowNum * (size.height-2), size.width , size.height)];
@@ -196,7 +216,6 @@
             backGroundView.frame = CGRectMake(0, 0, backGroundView.frame.size.width, contentSize.height);
         }
     }
-    
     else{
         UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background_low"]];
         CGSize size = frameImageView.frame.size;
@@ -227,6 +246,7 @@
 
 -(IBAction)onClickSelectVideos:(UIButton *)button
 {
+    NSLog(@"onClickSelectVideos !!");
     if (self.playControlView.videoListView == nil) {
         NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
@@ -330,7 +350,7 @@
         
         BOOL isLike = [[AiDataBaseManager shareInstance] isFavouriteVideo:[AiVideoPlayerManager shareInstance].currentVideoObject];
         if (isLike) {
-            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart-pressed"] forState:UIControlStateNormal];
+            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart_pressed"] forState:UIControlStateNormal];
         } else {
             [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart"] forState:UIControlStateNormal];
         }
@@ -364,17 +384,6 @@
 // this enables you to handle multiple recognizers on single view
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
-}
-
-- (void)viewDidLoad
-{
-    self.moviePlayer.controlStyle = MPMovieControlStyleNone;
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addControllView)];
-    gesture.delegate = self;
-    [self.moviePlayer.view addGestureRecognizer:gesture];
-
-    [super viewDidLoad];
-
 }
 
 - (void)didReceiveMemoryWarning

@@ -90,7 +90,7 @@
         @try {
             ReqHead *reqHead = [[ReqHead alloc] initWithBabyId:self.babyId guid:self.openUdid version:VERSION];
             UserConfig *userConfig = [[AiThriftManager shareInstance].userClient updateConfig:reqHead];
-            NSLog(@"userConfig is %@",userConfig);
+//            NSLog(@"userConfig is %@",userConfig);
             completion(userConfig);
         }
         @catch (NSException *exception) {
@@ -106,7 +106,7 @@
             ReqHead *reqHead = [[ReqHead alloc] initWithBabyId:self.babyId guid:self.openUdid version:VERSION];
             SearchSuggestKeys *keys = [[AiThriftManager shareInstance].userClient getSearchSuggestKeys:reqHead];
             NSArray *keysArray = [keys.suggestKeys componentsSeparatedByString:@"\n"];
-            NSLog(@"versiont is %d, keysArray is %@",keys.version,keysArray);
+//            NSLog(@"versiont is %d, keysArray is %@",keys.version,keysArray);
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *keysDirectory = [paths objectAtIndex:0];
             NSString *filePath = [NSString stringWithFormat:@"%@/keys.plist",keysDirectory];
@@ -131,7 +131,7 @@
             ReqHead *reqHead = [[ReqHead alloc] initWithBabyId:self.babyId guid:self.openUdid version:VERSION];
             NSString * seedString = [[AiThriftManager shareInstance].userClient getAuthSeed:reqHead];
             NSString * authString = [NSString stringWithFormat:@"%d%@%@%@",self.babyId,self.openUdid,self.passwd,seedString];
-            NSLog(@"authString is %@ %d openUdid is %@ seedString is %@",authString,self.babyId,self.openUdid,seedString);
+//            NSLog(@"authString is %@ %d openUdid is %@ seedString is %@",authString,self.babyId,self.openUdid,seedString);
             
             NSString * authMd5String = [AiUserManager md5Value:authString];
             
@@ -142,7 +142,7 @@
                 completion(reslut);
             }
             
-            NSLog(@"result is %d ----------- %d",reslut,loginReq.authStr.length);
+//            NSLog(@"result is %d ----------- %d",reslut,loginReq.authStr.length);
         }
         @catch (NSException *exception) {
             NSLog(@"login error!!");

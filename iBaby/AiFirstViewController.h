@@ -62,6 +62,8 @@
 
 -(IBAction)onclickBirds:(id)sender;
 
+-(IBAction)onClickFlowers:(id)sender;
+
 -(void)presentAlbumViewObject:(AiVideoObject *)videoObject;
 
 //-(void)presentAlbumViewController:(NSString *)serialId;

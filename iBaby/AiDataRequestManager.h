@@ -35,6 +35,8 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
 
 @property (nonatomic, assign) int searchDefaultVer;
 
+@property (nonatomic, strong) NSOperationQueue *queue;
+
 + (AiDataRequestManager *)shareInstance;
 
 -(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId  recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion;

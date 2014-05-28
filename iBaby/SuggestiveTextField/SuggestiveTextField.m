@@ -62,7 +62,7 @@
 
     self.popOver = [[UIPopoverController alloc] initWithContentViewController:_controller];
     
-    _popOver.popoverContentSize = CGSizeMake(self.frame.size.width, 300);
+    _popOver.popoverContentSize = CGSizeMake(self.frame.size.width+ 55, 300);
     if ([_popOver respondsToSelector:@selector(setBackgroundColor:)]) {
         _popOver.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
     }
@@ -96,7 +96,8 @@
     }
     else{
         if (!_popOver.isPopoverVisible){
-            [_popOver presentPopoverFromRect:self.frame inView:self.superview permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+            CGRect showRect = CGRectMake(self.frame.origin.x- 55/2, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+            [_popOver presentPopoverFromRect:showRect inView:self.superview permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
         }
         int cellNum = _matchedStrings.count;
         if (cellNum > 10) {
@@ -148,7 +149,7 @@
     [cell.textLabel setTextColor:[UIColor whiteColor]];
     cell.backgroundColor = [UIColor colorWithRed:((float)0x12/0xFF) green:((float)0xB5/0xFF) blue:((float)0xF8/0xFF) alpha:1];
     cell.textLabel.text = [_matchedStrings objectAtIndex:indexPath.row];
-    cell.imageView.image = [self scaleImage:[UIImage imageNamed:@"search"] ToSize:CGSizeMake(20, 20)];
+    cell.imageView.image = [self scaleImage:[UIImage imageNamed:@"search"] ToSize:CGSizeMake(25, 25)];
     
     return cell;
 }

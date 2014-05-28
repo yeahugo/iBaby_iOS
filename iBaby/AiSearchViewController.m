@@ -12,6 +12,7 @@
 #import "AiFirstViewController.h"
 #import "AiDefaultSearchView.h"
 #import "AiWaitingView.h"
+#import "AiAudioManager.h"
 
 @interface AiSearchViewController ()
 
@@ -50,14 +51,15 @@
     AiDefaultSearchView *defaultSearchView = [nib objectAtIndex:0];
 //    NSArray *subViews = [defaultSearchView subviews];
     [[AiDataRequestManager shareInstance] requestSearchRecommend:^(NSArray *resultArray, NSError *error) {
-        NSLog(@"requestSearchRecommend resultArray is %@",resultArray);
+//        NSLog(@"requestSearchRecommend resultArray is %@",resultArray);
         for (int i= 0; i<resultArray.count; i++) {
             ResourceInfo *resourceInfo = [resultArray objectAtIndex:i];
             AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
             UIView *subView = [defaultSearchView viewWithTag:100+i];
-            NSLog(@"subView frame is %@",NSStringFromCGRect(subView.frame));
+//            NSLog(@"subView frame is %@",NSStringFromCGRect(subView.frame));
             AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:subView.frame cellType:kViewCellTypeSearchRecommend];
             scrollViewCell.aiVideoObject = videoObject;
+            [scrollViewCell.imageButton setImage:nil forState:UIControlStateNormal];
             [self.backGroundView addSubview:scrollViewCell];
         }
     }];
@@ -98,6 +100,8 @@
 
 -(IBAction)onClickSearchWords:(NSString *)keyWords
 {
+//    [AiAudioManager play:@"search"];
+    [AiWaitingView addNoNetworkTip];
     [self.textField.popOver dismissPopoverAnimated:YES];
     [self removeAllSubView];
     NSString *keywords = nil;

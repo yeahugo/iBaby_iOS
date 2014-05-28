@@ -32,13 +32,13 @@
         NSString *queryString = [NSString stringWithFormat:@"SELECT * FROM `PlayedVideos`"];
         EGODatabaseResult *result = [_dataBase executeQuery:queryString];
         if (result.errorCode == 1) {
-            NSString *historySqlString = [NSString stringWithFormat:@"CREATE TABLE PlayedVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,PlayTime integer);"];
+            NSString *historySqlString = [NSString stringWithFormat:@"CREATE TABLE PlayedVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,SerialId String,SerialNum integer,PlayUrl String,PlayTime integer);"];
 //            [_dataBase requestWithUpdate:historySqlString];
             [_dataBase executeUpdate:historySqlString];
             NSString *recommendSqlString = [NSString stringWithFormat:@"CREATE TABLE RecommendVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,VideoType integer);"];
 //            [_dataBase requestWithUpdate:recommendSqlString];
             [_dataBase executeUpdate:recommendSqlString];
-            NSString *favouriteSqlString = [NSString stringWithFormat:@"CREATE TABLE FavouriteVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,VideoType integer);"];
+            NSString *favouriteSqlString = [NSString stringWithFormat:@"CREATE TABLE FavouriteVideos(Id integer PRIMARY KEY AUTOINCREMENT, Title String,ImageUrl String,SourceType integer,Vid String,SerialId String,SerialNum integer,PlayUrl String,VideoType integer);"];
 //            [_dataBase requestWithUpdate:favouriteSqlString];
             [_dataBase executeUpdate:favouriteSqlString];
         }
@@ -104,6 +104,9 @@
                 video.sourceType = [row intForColumn:@"SourceType"];
                 video.vid = [row stringForColumn:@"Vid"];
                 video.playTime = [row intForColumn:@"PlayTime"];
+                video.serialId = [row stringForColumn:@"SerialId"];
+                video.playUrl = [row stringForColumn:@"PlayUrl"];
+                video.totalSectionNum = [row intForColumn:@"SerialNum"];
                 [videoArray addObject:video];
             }
             completion(videoArray,error);
@@ -132,7 +135,7 @@
         startId = _favouriteStartId;
     }
     
-    NSLog(@"startid is %d",startId);
+//    NSLog(@"startid is %d",startId);
     EGODatabaseRequest *request = [_dataBase requestWithQuery:[NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY Id DESC LIMIT %d,%d",tableName,startId,startId+HistoryNum]];
     request.completion = ^(EGODatabaseRequest* request, EGODatabaseResult* result, NSError* error){
         if (result.errorCode == 0) {
@@ -149,6 +152,8 @@
                 video.sourceType = [row intForColumn:@"SourceType"];
                 video.vid = [row stringForColumn:@"Vid"];
                 video.playTime = [row intForColumn:@"PlayTime"];
+                video.serialId = [row stringForColumn:@"SerialId"];
+                video.totalSectionNum = [row intForColumn:@"SerialNum"];
                 [videoArray addObject:video];
             }
             completion(videoArray,error);
@@ -172,7 +177,7 @@
         [_queue addOperation:deleteRequest];
         
         NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO RecommendVideos(Id, Title,ImageUrl,SourceType,VideoType,Vid,PlayTime) VALUES (NULL,'%@','%@',%d,%d,'%@',%ld);",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.videoType,videoObject.vid,(long)videoObject.playTime];
-        NSLog(@"insertString is %@",sqlString);
+//        NSLog(@"insertString is %@",sqlString);
         EGODatabaseRequest *request = [_dataBase requestWithUpdate:sqlString];
         [_queue addOperation:request];
     }
@@ -189,7 +194,7 @@
         EGODatabaseRequest *deleteRequest = [_dataBase requestWithUpdate:deleteString];
         [_queue addOperation:deleteRequest];
         
-        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO FavouriteVideos(Id, Title,ImageUrl,SourceType,Vid) VALUES (NULL,'%@','%@',%d,'%@');",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid];
+        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO FavouriteVideos(Id, Title,ImageUrl,SourceType,Vid,SerialId,SerialNum,PlayUrl) VALUES (NULL,'%@','%@',%d,'%@','%@',%d,'%@');",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid,videoObject.serialId,videoObject.totalSectionNum,videoObject.playUrl];
         NSLog(@"insertString is %@",sqlString);
         EGODatabaseRequest *request = [_dataBase requestWithUpdate:sqlString];
         [_queue addOperation:request];
@@ -231,7 +236,7 @@
         EGODatabaseRequest *deleteRequest = [_dataBase requestWithUpdate:deleteString];
         [_queue addOperation:deleteRequest];
         
-        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO PlayedVideos(Id, Title,ImageUrl,SourceType,Vid,PlayTime) VALUES (NULL,'%@','%@',%d,'%@',%ld);",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid,(long)videoObject.playTime];
+        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO PlayedVideos(Id, Title,ImageUrl,SourceType,Vid,PlayTime,SerialId,SerialNum,PlayUrl) VALUES (NULL,'%@','%@',%d,'%@',%ld,'%@',%d,'%@');",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid,(long)videoObject.playTime,videoObject.serialId,videoObject.totalSectionNum,videoObject.playUrl];
         NSLog(@"insertString is %@",sqlString);
         EGODatabaseRequest *request = [_dataBase requestWithUpdate:sqlString];
         [_queue addOperation:request];

@@ -109,6 +109,7 @@
         [waitingImage setAnimationImages:loadingImages];
         [waitingImage startAnimating];
         [self addSubview:waitingImage];
+        [self setState:EGOOPullRefreshNormal];
     }
     return self;
 }
@@ -247,7 +248,7 @@
 //		[UIView commitAnimations];
 		
 	}
-    NSLog(@"contentOffset is %f",scrollView.contentOffset.y);
+//    NSLog(@"contentOffset is %f",scrollView.contentOffset.y);
     if (scrollView.contentOffset.y > 0 && scrollView.contentOffset.y > scrollView.contentSize.height - (self.superview.frame.size.height - 65) && !_loading) {
 		
 		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerGetMore:)]) {

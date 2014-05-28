@@ -114,6 +114,7 @@
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
     [dataManager requestRecommendWithType:resourceType startId:_startId completion:^(NSArray *resultArray,NSError *error){
         [AiWaitingView dismiss];    //移除菊花
+//        NSLog(@"resultArray is %@",resultArray);
         if (error == nil) {
             _startId = _startId + (int)resultArray.count;
             NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
@@ -146,6 +147,7 @@
                 UIImageView *noResultImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no_results"]];
                 noResultImage.center = CGPointMake(self.scrollView.frame.size.width/2, self.scrollView.frame.size.height/2);
                 [self.scrollView addSubview:noResultImage];
+                [self.scrollView setAiVideoObjects:_songListArray];
                 return;
             }
             

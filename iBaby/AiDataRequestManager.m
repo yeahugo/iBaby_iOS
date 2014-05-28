@@ -32,8 +32,9 @@
         _reConnectNum = 0;
         int babyId = [AiUserManager shareInstance].babyId;
         NSString *openUdid = [AiUserManager shareInstance].openUdid;
+        self.queue = [[NSOperationQueue alloc] init];
         
-        NSLog(@"baby id is %d",babyId);
+//        NSLog(@"baby id is %d",babyId);
         if (babyId == -1) {
             [[AiUserManager shareInstance] userRegistWithCompletion:^(RegisterResp *result, NSError *error) {
                 if (error == nil) {
@@ -47,10 +48,9 @@
             }];
         } else {
             _reqHead = [[ReqHead alloc] initWithBabyId:babyId guid:openUdid version:VERSION];
-            NSLog(@"[[AiUserManager shareInstance] userLogin:^(int result) here");
             [[AiUserManager shareInstance] userLogin:^(int result) {
                 [self updateConfig];
-                NSLog(@"user login is %d",result);
+//                NSLog(@"user login is %d",result);
             }];
         }
 
@@ -66,7 +66,7 @@
         self.searchDefaultVer = config.searchImgVer;
         if (self.searchKeyVer != config.searchKeysVer) {
             [[AiUserManager shareInstance] getSearchSuggestKeys:^(int result) {
-                NSLog(@"result is %d",result);
+//                NSLog(@"result is %d",result);
             }];
         }
         self.searchKeyVer = config.searchKeysVer;
@@ -90,9 +90,8 @@
 
 -(void)doRequestAlbumWithSericalId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion
 {
-//    AlbumReq *albumReq = [[AlbumReq alloc] initWithHead:_reqHead serialId:serialId startId:startId recordNum:recordNum];
     AlbumReq *albumReq = [[AlbumReq alloc] initWithHead:_reqHead serialId:serialId startId:startId recordNum:recordNum sectionName:videoTitle];
-    NSLog(@"albumreq is %@",albumReq);
+//    NSLog(@"albumreq is %@",albumReq);
     ResourceResp *resouceResp = [[AiThriftManager shareInstance].resourceClient getAlbum:albumReq];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -100,6 +99,14 @@
 //            NSLog(@"result is %@",resouceResp);
             completion(resouceResp.resList,nil);
         } else {
+            if (resouceResp.resCode == -1) {
+                [[AiUserManager shareInstance] userLogin:^(int result){
+                    if (result == 0) {
+                        [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum videoTitle:videoTitle completion:completion];
+                        return ;
+                    }
+                }];
+            }
             NSError *error = [NSError errorWithDomain:@"server error" code:resouceResp.resCode userInfo:nil];
             completion(nil,error);
         }
@@ -150,9 +157,9 @@
 
 -(void)doRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion
 {
-    NSLog(@"doRecommendWithType is %d",resourceType);
+//    NSLog(@"doRecommendWithType is %d",resourceType);
     RecommendReq * recommendReq = [[RecommendReq alloc] initWithHead:_reqHead startId:startId recordNum:RecommendNum];
-    NSLog(@"recommendReq is %@",recommendReq);
+//    NSLog(@"recommendReq is %@",recommendReq);
     ResourceResp *resp = nil;
     if (resourceType == RESOURCE_TYPE_SONG) {
         resp = [[AiThriftManager shareInstance].resourceClient getRecommendSongs:recommendReq];
@@ -176,6 +183,7 @@
                 [[AiUserManager shareInstance] userLogin:^(int result){
                     if (result == 0) {
                         [self doRecommendWithType:resourceType startId:startId completion:completion];
+                        return ;
                     }
                 }];
             }
@@ -189,7 +197,7 @@
 -(void)requestRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion
 {
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
-        NSLog(@"startId is %d",startId);
+//        NSLog(@"startId is %d",startId);
         @try {
             [self doRecommendWithType:resourceType startId:startId completion:completion];
         }
@@ -248,6 +256,14 @@
                 completion(resultArray,nil);
             }
         } else {
+            if (resp.resCode == -1) {
+                [[AiUserManager shareInstance] userLogin:^(int result){
+                    if (result == 0) {
+                        [self doSearchWithRequest:searchReq completion:completion];
+                        return ;
+                    }
+                }];
+            }
             NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
             if (completion) {
                 completion(nil,error);

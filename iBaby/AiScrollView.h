@@ -82,6 +82,8 @@
 
 @property (nonatomic, assign) AiScrollView *scrollView;
 
+@property (nonatomic, assign) kViewCellType viewCellType;
+
 -(void)onClickButton:(UIButton *)button;
 
 -(id)initWithVideoObject:(AiVideoObject *)videoObject;

@@ -18,5 +18,9 @@
 
 +(void)showInView:(UIView *)superView point:(CGPoint)point;
 
++(void)addNoNetworkTip:(UIView *)superView;
+
++(void)addNoNetworkTip;
+
 + (void)dismiss;
 @end

@@ -13,6 +13,10 @@
 #import "AiBannerView.h"
 #import "AiScrollViewController.h"
 #import "AiFirstViewController.h"
+#import "AiAudioManager.h"
+#import "AiDataRequestManager.h"
+#import "AFNetworking/AFNetworking.h"
+#import "AiWaitingView.h"
 
 #define DeltaY 14
 
@@ -35,7 +39,7 @@
     [self reloadData];
     
     if (self.videoDatas.count % self.pageCount == 0 && self.videoDatas.count > 0) {
-//        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
+        _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
         _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithWaitingImage:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
         _egoFooterView.delegate = self;
         [self addSubview:_egoFooterView];
@@ -113,7 +117,7 @@
 {
     NSArray * views = [self subviews];
     for (UIView * view in views) {
-        NSLog(@"view tag is %d",view.tag);
+//        NSLog(@"view tag is %d",view.tag);
         if (view.tag > 3) {
             [view removeFromSuperview];
         }
@@ -330,6 +334,7 @@
             [self addSubview:frameImageView];
         }
         self.backgroundColor = [UIColor clearColor];
+        self.viewCellType = viewCellType;
         
         if (viewCellType == kViewCellTypeHot || viewCellType == kViewCellTypeRecommend) {
             CGRect rect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
@@ -379,6 +384,7 @@
             [self.imageButton addTarget:self action:@selector(onClickButton:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:self.imageButton];
         }
+        [self.imageButton setImage:[UIImage imageNamed:@"no_picture"] forState:UIControlStateNormal];
         
         _aiVideoObject = [[AiVideoObject alloc] init];
     }
@@ -389,10 +395,21 @@
 {
     NSLog(@"vid is %@ sourceType is %d videoType is %d serialId is %@ url is %@",self.aiVideoObject.vid,self.aiVideoObject.sourceType,self.aiVideoObject.videoType,self.aiVideoObject.serialId,self.aiVideoObject.playUrl);
     
+    if ([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable) {
+        [AiWaitingView addNoNetworkTip];
+//        [AiWaitingView addNoNetworkTip:self.superview.superview.superview];
+        return;
+    }
+    
+    if (self.viewCellType == kViewCellTypeSearchRecommend) {
+        UITextField *textField = (UITextField *)[self.superview.superview viewWithTag:50];
+        [textField resignFirstResponder];
+//        [AiAudioManager play:@"search"];
+    }
+    
     if (![self.aiVideoObject.serialId isEqualToString:@"0"]  && self.scrollView.viewType == kTagViewTypeIndex) {
         AiFirstViewController *firstViewController = (AiFirstViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;
         [firstViewController presentAlbumViewObject:self.aiVideoObject];
-//        [firstViewController presentAlbumViewController:self.aiVideoObject.serialId];
     } else {
         [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
             if (error == nil) {
@@ -416,15 +433,19 @@
     [imageView setImageURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
     
     if ( !imageView.isCache) {
-        [self.scrollView.queue addOperationWithBlock:^(void){
+//        NSLog(@"imageView not cache!");
+        [[AiDataRequestManager shareInstance].queue addOperationWithBlock:^(void){
+//                    NSLog(@"imageView add block!");
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:aiVideoObject.imageUrl]];
             UIImage *image = [UIImage imageWithData:imageData];
             dispatch_async(dispatch_get_main_queue(), ^{
+                [self.imageButton setImage:nil forState:UIControlStateNormal];
                 [self.imageButton setBackgroundImage:image forState:UIControlStateNormal];
             });
         }];
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self.imageButton setImage:nil forState:UIControlStateNormal];
             [self.imageButton setBackgroundImage:imageView.image forState:UIControlStateNormal];
         });
     }

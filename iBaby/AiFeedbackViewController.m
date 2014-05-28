@@ -26,7 +26,7 @@
 
 -(IBAction)closeFeedback:(id)sender
 {
-    NSLog(@"closeFeedback!!");
+//    NSLog(@"closeFeedback!!");
     [self.formSheetController dismissAnimated:YES completionHandler:nil];
 }
 

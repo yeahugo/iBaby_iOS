@@ -23,6 +23,7 @@
 
 #import "AiWaitingView.h"
 #import "AiVideoPlayerManager.h"
+#import "AiAudioManager.h"
 
 @interface AiFirstViewController ()
 {
@@ -57,12 +58,23 @@
     }
     imageView.center = CGPointMake(window.frame.size.width/2, window.frame.size.height/2);
     imageView.tag = 101;
-    UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.frame];
-    backgroundView.tag = 100;
-    backgroundView.backgroundColor = [UIColor lightGrayColor];
-    backgroundView.alpha = 0.5;
-    [window addSubview:backgroundView];
+//    UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.frame];
+    UIButton *unreachButton = [[UIButton alloc] initWithFrame:self.view.frame];
+    [unreachButton setBackgroundColor:[UIColor lightGrayColor]];
+    [unreachButton addTarget:self action:@selector(removeUnreach:) forControlEvents:UIControlEventTouchUpInside];
+    unreachButton.tag = 100;
+    unreachButton.alpha = 0.6;
+    [window addSubview:unreachButton];
     [window addSubview:imageView];
+    [AiAudioManager play:@"no_network"];
+}
+
+-(void)removeUnreach:(UIButton *)button
+{
+    [button removeFromSuperview];
+    UIWindow *window = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
+    UIView *subView = [window viewWithTag:101];
+    [subView removeFromSuperview];
 }
 
 -(void)removeNetworkTip
@@ -78,7 +90,6 @@
 
 - (void)checkNetwork
 {
-//    [AFNetworkReachabilityManager managerForDomain:@"www.baidu.com"];
     [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         NSLog(@"Reachability: %@", AFStringFromNetworkReachabilityStatus(status));
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -354,47 +365,32 @@
 
 -(IBAction)onClickSun:(id)sender
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"sun" ofType:@"mp3"];
-    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
+    [AiAudioManager play:@"sun"];
 }
 
 -(IBAction)onClickBaby:(id)sender
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"baby" ofType:@"mp3"];
-    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
+    [AiAudioManager play:@"baby"];
 }
 
 -(IBAction)onClickTree:(id)sender
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"tree" ofType:@"mp3"];
-    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
+    [AiAudioManager play:@"tree"];
 }
 
 -(IBAction)onClickBee:(id)sender
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"bee" ofType:@"mp3"];
-    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
+    [AiAudioManager play:@"bee"];
 }
 
 -(IBAction)onclickBirds:(id)sender
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"birds" ofType:@"mp3"];
-    NSURL *audioUrl = [[NSURL alloc] initFileURLWithPath:path];
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioUrl error:nil];
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
+    [AiAudioManager play:@"birds"];
+}
+
+-(IBAction)onClickFlowers:(id)sender
+{
+    [AiAudioManager play:@"flower"];
 }
 
 #pragma mark Audio Sound

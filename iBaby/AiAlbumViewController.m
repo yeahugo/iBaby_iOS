@@ -50,10 +50,14 @@
             if (imageView.isCache) {
                 self.serialImageView.image = imageView.image;
             } else {
-                NSData * data = [NSData dataWithContentsOfURL:[NSURL URLWithString:resourceInfo.url]];
-                UIImage *image = [UIImage imageWithData:data];
-                self.serialImageView.image = image;
-                [self.serialImageView setNeedsDisplay];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                   
+                    NSData * data = [NSData dataWithContentsOfURL:[NSURL URLWithString:resourceInfo.img]];
+                    UIImage *image = [UIImage imageWithData:data];
+                    self.serialImageView.image = image;
+//                     NSLog(@"set sericial image view image is %@",image);
+                    [self.serialImageView setNeedsDisplay];
+                });
             }
         }
     }];
