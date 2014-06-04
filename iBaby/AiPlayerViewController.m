@@ -30,10 +30,8 @@
         self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
         self.moviePlayer.repeatMode = MPMovieRepeatModeOne;
         [self.moviePlayer prepareToPlay];
-        NSLog(@"contentUrl is %@",contentURL);
         [self.moviePlayer setContentURL:contentURL];
         _videoArray = [[NSArray alloc] init];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishVideo) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeVideo:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
         
@@ -87,20 +85,21 @@
 {
     if (self.moviePlayer.playbackState == MPMoviePlaybackStatePlaying)
     {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
         [AiWaitingView dismiss];
     }
 }
 
 -(void)finishVideo
 {
-    NSLog(@"finish video!!");
+//    NSLog(@"finish video!!");
     if (_timer) {
         [_timer invalidate];
     }
     if (![[AiVideoPlayerManager shareInstance].currentVideoObject.serialId isEqualToString:@"0"]) {
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
         if (self.videoArray.count > sectionNum + 2) {
-            NSLog(@"-----play here !!!!!!!!");
+//            NSLog(@"-----play here !!!!!!!!");
             [self playVideoAtSection:sectionNum + 1];
         }
     } 
@@ -121,7 +120,7 @@
     int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
     
     if ((int)(self.moviePlayer.currentPlaybackTime + 1) == (int)(self.moviePlayer.duration)) {
-        if (curSectionNum + 1 < [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum && ![[AiVideoPlayerManager shareInstance].currentVideoObject.serialId isEqualToString:@"0"]) {
+        if (curSectionNum + 1 < [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum && ![[AiVideoPlayerManager shareInstance].currentVideoObject.serialId isEqualToString:@"0"] && self.videoArray.count > 0) {
             [self playVideoAtSection:curSectionNum+1];
         }
         if([[AiVideoPlayerManager shareInstance].currentVideoObject.serialId isEqualToString:@"0"]) {
@@ -146,7 +145,7 @@
 
 -(IBAction)onClickVolumn:(UIButton *)button
 {
-    NSLog(@"onClickVolumn");
+//    NSLog(@"onClickVolumn");
     if (self.isOnVolumn == YES) {
         self.volume = [MPMusicPlayerController applicationMusicPlayer].volume;
         [[MPMusicPlayerController applicationMusicPlayer] setVolume:0];
@@ -190,7 +189,7 @@
     self.videoArray = result;
 
     int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
-    NSLog(@"-----resource type is %d",[AiVideoPlayerManager shareInstance].currentVideoObject.resourceType);
+//    NSLog(@"-----resource type is %d",[AiVideoPlayerManager shareInstance].currentVideoObject.resourceType);
     
     if ([AiVideoPlayerManager shareInstance].currentVideoObject.resourceType == RESOURCE_TYPE_CARTOON) {
         int rowNum = 5;
@@ -283,7 +282,7 @@
     
     [videoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
         if (error == nil) {
-            NSLog(@"-------------play url is %@ self.moviePlayer is %@",urlString,self.moviePlayer);
+//            NSLog(@"-------------play url is %@ self.moviePlayer is %@",urlString,self.moviePlayer);
             [self.moviePlayer setContentURL:[NSURL URLWithString:urlString]];
             [self.moviePlayer play];
         } else {

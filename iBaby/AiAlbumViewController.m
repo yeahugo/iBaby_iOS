@@ -10,6 +10,7 @@
 #import "AiFirstViewController.h"
 #import "UMImageView.h"
 #import "AiVideoPlayerManager.h"
+#import "AiWaitingView.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface AiAlbumViewController ()

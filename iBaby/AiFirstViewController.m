@@ -96,16 +96,16 @@
             if (status == AFNetworkReachabilityStatusNotReachable) {
                 [self addNoNetworkTip];
             } else {
-                [self removeNetworkTip];
-                if (self.songScrollView.videoDatas.count == 0) {
-                    [self.songScrollView.scrollViewController getRecommendResourceType];
-                }
-                if (self.catoonScrollView.videoDatas.count == 0) {
-                    [self.catoonScrollView.scrollViewController getRecommendResourceType];
-                }
-                if (self.videoScrollView.videoDatas.count == 0) {
-                    [self.videoScrollView.scrollViewController getRecommendResourceType];
-                }
+//                [self removeNetworkTip];
+//                if (self.songScrollView.videoDatas.count == 0) {
+//                    [self.songScrollView.scrollViewController getRecommendResourceType];
+//                }
+//                if (self.catoonScrollView.videoDatas.count == 0) {
+//                    [self.catoonScrollView.scrollViewController getRecommendResourceType];
+//                }
+//                if (self.videoScrollView.videoDatas.count == 0) {
+//                    [self.videoScrollView.scrollViewController getRecommendResourceType];
+//                }
             }
         });
     }];

@@ -1355,7 +1355,7 @@
 				ORGANIZATIONNAME = Ai;
 				TargetAttributes = {
 					D5A4463018E2512800B95D22 = {
-						DevelopmentTeam = L99VHR6ZPL;
+						DevelopmentTeam = 486K7NX823;
 					};
 					D5A4465418E2512800B95D22 = {
 						TestTargetID = D5A4463018E2512800B95D22;
@@ -1704,7 +1704,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ye Jiahuan (L99VHR6ZPL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ye Jiahuan (5B3Q2HND9L)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ye Jiahuan (5B3Q2HND9L)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1723,7 +1723,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "DFF00F7C-98E9-4467-9F74-99B64270B24A";
+				PROVISIONING_PROFILE = "785EC5A8-83C8-43DA-A82A-36211BB120DF";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1745,7 +1745,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ye Jiahuan (L99VHR6ZPL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ye Jiahuan (5B3Q2HND9L)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ye Jiahuan (5B3Q2HND9L)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1757,7 +1757,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				PROVISIONING_PROFILE = "DFF00F7C-98E9-4467-9F74-99B64270B24A";
+				PROVISIONING_PROFILE = "785EC5A8-83C8-43DA-A82A-36211BB120DF";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1770,9 +1770,9 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ye Jiahuan (L99VHR6ZPL)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Ye Jiahuan (5B3Q2HND9L)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ye Jiahuan (L99VHR6ZPL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iBaby/UmengSocial/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -1796,7 +1796,7 @@
 					"$(PROJECT_DIR)/iBaby/UmengSocial/UMSocial_Sdk_Extra_Frameworks/YiXin",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "DFF00F7C-98E9-4467-9F74-99B64270B24A";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1809,7 +1809,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ye Jiahuan (L99VHR6ZPL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iBaby/UmengSocial/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -1834,7 +1834,7 @@
 					"$(PROJECT_DIR)/iBaby/UmengSocial/UMSocial_Sdk_Extra_Frameworks/YiXin",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "DFF00F7C-98E9-4467-9F74-99B64270B24A";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};

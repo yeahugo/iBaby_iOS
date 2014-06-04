@@ -190,12 +190,12 @@
 {
     @try {
         NSString *deleteString = [NSString stringWithFormat:@"DELETE FROM FavouriteVideos WHERE SourceType=%d and Vid='%@'",videoObject.sourceType,videoObject.vid];
-        NSLog(@"deleteString is %@",deleteString);
+//        NSLog(@"deleteString is %@",deleteString);
         EGODatabaseRequest *deleteRequest = [_dataBase requestWithUpdate:deleteString];
         [_queue addOperation:deleteRequest];
         
         NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO FavouriteVideos(Id, Title,ImageUrl,SourceType,Vid,SerialId,SerialNum,PlayUrl) VALUES (NULL,'%@','%@',%d,'%@','%@',%d,'%@');",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid,videoObject.serialId,videoObject.totalSectionNum,videoObject.playUrl];
-        NSLog(@"insertString is %@",sqlString);
+//        NSLog(@"insertString is %@",sqlString);
         EGODatabaseRequest *request = [_dataBase requestWithUpdate:sqlString];
         [_queue addOperation:request];
     }
@@ -208,7 +208,7 @@
 {
     @try {
         NSString *deleteString = [NSString stringWithFormat:@"DELETE FROM FavouriteVideos WHERE SourceType=%d and Vid='%@'",videoObject.sourceType,videoObject.vid];
-        NSLog(@"deleteString is %@",deleteString);
+//        NSLog(@"deleteString is %@",deleteString);
         EGODatabaseRequest *deleteRequest = [_dataBase requestWithUpdate:deleteString];
         [_queue addOperation:deleteRequest];
     }
@@ -237,7 +237,7 @@
         [_queue addOperation:deleteRequest];
         
         NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO PlayedVideos(Id, Title,ImageUrl,SourceType,Vid,PlayTime,SerialId,SerialNum,PlayUrl) VALUES (NULL,'%@','%@',%d,'%@',%ld,'%@',%d,'%@');",videoObject.title,videoObject.imageUrl,videoObject.sourceType,videoObject.vid,(long)videoObject.playTime,videoObject.serialId,videoObject.totalSectionNum,videoObject.playUrl];
-        NSLog(@"insertString is %@",sqlString);
+//        NSLog(@"insertString is %@",sqlString);
         EGODatabaseRequest *request = [_dataBase requestWithUpdate:sqlString];
         [_queue addOperation:request];
     }

@@ -38,7 +38,20 @@
     [self.videoDatas addObjectsFromArray:aiVideoObjects];
     [self reloadData];
     
-    if (self.videoDatas.count % self.pageCount == 0 && self.videoDatas.count > 0) {
+    BOOL isAddEgoFooterView = NO;
+    if (self.viewType == kTagViewTypeIndex) {
+        NSArray *normalArray = [self getNormalVideoDatas:aiVideoObjects];
+        NSLog(@"normalArray count is %d",normalArray.count);
+        if (normalArray.count % self.pageCount == 0 && normalArray.count > 0) {
+            isAddEgoFooterView = YES;
+        }
+    }
+    else {
+        if (self.videoDatas.count % self.pageCount == 0 && self.videoDatas.count > 0) {
+            isAddEgoFooterView = YES;
+        }
+    }
+    if (isAddEgoFooterView) {
         _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
         _egoFooterView = [[EGORefreshTableHeaderView alloc] initWithWaitingImage:CGRectMake(0, self.contentSize.height, self.frame.size.width - 50, 60)];
         _egoFooterView.delegate = self;
@@ -48,7 +61,7 @@
 
 -(void)addAiVideoObjects:(NSArray *)aiVideoObjects
 {
-    int startIndex = self.videoDatas.count;
+    int startIndex = aiVideoObjects.count;
     [self.videoDatas addObjectsFromArray:aiVideoObjects];
     for (int i = startIndex; i<[self.videoDatas count]; i++) {
         AiScrollViewCell *cell = [self scrollCellWithIndex:i];
@@ -60,8 +73,7 @@
     [self setContentSize:CGSizeMake(self.frame.size.width, self.contentSize.height + deltaHeight)];
     if (aiVideoObjects.count == self.pageCount) {
         _egoFooterView.center = CGPointMake(_egoFooterView.center.x, _egoFooterView.center.y + deltaHeight);
-    }
-    else {
+    } else {
         [_egoFooterView removeFromSuperview];
     }
 }
@@ -208,20 +220,33 @@
         _cellOffSetY = 190;
     }
     
-    if (self.viewType == kTagViewTypeIndex && firstVideoObject.status == 2) {
+    if (self.viewType == kTagViewTypeIndex && firstVideoObject.status == RESOURCE_STATUS_HOT) {
         AiBannerView *bannerView = [[AiBannerView alloc] initWithFrame:CGRectMake( _cellOffSetX, 0, self.frame.size.width, 296) videoDatas:self.videoDatas scrollView:self];
         [self addSubview:bannerView];
         _cellOffSetY = 322;
     }
     
     _cellHeight = 0;
-    for (int i = 0; i<[self.videoDatas count]; i++) {
+    NSArray *normalVideoArray = [self getNormalVideoDatas:self.videoDatas];
+    for (int i = 0; i<normalVideoArray.count; i++) {
         AiScrollViewCell *cell = [self scrollCellWithIndex:i];
-        cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
+        cell.aiVideoObject = [normalVideoArray objectAtIndex:i];
         _cellHeight = cell.frame.size.height + DeltaY;
     }
-    float height = ceil((float)self.videoDatas.count / ColNum) * _cellHeight + _cellOffSetY;
+    
+    float height = ceil((float)normalVideoArray.count / ColNum) * _cellHeight + _cellOffSetY;
     [self setContentSize:CGSizeMake(self.frame.size.width, height)];
+}
+
+-(NSArray *)getNormalVideoDatas:(NSArray *)sourceArray
+{
+    NSMutableArray *normalVideoObject = [NSMutableArray array];
+    for (AiVideoObject * videoObject in self.videoDatas) {
+        if (videoObject.status == RESOURCE_STATUS_NORMAL) {
+            [normalVideoObject addObject:videoObject];
+        }
+    }
+    return normalVideoObject;
 }
 
 

@@ -113,8 +113,7 @@
     [_songListArray removeAllObjects];
     AiDataRequestManager *dataManager = [AiDataRequestManager shareInstance];
     [dataManager requestRecommendWithType:resourceType startId:_startId completion:^(NSArray *resultArray,NSError *error){
-        [AiWaitingView dismiss];    //移除菊花
-//        NSLog(@"resultArray is %@",resultArray);
+        [AiWaitingView dismiss];
         if (error == nil) {
             _startId = _startId + (int)resultArray.count;
             NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
@@ -177,6 +176,7 @@
                     AiVideoObject * videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
                     [saveSongArray addObject:videoObject];
                 }
+                NSLog(@"saveSongArray count is %d",saveSongArray.count);
                 [_songListArray addObjectsFromArray:saveSongArray];
                 [self.scrollView addAiVideoObjects:saveSongArray];
             }
@@ -185,14 +185,18 @@
     if (self.scrollView.viewType == kTagViewTypeIndex) {
         [dataManager requestRecommendWithType:self.resourceType startId:_startId completion:^(NSArray *resultArray, NSError *error) {
             if (error == nil) {
+                NSLog(@"start id is %d",_startId);
                 _startId = _startId + resultArray.count;
                 NSMutableArray * saveSongArray = [[NSMutableArray alloc] init];
                 for (int i = 0; i < resultArray.count; i++) {
                     ResourceInfo * resourceInfo = [resultArray objectAtIndex:i];
                     AiVideoObject * videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
-                    [saveSongArray addObject:videoObject];
+                    if (videoObject.status == RESOURCE_STATUS_NORMAL) {
+                        [saveSongArray addObject:videoObject];
+                    }
                 }
                 [_songListArray addObjectsFromArray:saveSongArray];
+                NSLog(@"add song is %d",saveSongArray.count);
                 [self.scrollView addAiVideoObjects:saveSongArray];
             }
         }];

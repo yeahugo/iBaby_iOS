@@ -91,12 +91,10 @@
 -(void)doRequestAlbumWithSericalId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion
 {
     AlbumReq *albumReq = [[AlbumReq alloc] initWithHead:_reqHead serialId:serialId startId:startId recordNum:recordNum sectionName:videoTitle];
-//    NSLog(@"albumreq is %@",albumReq);
     ResourceResp *resouceResp = [[AiThriftManager shareInstance].resourceClient getAlbum:albumReq];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (resouceResp.resCode == ResponseCodeSuccess) {
-//            NSLog(@"result is %@",resouceResp);
             completion(resouceResp.resList,nil);
         } else {
             if (resouceResp.resCode == -1) {
@@ -115,6 +113,7 @@
 
 -(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion
 {
+    NSLog(@"startid is %d",startId);
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
             [self doRequestAlbumWithSericalId:serialId startId:startId recordNum:recordNum videoTitle:videoTitle completion:completion];
@@ -139,7 +138,7 @@
     ReportReq *reportReq = [[ReportReq alloc] initWithHead:_reqHead rptItem:reportString];
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
-            NSLog(@"reportReq is %@",reportReq);
+//            NSLog(@"reportReq is %@",reportReq);
             [[AiThriftManager shareInstance].reportClient report:reportReq];
         }
         @catch (NSException *exception) {
@@ -177,7 +176,6 @@
                 completion(resultArray,nil);
             }
         } else {
-            NSLog(@"error resp is %@",resp);
             NSError *error = [NSError errorWithDomain:@"server error" code:resp.resCode userInfo:nil];
             if (resp.resCode == -1) {
                 [[AiUserManager shareInstance] userLogin:^(int result){
@@ -187,7 +185,9 @@
                     }
                 }];
             }
+
             if (completion) {
+                NSLog(@"completion here is %@",resp);
                 completion(nil,error);
             }
         }
@@ -197,7 +197,6 @@
 -(void)requestRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion
 {
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
-//        NSLog(@"startId is %d",startId);
         @try {
             [self doRecommendWithType:resourceType startId:startId completion:completion];
         }

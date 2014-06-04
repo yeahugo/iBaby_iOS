@@ -24,9 +24,24 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        int bigVideoNum = 7;
+        int bigVideoNum = 0;
         _scrollViewWidth = 490;
         UIScrollView * scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, _scrollViewWidth, frame.size.height)];
+        
+        for (int i = 0; i < videoDatas.count; i++) {
+            AiVideoObject *aiVideoObject = [videoDatas objectAtIndex:i];
+            if (aiVideoObject.status == RESOURCE_STATUS_HOT) {
+                AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(i * scrollView.frame.size.width, 0, scrollView.frame.size.width, scrollView.frame.size.height) cellType:kViewCellTypeHot];
+                scrollViewCell.scrollView = aiScrollView;
+                scrollViewCell.tag = 2000 + i;
+                scrollViewCell.aiVideoObject = [videoDatas objectAtIndex:i];
+                bigVideoNum ++;
+                [scrollView addSubview:scrollViewCell];
+            }
+        }
+        if (bigVideoNum < 7) {
+            bigVideoNum = 7;
+        }
         scrollView.backgroundColor = [UIColor blackColor];
         scrollView.pagingEnabled = YES;
         scrollView.showsHorizontalScrollIndicator = NO;
@@ -38,29 +53,25 @@
         _pageControl = [[UIPageControl alloc] initWithFrame:pageControlRect];
         _pageControl.numberOfPages = bigVideoNum;
         _pageControl.currentPage = 0;
-//        [_pageControl addTarget:self action:@selector(pageChanged:) forControlEvents:UIControlEventValueChanged];
-//        [self pageChanged:_pageControl];
         [self addSubview:_pageControl];
-        
-        for (int i = 0; i < bigVideoNum; i++) {
-            AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(i * scrollView.frame.size.width, 0, scrollView.frame.size.width, scrollView.frame.size.height) cellType:kViewCellTypeHot];
-            scrollViewCell.scrollView = aiScrollView;
-            scrollViewCell.tag = 2000 + i;
-            scrollViewCell.aiVideoObject = [videoDatas objectAtIndex:i];
-            [scrollView addSubview:scrollViewCell];
-        }
-        scrollView.backgroundColor = [UIColor blackColor];
         
         int deltaX = 17;
         int height = 143;
         int width = 266;
         int deltaY = 10;
         
-        for (int i = 0; i < 2; i++) {
-            AiScrollViewCell *scrollViewCellRecommend = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_scrollViewWidth + deltaX, i*(height+deltaY), width, height) cellType:kViewCellTypeRecommend];
-            scrollViewCellRecommend.scrollView = aiScrollView;
-            scrollViewCellRecommend.aiVideoObject = [videoDatas objectAtIndex:bigVideoNum + i];
-            [self addSubview:scrollViewCellRecommend];
+        int recommendNum = videoDatas.count - bigVideoNum;
+        if (recommendNum > 2) {
+            recommendNum = 2;
+        }
+        for (int i = 0; i < recommendNum; i++) {
+            AiVideoObject *videoObject = [videoDatas objectAtIndex:bigVideoNum + i];
+            if (videoObject.status == RESOURCE_STATUS_RECOMMEND) {
+                AiScrollViewCell *scrollViewCellRecommend = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_scrollViewWidth + deltaX, i*(height+deltaY), width, height) cellType:kViewCellTypeRecommend];
+                scrollViewCellRecommend.scrollView = aiScrollView;
+                scrollViewCellRecommend.aiVideoObject = [videoDatas objectAtIndex:bigVideoNum + i];
+                [self addSubview:scrollViewCellRecommend];
+            }
         }
     }
     return self;
