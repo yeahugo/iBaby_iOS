@@ -40,13 +40,10 @@
     
     BOOL isAddEgoFooterView = NO;
     if (self.viewType == kTagViewTypeIndex) {
-        NSArray *normalArray = [self getNormalVideoDatas:aiVideoObjects];
-        NSLog(@"normalArray count is %d",normalArray.count);
-        if (normalArray.count % self.pageCount == 0 && normalArray.count > 0) {
+        if (aiVideoObjects.count % self.pageCount == 0 && aiVideoObjects.count > 0) {
             isAddEgoFooterView = YES;
         }
-    }
-    else {
+    } else {
         if (self.videoDatas.count % self.pageCount == 0 && self.videoDatas.count > 0) {
             isAddEgoFooterView = YES;
         }
@@ -61,14 +58,17 @@
 
 -(void)addAiVideoObjects:(NSArray *)aiVideoObjects
 {
-    int startIndex = aiVideoObjects.count;
+    NSArray *normalArray = [self getNormalVideoDatas:self.videoDatas];
+    int startIndex = normalArray.count;
+    NSLog(@"startIndex is %d",startIndex);
     [self.videoDatas addObjectsFromArray:aiVideoObjects];
-    for (int i = startIndex; i<[self.videoDatas count]; i++) {
+    NSArray *newNormalArray = [self getNormalVideoDatas:self.videoDatas];
+    for (int i = startIndex; i<[newNormalArray count]; i++) {
         AiScrollViewCell *cell = [self scrollCellWithIndex:i];
-        cell.aiVideoObject = [self.videoDatas objectAtIndex:i];
+        cell.aiVideoObject = [newNormalArray objectAtIndex:i];
     }
     
-    int deltaHeight = ceil((float)aiVideoObjects.count/ColNum) * _cellHeight;
+    int deltaHeight = (ceil((float)newNormalArray.count/ColNum) - ceil((float)normalArray.count/ColNum)) * _cellHeight;
 
     [self setContentSize:CGSizeMake(self.frame.size.width, self.contentSize.height + deltaHeight)];
     if (aiVideoObjects.count == self.pageCount) {
@@ -436,18 +436,19 @@
         AiFirstViewController *firstViewController = (AiFirstViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;
         [firstViewController presentAlbumViewObject:self.aiVideoObject];
     } else {
-        [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
-            if (error == nil) {
-                [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
-                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
-                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
-                self.aiVideoObject.playUrl = urlString;
-                UIApplication *shareApplication = [UIApplication sharedApplication];
-                [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
-            } else {
-                NSLog(@"error is %@",error);
-            }
-        }];
+        [self.aiVideoObject playVideo];
+//        [self.aiVideoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+//            if (error == nil) {
+//                [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
+//                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
+//                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
+//                self.aiVideoObject.playUrl = urlString;
+//                UIApplication *shareApplication = [UIApplication sharedApplication];
+//                [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+//            } else {
+//                NSLog(@"error is %@",error);
+//            }
+//        }];
     }
 }
 

@@ -100,8 +100,7 @@
 
 -(IBAction)onClickSearchWords:(NSString *)keyWords
 {
-//    [AiAudioManager play:@"search"];
-    [AiWaitingView addNoNetworkTip];
+//    [AiWaitingView addNoNetworkTip];
     [self.textField.popOver dismissPopoverAnimated:YES];
     [self removeAllSubView];
     NSString *keywords = nil;

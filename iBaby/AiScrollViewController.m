@@ -55,6 +55,8 @@
         self.scrollView.backgroundColor = [UIColor clearColor];
         _songListArray = [[NSMutableArray alloc] init];
         [self getRecommendResource:resourceType];
+        
+//        [AiWaitingView showInView:self.scrollView];
     }
     return self;
 }

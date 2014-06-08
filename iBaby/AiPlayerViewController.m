@@ -15,6 +15,49 @@
 
 @implementation AiPlayerViewControl
 
++(AiPlayerViewControl *)makePlayerViewControl
+{
+    NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiPlayerViewControl" owner:self options:nil];
+    AiPlayerViewControl *controlView = [nib objectAtIndex:0];
+    [controlView.slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
+    [controlView.slider setMinimumTrackImage:[[UIImage imageNamed:@"schedule-bar-schedule"] stretchableImageWithLeftCapWidth:20 topCapHeight:0] forState:UIControlStateNormal];
+    [controlView.slider setMaximumTrackImage:[UIImage imageNamed:@"schedule-bar-bottom"] forState:UIControlStateNormal];
+//    [controlView.slider addTarget:self action:@selector(durationSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    controlView.slider.minimumValue = 0;
+    
+    [controlView.volumn_slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
+    [controlView.volumn_slider setMinimumTrackImage:[[UIImage imageNamed:@"volume-bar-top"] stretchableImageWithLeftCapWidth:20 topCapHeight:0] forState:UIControlStateNormal];
+    [controlView.volumn_slider setMaximumTrackImage:[UIImage imageNamed:@"volume-bar-bottom"] forState:UIControlStateNormal];
+//    [controlView.volumn_slider addTarget:self action:@selector(volumnSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    float volume = [MPMusicPlayerController applicationMusicPlayer].volume;
+    [controlView.volumn_slider setValue:volume];
+    
+    BOOL isLike = [[AiDataBaseManager shareInstance] isFavouriteVideo:[AiVideoPlayerManager shareInstance].currentVideoObject];
+    if (isLike) {
+        [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart_pressed"] forState:UIControlStateNormal];
+    } else {
+        [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart"] forState:UIControlStateNormal];
+    }
+    return controlView;
+    
+//    int currentTime = floor(self.moviePlayer.currentPlaybackTime);
+//    controlView.slider.value = currentTime;
+//    int current_minutes = currentTime / 60;
+//    int current_seconds = currentTime % 60;
+//    
+//    NSString *currentTimeString = [NSString stringWithFormat:@"%d:%02d", current_minutes, current_seconds];
+//    
+//    controlView.currentTimeLabel.text = [NSString stringWithFormat:@"%@",currentTimeString];
+//    
+//    int totalTime = self.moviePlayer.duration;
+//    int minutes = totalTime / 60;
+//    int seconds = totalTime % 60;
+//    
+//    NSString *time = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+//    
+//    controlView.totalTimeLabel.text = [NSString stringWithFormat:@"%@",time];
+}
+
 @end
 
 @interface AiPlayerViewController ()
@@ -25,13 +68,12 @@
 
 -(id)initWithContentURL:(NSURL *)contentURL
 {
-    if ([super init]) {
+    self = [super init];
+    if (self) {
         [self.moviePlayer stop];
         self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
         self.moviePlayer.repeatMode = MPMovieRepeatModeOne;
-        [self.moviePlayer prepareToPlay];
         [self.moviePlayer setContentURL:contentURL];
-        _videoArray = [[NSArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishVideo) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeVideo:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
         
@@ -53,20 +95,18 @@
         sectionNum = AlbumNum;
     }
     NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
-        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
-                if (result.count > 0) {
-                    int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
-                    if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
-                        [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
-//                            NSLog(@"result Array is %@",resultArray);
-                            self.videoArray = resultArray;
-                        }];
-                    } else{
-//                        NSLog(@"result Array is %@",result);
-                        self.videoArray = result;
-                    }
-                }
-        }];
+    [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
+        if (result.count > 0) {
+            int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
+            if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
+                [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
+                    self.videoArray = resultArray;
+                }];
+            } else{
+                self.videoArray = result;
+            }
+        }
+    }];
     self.moviePlayer.controlStyle = MPMovieControlStyleNone;
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addControllView)];
     gesture.delegate = self;
@@ -92,14 +132,12 @@
 
 -(void)finishVideo
 {
-//    NSLog(@"finish video!!");
     if (_timer) {
         [_timer invalidate];
     }
     if (![[AiVideoPlayerManager shareInstance].currentVideoObject.serialId isEqualToString:@"0"]) {
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
         if (self.videoArray.count > sectionNum + 2) {
-//            NSLog(@"-----play here !!!!!!!!");
             [self playVideoAtSection:sectionNum + 1];
         }
     } 
@@ -189,8 +227,6 @@
     self.videoArray = result;
 
     int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
-//    NSLog(@"-----resource type is %d",[AiVideoPlayerManager shareInstance].currentVideoObject.resourceType);
-    
     if ([AiVideoPlayerManager shareInstance].currentVideoObject.resourceType == RESOURCE_TYPE_CARTOON) {
         int rowNum = 5;
         for (int i = 0; i < totalNum; i++) {
@@ -325,34 +361,14 @@
 
 -(void)addControllView
 {
-    NSLog(@"addControllView");
-
     if (self.playControlView == nil) {
-        NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiPlayerViewControl" owner:self options:nil];
-        //得到第一个UIView
-        AiPlayerViewControl *controlView = [nib objectAtIndex:0];
-        controlView.playerViewController = self;
+        AiPlayerViewControl *controlView = [AiPlayerViewControl makePlayerViewControl];
         self.playControlView = controlView;
-        [controlView.slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
-        [controlView.slider setMinimumTrackImage:[[UIImage imageNamed:@"schedule-bar-schedule"] stretchableImageWithLeftCapWidth:20 topCapHeight:0] forState:UIControlStateNormal];
-        [controlView.slider setMaximumTrackImage:[UIImage imageNamed:@"schedule-bar-bottom"] forState:UIControlStateNormal];
+        controlView.playerViewController = self;
         [controlView.slider addTarget:self action:@selector(durationSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-        controlView.slider.minimumValue = 0;
         controlView.slider.maximumValue = self.moviePlayer.duration;
         
-        [controlView.volumn_slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
-        [controlView.volumn_slider setMinimumTrackImage:[[UIImage imageNamed:@"volume-bar-top"] stretchableImageWithLeftCapWidth:20 topCapHeight:0] forState:UIControlStateNormal];
-        [controlView.volumn_slider setMaximumTrackImage:[UIImage imageNamed:@"volume-bar-bottom"] forState:UIControlStateNormal];
         [controlView.volumn_slider addTarget:self action:@selector(volumnSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-        float volume = [MPMusicPlayerController applicationMusicPlayer].volume;
-        [controlView.volumn_slider setValue:volume];
-        
-        BOOL isLike = [[AiDataBaseManager shareInstance] isFavouriteVideo:[AiVideoPlayerManager shareInstance].currentVideoObject];
-        if (isLike) {
-            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart_pressed"] forState:UIControlStateNormal];
-        } else {
-            [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart"] forState:UIControlStateNormal];
-        }
         
         int currentTime = floor(self.moviePlayer.currentPlaybackTime);
         controlView.slider.value = currentTime;

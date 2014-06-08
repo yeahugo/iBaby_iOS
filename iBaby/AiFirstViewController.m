@@ -183,9 +183,7 @@
     swipeView.scrollEnabled = NO;
     self.swipeview = swipeView;
     [self.view addSubview:self.swipeview];
-    [self setCurrentButton:_currentType];
-    
-    [AiWaitingView showInView:self.view];
+    [self setCurrentButton:_currentType];    
 }
 
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView

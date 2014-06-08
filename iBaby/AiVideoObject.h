@@ -10,6 +10,8 @@
 #import "AiDefine.h"
 #import "AiThriftManager.h"
 
+@class AiPlayerViewControl;
+
 @interface AiVideoObject : NSObject<NSCopying>
 
 @property (nonatomic, copy) NSString *title;
@@ -35,6 +37,8 @@
 @property (nonatomic, assign) int videoType;        //RESOURCE_TYPE
 
 @property (nonatomic, assign) int status;
+
+@property (nonatomic, assign) int durationTime;
 
 @property (nonatomic, copy) NSString *serialTitle;
 

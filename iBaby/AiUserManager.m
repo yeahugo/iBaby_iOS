@@ -155,7 +155,6 @@
     unsigned char result[16];
     
     CC_MD5(cStr, (CC_LONG)strlen(cStr), result);
-//    printf("cStr is %s",cStr);
     
     return [NSString stringWithFormat:
             @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",

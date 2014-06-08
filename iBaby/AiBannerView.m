@@ -39,8 +39,8 @@
                 [scrollView addSubview:scrollViewCell];
             }
         }
-        if (bigVideoNum < 7) {
-            bigVideoNum = 7;
+        if (bigVideoNum < 1) {
+            bigVideoNum = 1;
         }
         scrollView.backgroundColor = [UIColor blackColor];
         scrollView.pagingEnabled = YES;
@@ -76,17 +76,6 @@
     }
     return self;
 }
-
-//-(void)pageChanged:(UIPageControl*)pc{
-//    NSArray *subViews = pc.subviews;
-//    for (int i = 0; i < [subViews count]; i++) {
-//        UIView* subView = [subViews objectAtIndex:i];
-//        if ([NSStringFromClass([subView class]) isEqualToString:NSStringFromClass([UIImageView class])]) {
-//            ((UIImageView*)subView).image = (pc.currentPage == i ? [UIImage imageNamed:@"banner_focus.png"] : [UIImage imageNamed:@"banner_notfocus.png"]);
-//        }
-//        
-//    }
-//}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollview {
     int page = scrollview.contentOffset.x / _scrollViewWidth;

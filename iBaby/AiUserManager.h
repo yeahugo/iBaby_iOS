@@ -26,4 +26,6 @@
 -(void)updateConfig:(void(^)(UserConfig *config))completion;
 
 -(void)getSearchSuggestKeys:(void (^)(int result))completion;
+
++ (NSString *)md5Value:(NSString *)string;
 @end

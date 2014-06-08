@@ -30,6 +30,9 @@
 
 @property (nonatomic, assign) IBOutlet UIButton *likeButton;
 
++(AiPlayerViewControl *)makePlayerViewControl;
+
+
 @end
 
 @interface AiPlayerViewController : MPMoviePlayerViewController
@@ -43,6 +46,8 @@
 @property (nonatomic, strong) AiPlayerViewControl *playControlView;
 
 @property (nonatomic, strong) MPMoviePlayerController *playerController;
+
+@property (nonatomic, strong) UIView *webView;
 
 @property (nonatomic, assign) float volume;
 

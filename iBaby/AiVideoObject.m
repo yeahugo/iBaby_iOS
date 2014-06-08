@@ -12,6 +12,10 @@
 #import "shy.h"
 #import "AiVideoPlayerManager.h"
 #import "AiDataRequestManager.h"
+#import "AiUserManager.h"
+#import "AiWebViewPlayerController.h"
+
+#define kTagPlayerControlView 100
 
 @implementation AiVideoObject
 
@@ -31,24 +35,33 @@
         self.status = resourceInfo.status;
         self.serialDes = resourceInfo.serialDes;
         self.serialTitle = resourceInfo.serialName;
+        self.durationTime = resourceInfo.durationTime;
     }
     return self;
 }
 
 -(void)playVideo
 {
-    [self getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
-        if (error == nil) {
-            [AiVideoPlayerManager shareInstance].currentVideoObject = self;
-            AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
-            [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
-            self.playUrl = urlString;
-            UIApplication *shareApplication = [UIApplication sharedApplication];
-            [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
-        } else {
-            NSLog(@"error is %@",error);
-        }
-    }];
+    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_YOUKU) {
+        [AiVideoPlayerManager shareInstance].currentVideoObject = self;
+        UIApplication *shareApplication = [UIApplication sharedApplication];
+        AiWebViewPlayerController *viewController = [[AiWebViewPlayerController alloc] initWithVid:self.vid];
+        [shareApplication.keyWindow.rootViewController presentModalViewController:viewController animated:YES];
+    } else {
+        [self getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+            if (error == nil) {
+                [AiVideoPlayerManager shareInstance].currentVideoObject = self;
+                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
+                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
+                NSLog(@"playurl is %@",urlString);
+                self.playUrl = urlString;
+                UIApplication *shareApplication = [UIApplication sharedApplication];
+                [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+            } else {
+                NSLog(@"error is %@",error);
+            }
+        }];
+    }
 }
 
 - (NSString *)md5Value:(NSString *)string {
@@ -73,20 +86,22 @@
         completion(urlString,nil);
     }
     if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_56) {
+        NSLog(@"vid is %@",self.vid);
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
         int timeInteval = (int)[[NSDate date] timeIntervalSince1970];
         NSString *vidString = [NSString stringWithFormat:@"vid=%@",self.vid];
         NSString *appKey56 = [AiDataRequestManager shareInstance].wuliuAppkey;
+        NSLog(@"appKey is %@",appKey56);
         if (appKey56 == nil) {
             appKey56 = @"3000003910";
         }
-        NSString *signString = [NSString stringWithFormat:@"%@#%@#b7ed6e59906c4fa5#%d",appKey56,[self md5Value:vidString],timeInteval];
+        NSString *secret = @"b7ed6e59906c4fa5";
+        NSString *signString = [NSString stringWithFormat:@"%@#%@#%@#%d",[self md5Value:vidString],appKey56,secret,timeInteval];
         NSString *md5SignString = [self md5Value:signString];
         NSString *urlString = [NSString stringWithFormat:@"http://oapi.56.com/video/mobile.json?appkey=%@&ts=%d&vid=%@&sign=%@",appKey56,timeInteval,self.vid,md5SignString];
         [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary * resourceInfo = [responseObject valueForKey:@"info"];
-            NSLog(@"rfiles is %@ resourceInfo is %@",[resourceInfo valueForKey:@"rfiles"],resourceInfo);
             int index = [[resourceInfo valueForKey:@"rfiles"] count]-1;
             NSString *urlString = [[[resourceInfo valueForKey:@"rfiles"] objectAtIndex:index] valueForKey:@"url"];
             completion(urlString,nil);
@@ -126,6 +141,7 @@
     aiVideoObject.serialDes = _serialDes;
     aiVideoObject.serialTitle = _serialTitle;
     aiVideoObject.curSectionNum = _curSectionNum;
+    aiVideoObject.durationTime = _durationTime;
     return aiVideoObject;
 }
 

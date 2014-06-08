@@ -28,9 +28,6 @@
 {
     self = [super init];
     if (self) {
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                 selector:@selector(saveVideo:)
-//                                                     name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
         AiPlayerViewController * playerViewController = [[AiPlayerViewController alloc] init];
         self.aiPlayerViewController = playerViewController;
         _currentVideoObject = [[AiVideoObject alloc] init];

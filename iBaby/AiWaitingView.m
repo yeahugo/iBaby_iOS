@@ -68,11 +68,6 @@
     UIViewController  *rootViewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     UIImage *unreachableImage = [UIImage imageNamed:@"no_network"];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:unreachableImage];
-//    if (rootViewController.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-//        imageView.transform = CGAffineTransformMakeRotation(-M_PI/2);
-//    } else {
-//        imageView.transform = CGAffineTransformMakeRotation(M_PI/2);
-//    }
     imageView.center = CGPointMake(superView.frame.size.width/2, superView.frame.size.height/2);
     imageView.tag = 101;
     //    UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.frame];
@@ -119,6 +114,7 @@
 
 + (void)dismiss
 {
+    NSLog(@"dismiss!!");
     [self shareInstance].isShow = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC),dispatch_get_main_queue(), ^{
         [self shareInstance].isShow = YES;
