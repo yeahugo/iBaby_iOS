@@ -58,8 +58,6 @@
 
 -(IBAction)onClickBaby:(id)sender;
 
--(IBAction)onClickPlane:(id)sender;
-
 -(IBAction)onclickBirds:(id)sender;
 
 -(IBAction)onClickFlowers:(id)sender;

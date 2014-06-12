@@ -90,10 +90,22 @@
     [subView removeFromSuperview];
 }
 
-+ (void)showInView:(UIView *)superView
++(void)show
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         if ([AiWaitingView shareInstance].isShow == YES) {
+            [self shareInstance].waitingImageView.center = CGPointMake([UIScreen mainScreen].bounds.size.height/2, [[UIScreen mainScreen] bounds].size.width/2);
+            UIWindow *window = [UIApplication sharedApplication].keyWindow;
+            [window addSubview:[self shareInstance].waitingImageView];
+            [[self shareInstance].waitingImageView startAnimating];
+        }
+    });
+}
+
++ (void)showInView:(UIView *)superView
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        if ([self shareInstance].isShow == YES) {
             [self shareInstance].waitingImageView.center = CGPointMake([UIScreen mainScreen].bounds.size.height/2, [[UIScreen mainScreen] bounds].size.width/2);
             [superView addSubview:[self shareInstance].waitingImageView];
             [[self shareInstance].waitingImageView startAnimating];
@@ -107,14 +119,13 @@
         if ([self shareInstance].isShow == YES) {
             [self shareInstance].waitingImageView.center = point;
             [superView addSubview:[self shareInstance].waitingImageView];
-            [[self shareInstance].waitingImageView startAnimating];            
+            [[self shareInstance].waitingImageView startAnimating];
         }
     });
 }
 
 + (void)dismiss
 {
-    NSLog(@"dismiss!!");
     [self shareInstance].isShow = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC),dispatch_get_main_queue(), ^{
         [self shareInstance].isShow = YES;

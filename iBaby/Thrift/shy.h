@@ -170,12 +170,20 @@ enum RESOURCE_SOURCE_TYPE {
   int32_t __reportFlag;
   int32_t __searchKeysVer;
   int32_t __searchImgVer;
+  NSString * __youkuClientId;
+  NSString * __youkuClientSecret;
+  int32_t __youkuUsedUrl;
+  NSString * __appSecret56;
 
   BOOL __head_isset;
   BOOL __appKey56_isset;
   BOOL __reportFlag_isset;
   BOOL __searchKeysVer_isset;
   BOOL __searchImgVer_isset;
+  BOOL __youkuClientId_isset;
+  BOOL __youkuClientSecret_isset;
+  BOOL __youkuUsedUrl_isset;
+  BOOL __appSecret56_isset;
 }
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
@@ -184,10 +192,14 @@ enum RESOURCE_SOURCE_TYPE {
 @property (nonatomic, getter=reportFlag, setter=setReportFlag:) int32_t reportFlag;
 @property (nonatomic, getter=searchKeysVer, setter=setSearchKeysVer:) int32_t searchKeysVer;
 @property (nonatomic, getter=searchImgVer, setter=setSearchImgVer:) int32_t searchImgVer;
+@property (nonatomic, retain, getter=youkuClientId, setter=setYoukuClientId:) NSString * youkuClientId;
+@property (nonatomic, retain, getter=youkuClientSecret, setter=setYoukuClientSecret:) NSString * youkuClientSecret;
+@property (nonatomic, getter=youkuUsedUrl, setter=setYoukuUsedUrl:) int32_t youkuUsedUrl;
+@property (nonatomic, retain, getter=appSecret56, setter=setAppSecret56:) NSString * appSecret56;
 #endif
 
 - (id) init;
-- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer searchImgVer: (int32_t) searchImgVer;
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer searchImgVer: (int32_t) searchImgVer youkuClientId: (NSString *) youkuClientId youkuClientSecret: (NSString *) youkuClientSecret youkuUsedUrl: (int32_t) youkuUsedUrl appSecret56: (NSString *) appSecret56;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -223,6 +235,30 @@ enum RESOURCE_SOURCE_TYPE {
 - (void) setSearchImgVer: (int32_t) searchImgVer;
 #endif
 - (BOOL) searchImgVerIsSet;
+
+#if !__has_feature(objc_arc)
+- (NSString *) youkuClientId;
+- (void) setYoukuClientId: (NSString *) youkuClientId;
+#endif
+- (BOOL) youkuClientIdIsSet;
+
+#if !__has_feature(objc_arc)
+- (NSString *) youkuClientSecret;
+- (void) setYoukuClientSecret: (NSString *) youkuClientSecret;
+#endif
+- (BOOL) youkuClientSecretIsSet;
+
+#if !__has_feature(objc_arc)
+- (int32_t) youkuUsedUrl;
+- (void) setYoukuUsedUrl: (int32_t) youkuUsedUrl;
+#endif
+- (BOOL) youkuUsedUrlIsSet;
+
+#if !__has_feature(objc_arc)
+- (NSString *) appSecret56;
+- (void) setAppSecret56: (NSString *) appSecret56;
+#endif
+- (BOOL) appSecret56IsSet;
 
 @end
 

@@ -16,7 +16,13 @@ typedef enum {
     kReportTypeSearch,
     kReportTypeHistory,
     kReportTypeFavourite,
-    kReportTypeFeedback
+    kReportTypeFeedback,
+    kReportTypeSun,
+    kReportTypeChild,
+    kReportTypeBird,
+    kReportTypeTree,
+    kReportTypeFlower,
+    kReportTypeBee
 } kReportType;
 
 typedef enum {

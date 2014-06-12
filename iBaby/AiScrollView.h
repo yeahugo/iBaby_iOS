@@ -20,6 +20,8 @@
     int _cellHeight;
     int _cellOffSetY;
     int _cellOffSetX;
+    int _leftNum;
+    int _getMoreDataNum;
 }
 
 @property (nonatomic, assign) kTagViewType viewType;
@@ -27,6 +29,10 @@
 @property (nonatomic, assign) kSearchViewType searchViewType;
 
 @property (nonatomic, strong) NSMutableArray * videoDatas;
+
+@property (nonatomic, strong) NSMutableArray * normalDatas;
+
+@property (nonatomic, strong) NSArray *leftDatas;  //第一次没有显示完的数据
 
 @property (nonatomic, strong) NSOperationQueue *queue;
 
@@ -74,7 +80,7 @@
 
 @interface AiScrollViewCell : UIView
 
-@property (nonatomic, strong) AiVideoObject *aiVideoObject;
+@property (nonatomic, copy) AiVideoObject *aiVideoObject;
 
 @property (nonatomic, strong) UIButton *imageButton;
 
@@ -84,9 +90,13 @@
 
 @property (nonatomic, assign) kViewCellType viewCellType;
 
+@property (nonatomic, strong) UIImageView *backgroundView;
+
 -(void)onClickButton:(UIButton *)button;
 
 -(id)initWithVideoObject:(AiVideoObject *)videoObject;
 
 -(id)initWithFrame:(CGRect)frame cellType:(kViewCellType)viewCellType;
+
+-(void)setHightLightScrollViewCell;
 @end

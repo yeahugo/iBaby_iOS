@@ -37,11 +37,9 @@
 
 -(void)saveVideo:(NSNotification *)notification
 {
-    NSLog(@"--------- saveVideo !!!!!!!!");
     if (![self.currentVideoObject.serialId isEqualToString:@"0"]) {
         int sectionNum = self.currentVideoObject.curSectionNum;
         if (self.aiPlayerViewController.videoArray.count > sectionNum + 2) {
-            NSLog(@"-----play here !!!!!!!!");
             [self.aiPlayerViewController playVideoAtSection:sectionNum + 1];
         }
     } else {

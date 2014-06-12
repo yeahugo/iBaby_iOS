@@ -8,7 +8,6 @@
 
 #import "AiSearchViewController.h"
 #import "AiDataRequestManager.h"
-//#import "AiGridViewController.h"
 #import "AiFirstViewController.h"
 #import "AiDefaultSearchView.h"
 #import "AiWaitingView.h"
@@ -100,7 +99,6 @@
 
 -(IBAction)onClickSearchWords:(NSString *)keyWords
 {
-//    [AiWaitingView addNoNetworkTip];
     [self.textField.popOver dismissPopoverAnimated:YES];
     [self removeAllSubView];
     NSString *keywords = nil;
@@ -149,6 +147,12 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self onClickSearchField];
+    return YES;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    [[self.textField popOver] dismissPopoverAnimated:YES];
     return YES;
 }
 

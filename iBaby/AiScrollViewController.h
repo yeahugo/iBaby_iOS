@@ -39,14 +39,14 @@ typedef enum {
 
 -(id)initWithFrame:(CGRect)frame keyWords:(NSString *)keyWords;
 
--(id)initWithFrame:(CGRect)frame recommend:(int)resourceType;
+-(id)initWithFrame:(CGRect)frame recommend:(int)resourceType completion:(void (^)(void))completion;
 
 -(id)initWithFrame:(CGRect)frame serialId:(NSString *)serialId completion:(void (^)(NSArray * resultArray, NSError * error))completion;
 
 -(void)clickKeyWords:(NSString *)keyWords resourceType:(int)resourceType;
 
--(void)getRecommendResourceType;
+-(void)getRecommendResource:(int)resourceType completion:(void (^)(void))completion;
 
--(void)getMoreData;
+-(void)getMoreData:(int)totalNum;
 
 @end

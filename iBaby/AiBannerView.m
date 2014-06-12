@@ -42,7 +42,7 @@
         if (bigVideoNum < 1) {
             bigVideoNum = 1;
         }
-        scrollView.backgroundColor = [UIColor blackColor];
+        scrollView.backgroundColor = [UIColor clearColor];
         scrollView.pagingEnabled = YES;
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.contentSize = CGSizeMake(bigVideoNum * scrollView.frame.size.width, scrollView.frame.size.height);

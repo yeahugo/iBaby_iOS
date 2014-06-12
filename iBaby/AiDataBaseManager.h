@@ -27,7 +27,7 @@ typedef enum {
 
 + (AiDataBaseManager *)shareInstance;
 
--(void)getRecommendListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
+//-(void)getRecommendListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
 
 -(void)getFavouriteListsWithCompletion:(void(^)(NSArray* videoList, NSError* error))completion;
 

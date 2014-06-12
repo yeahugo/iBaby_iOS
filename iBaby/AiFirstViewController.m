@@ -96,16 +96,16 @@
             if (status == AFNetworkReachabilityStatusNotReachable) {
                 [self addNoNetworkTip];
             } else {
-//                [self removeNetworkTip];
-//                if (self.songScrollView.videoDatas.count == 0) {
-//                    [self.songScrollView.scrollViewController getRecommendResourceType];
-//                }
-//                if (self.catoonScrollView.videoDatas.count == 0) {
-//                    [self.catoonScrollView.scrollViewController getRecommendResourceType];
-//                }
-//                if (self.videoScrollView.videoDatas.count == 0) {
-//                    [self.videoScrollView.scrollViewController getRecommendResourceType];
-//                }
+                [self removeNetworkTip];
+                if (self.songScrollView.videoDatas.count == 0) {
+                    [self.songScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_SONG completion:nil];
+                }
+                if (self.catoonScrollView.videoDatas.count == 0) {
+                    [self.catoonScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_CARTOON completion:nil];
+                }
+                if (self.videoScrollView.videoDatas.count == 0) {
+                    [self.catoonScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_TV completion:nil];
+                }
             }
         });
     }];
@@ -147,7 +147,6 @@
     [self setUI];
     _isPresentView = NO;
     _isOnClickButton = NO;
-    [self checkNetwork];
 }
 
 -(void)setUI
@@ -158,19 +157,22 @@
     
     CGRect backGroundRect = self.backgroundView.frame;
     
-    _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_SONG];
+    _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_SONG completion:nil];
     _songViewController.videoType = kTagButtonTypeSong;
     _songViewController.sourceType = kDataSourceTypeWeb;
     self.songScrollView = _songViewController.scrollView;
     self.songScrollView.tag = kTagButtonTypeSong;
     
-    _catoonViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_CARTOON];
+    _catoonViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_CARTOON completion:nil];
     _catoonViewController.videoType = kTagButtonTypeCatoon;
     _catoonViewController.sourceType = kDataSourceTypeWeb;
     self.catoonScrollView = _catoonViewController.scrollView;
     self.catoonScrollView.tag = kTagButtonTypeCatoon;
 //
-    _videoViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_TV];
+    _videoViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_TV completion:^(void){
+        [self checkNetwork];
+        [AiWaitingView dismiss];
+    }];
     _videoViewController.videoType = kTagButtonTypeVideo;
     _videoViewController.sourceType = kDataSourceTypeWeb;
     self.videoScrollView = _videoViewController.scrollView;
@@ -183,7 +185,8 @@
     swipeView.scrollEnabled = NO;
     self.swipeview = swipeView;
     [self.view addSubview:self.swipeview];
-    [self setCurrentButton:_currentType];    
+    [self setCurrentButton:_currentType];
+    [AiWaitingView showInView:self.view];
 }
 
 - (NSInteger)numberOfItemsInSwipeView:(SwipeView *)swipeView
@@ -195,8 +198,7 @@
 {
     if (_isOnClickButton == NO) {
         _currentType = swipeView.currentItemIndex;
-        NSLog(@"currentType is %d",_currentType);
-        [self setCurrentButton:_currentType];        
+        [self setCurrentButton:_currentType];
     }
 }
 
@@ -246,11 +248,10 @@
 {
     if (_isPresentView == NO) {
         _isPresentView = YES;
-        AiAlbumViewController *albumViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"album"];
         [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
-//        AiAlbumViewController *albumViewController = [[AiAlbumViewController alloc] initWithVideoObject:videoObject];
+        AiAlbumViewController *albumViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"album"];
         [self mz_presentFormSheetController:[self makeMZFormSheetController:albumViewController] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-            NSLog(@"finish!!");
+//            NSLog(@"finish!!");
             _isPresentView = NO;
         }];
     }
@@ -272,7 +273,7 @@
         _isPresentView = YES;
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"search"];
         [self mz_presentFormSheetController:[self makeMZFormSheetController:vc] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-            NSLog(@"finish!!");
+//            NSLog(@"finish!!");
             _isPresentView = NO;
         }];
         [self.searchButton setBackgroundImage:[UIImage imageNamed:@"search_pressed"] forState:UIControlStateNormal];
@@ -364,31 +365,37 @@
 -(IBAction)onClickSun:(id)sender
 {
     [AiAudioManager play:@"sun"];
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeSun] completion:nil];
 }
 
 -(IBAction)onClickBaby:(id)sender
 {
     [AiAudioManager play:@"baby"];
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeChild] completion:nil];
 }
 
 -(IBAction)onClickTree:(id)sender
 {
     [AiAudioManager play:@"tree"];
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeTree] completion:nil];
 }
 
 -(IBAction)onClickBee:(id)sender
 {
     [AiAudioManager play:@"bee"];
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeBee] completion:nil];
 }
 
 -(IBAction)onclickBirds:(id)sender
 {
     [AiAudioManager play:@"birds"];
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeBird] completion:nil];
 }
 
 -(IBAction)onClickFlowers:(id)sender
 {
     [AiAudioManager play:@"flower"];
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"%d",kReportTypeFlower] completion:nil];
 }
 
 #pragma mark Audio Sound

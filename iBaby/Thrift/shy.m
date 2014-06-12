@@ -656,7 +656,7 @@
   return self;
 }
 
-- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer searchImgVer: (int32_t) searchImgVer
+- (id) initWithHead: (ReqHead *) head appKey56: (NSString *) appKey56 reportFlag: (int32_t) reportFlag searchKeysVer: (int32_t) searchKeysVer searchImgVer: (int32_t) searchImgVer youkuClientId: (NSString *) youkuClientId youkuClientSecret: (NSString *) youkuClientSecret youkuUsedUrl: (int32_t) youkuUsedUrl appSecret56: (NSString *) appSecret56
 {
   self = [super init];
   __head = [head retain_stub];
@@ -669,6 +669,14 @@
   __searchKeysVer_isset = YES;
   __searchImgVer = searchImgVer;
   __searchImgVer_isset = YES;
+  __youkuClientId = [youkuClientId retain_stub];
+  __youkuClientId_isset = YES;
+  __youkuClientSecret = [youkuClientSecret retain_stub];
+  __youkuClientSecret_isset = YES;
+  __youkuUsedUrl = youkuUsedUrl;
+  __youkuUsedUrl_isset = YES;
+  __appSecret56 = [appSecret56 retain_stub];
+  __appSecret56_isset = YES;
   return self;
 }
 
@@ -700,6 +708,26 @@
     __searchImgVer = [decoder decodeInt32ForKey: @"searchImgVer"];
     __searchImgVer_isset = YES;
   }
+  if ([decoder containsValueForKey: @"youkuClientId"])
+  {
+    __youkuClientId = [[decoder decodeObjectForKey: @"youkuClientId"] retain_stub];
+    __youkuClientId_isset = YES;
+  }
+  if ([decoder containsValueForKey: @"youkuClientSecret"])
+  {
+    __youkuClientSecret = [[decoder decodeObjectForKey: @"youkuClientSecret"] retain_stub];
+    __youkuClientSecret_isset = YES;
+  }
+  if ([decoder containsValueForKey: @"youkuUsedUrl"])
+  {
+    __youkuUsedUrl = [decoder decodeInt32ForKey: @"youkuUsedUrl"];
+    __youkuUsedUrl_isset = YES;
+  }
+  if ([decoder containsValueForKey: @"appSecret56"])
+  {
+    __appSecret56 = [[decoder decodeObjectForKey: @"appSecret56"] retain_stub];
+    __appSecret56_isset = YES;
+  }
   return self;
 }
 
@@ -725,12 +753,31 @@
   {
     [encoder encodeInt32: __searchImgVer forKey: @"searchImgVer"];
   }
+  if (__youkuClientId_isset)
+  {
+    [encoder encodeObject: __youkuClientId forKey: @"youkuClientId"];
+  }
+  if (__youkuClientSecret_isset)
+  {
+    [encoder encodeObject: __youkuClientSecret forKey: @"youkuClientSecret"];
+  }
+  if (__youkuUsedUrl_isset)
+  {
+    [encoder encodeInt32: __youkuUsedUrl forKey: @"youkuUsedUrl"];
+  }
+  if (__appSecret56_isset)
+  {
+    [encoder encodeObject: __appSecret56 forKey: @"appSecret56"];
+  }
 }
 
 - (void) dealloc
 {
   [__head release_stub];
   [__appKey56 release_stub];
+  [__youkuClientId release_stub];
+  [__youkuClientSecret release_stub];
+  [__appSecret56 release_stub];
   [super dealloc_stub];
 }
 
@@ -827,6 +874,86 @@
   __searchImgVer_isset = NO;
 }
 
+- (NSString *) youkuClientId {
+  return [[__youkuClientId retain_stub] autorelease_stub];
+}
+
+- (void) setYoukuClientId: (NSString *) youkuClientId {
+  [youkuClientId retain_stub];
+  [__youkuClientId release_stub];
+  __youkuClientId = youkuClientId;
+  __youkuClientId_isset = YES;
+}
+
+- (BOOL) youkuClientIdIsSet {
+  return __youkuClientId_isset;
+}
+
+- (void) unsetYoukuClientId {
+  [__youkuClientId release_stub];
+  __youkuClientId = nil;
+  __youkuClientId_isset = NO;
+}
+
+- (NSString *) youkuClientSecret {
+  return [[__youkuClientSecret retain_stub] autorelease_stub];
+}
+
+- (void) setYoukuClientSecret: (NSString *) youkuClientSecret {
+  [youkuClientSecret retain_stub];
+  [__youkuClientSecret release_stub];
+  __youkuClientSecret = youkuClientSecret;
+  __youkuClientSecret_isset = YES;
+}
+
+- (BOOL) youkuClientSecretIsSet {
+  return __youkuClientSecret_isset;
+}
+
+- (void) unsetYoukuClientSecret {
+  [__youkuClientSecret release_stub];
+  __youkuClientSecret = nil;
+  __youkuClientSecret_isset = NO;
+}
+
+- (int32_t) youkuUsedUrl {
+  return __youkuUsedUrl;
+}
+
+- (void) setYoukuUsedUrl: (int32_t) youkuUsedUrl {
+  __youkuUsedUrl = youkuUsedUrl;
+  __youkuUsedUrl_isset = YES;
+}
+
+- (BOOL) youkuUsedUrlIsSet {
+  return __youkuUsedUrl_isset;
+}
+
+- (void) unsetYoukuUsedUrl {
+  __youkuUsedUrl_isset = NO;
+}
+
+- (NSString *) appSecret56 {
+  return [[__appSecret56 retain_stub] autorelease_stub];
+}
+
+- (void) setAppSecret56: (NSString *) appSecret56 {
+  [appSecret56 retain_stub];
+  [__appSecret56 release_stub];
+  __appSecret56 = appSecret56;
+  __appSecret56_isset = YES;
+}
+
+- (BOOL) appSecret56IsSet {
+  return __appSecret56_isset;
+}
+
+- (void) unsetAppSecret56 {
+  [__appSecret56 release_stub];
+  __appSecret56 = nil;
+  __appSecret56_isset = NO;
+}
+
 - (void) read: (id <TProtocol>) inProtocol
 {
   NSString * fieldName;
@@ -884,6 +1011,38 @@
           [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         }
         break;
+      case 6:
+        if (fieldType == TType_STRING) {
+          NSString * fieldValue = [inProtocol readString];
+          [self setYoukuClientId: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      case 7:
+        if (fieldType == TType_STRING) {
+          NSString * fieldValue = [inProtocol readString];
+          [self setYoukuClientSecret: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      case 8:
+        if (fieldType == TType_I32) {
+          int32_t fieldValue = [inProtocol readI32];
+          [self setYoukuUsedUrl: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
+      case 9:
+        if (fieldType == TType_STRING) {
+          NSString * fieldValue = [inProtocol readString];
+          [self setAppSecret56: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -924,6 +1083,32 @@
     [outProtocol writeI32: __searchImgVer];
     [outProtocol writeFieldEnd];
   }
+  if (__youkuClientId_isset) {
+    if (__youkuClientId != nil) {
+      [outProtocol writeFieldBeginWithName: @"youkuClientId" type: TType_STRING fieldID: 6];
+      [outProtocol writeString: __youkuClientId];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  if (__youkuClientSecret_isset) {
+    if (__youkuClientSecret != nil) {
+      [outProtocol writeFieldBeginWithName: @"youkuClientSecret" type: TType_STRING fieldID: 7];
+      [outProtocol writeString: __youkuClientSecret];
+      [outProtocol writeFieldEnd];
+    }
+  }
+  if (__youkuUsedUrl_isset) {
+    [outProtocol writeFieldBeginWithName: @"youkuUsedUrl" type: TType_I32 fieldID: 8];
+    [outProtocol writeI32: __youkuUsedUrl];
+    [outProtocol writeFieldEnd];
+  }
+  if (__appSecret56_isset) {
+    if (__appSecret56 != nil) {
+      [outProtocol writeFieldBeginWithName: @"appSecret56" type: TType_STRING fieldID: 9];
+      [outProtocol writeString: __appSecret56];
+      [outProtocol writeFieldEnd];
+    }
+  }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
 }
@@ -946,6 +1131,18 @@
     @throw [TProtocolException exceptionWithName: @"TProtocolException"
                                reason: @"Required field 'searchImgVer' is not set."];
   }
+  if (!__youkuClientId_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'youkuClientId' is not set."];
+  }
+  if (!__youkuClientSecret_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'youkuClientSecret' is not set."];
+  }
+  if (!__appSecret56_isset) {
+    @throw [TProtocolException exceptionWithName: @"TProtocolException"
+                               reason: @"Required field 'appSecret56' is not set."];
+  }
 }
 
 - (NSString *) description {
@@ -960,6 +1157,14 @@
   [ms appendFormat: @"%i", __searchKeysVer];
   [ms appendString: @",searchImgVer:"];
   [ms appendFormat: @"%i", __searchImgVer];
+  [ms appendString: @",youkuClientId:"];
+  [ms appendFormat: @"\"%@\"", __youkuClientId];
+  [ms appendString: @",youkuClientSecret:"];
+  [ms appendFormat: @"\"%@\"", __youkuClientSecret];
+  [ms appendString: @",youkuUsedUrl:"];
+  [ms appendFormat: @"%i", __youkuUsedUrl];
+  [ms appendString: @",appSecret56:"];
+  [ms appendFormat: @"\"%@\"", __appSecret56];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }

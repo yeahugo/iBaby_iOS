@@ -41,7 +41,6 @@
             NSLog(@"getVideoList error is %@",error);
         }
     }];
-
 }
 
 -(NSMutableArray *)makeVideoArrays:(NSArray *)videoList

@@ -34,8 +34,6 @@
 
 @property (nonatomic, assign) int totalSectionNum;
 
-@property (nonatomic, assign) int videoType;        //RESOURCE_TYPE
-
 @property (nonatomic, assign) int status;
 
 @property (nonatomic, assign) int durationTime;

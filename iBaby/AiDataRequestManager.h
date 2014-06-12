@@ -27,7 +27,15 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
 
 @property (nonatomic, assign) int babyId;
 
+@property (nonatomic, assign) int isYoukuUseUrl;
+
 @property (nonatomic, copy) NSString *wuliuAppkey;
+
+@property (nonatomic, copy) NSString *wuliuSecret;
+
+@property (nonatomic, copy) NSString *youkuAppkey;
+
+@property (nonatomic, copy) NSString *youkuSecret;
 
 @property (nonatomic, assign) int isReportFlag;
 
@@ -41,7 +49,7 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
 
 -(void)requestAlbumWithSerialId:(NSString *)serialId startId:(int)startId  recordNum:(int)recordNum videoTitle:(NSString *)videoTitle completion:(void (^)(NSArray *resultArray,NSError *error))completion;
 
--(void)requestRecommendWithType:(int)resourceType startId:(int)startId completion:(void (^)(NSArray *resultArray , NSError * error))completion;
+-(void)requestRecommendWithType:(int)resourceType startId:(int)startId totalNum:(int)totalNum completion:(void (^)(NSArray *resultArray , NSError * error))completion;
 
 -(void)requestGetResourcesWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId totalSectionNum:(int)sectionNum completion:(void (^)(NSArray *, NSError *))completion;
 

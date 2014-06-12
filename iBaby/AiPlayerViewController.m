@@ -22,13 +22,11 @@
     [controlView.slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
     [controlView.slider setMinimumTrackImage:[[UIImage imageNamed:@"schedule-bar-schedule"] stretchableImageWithLeftCapWidth:20 topCapHeight:0] forState:UIControlStateNormal];
     [controlView.slider setMaximumTrackImage:[UIImage imageNamed:@"schedule-bar-bottom"] forState:UIControlStateNormal];
-//    [controlView.slider addTarget:self action:@selector(durationSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     controlView.slider.minimumValue = 0;
     
     [controlView.volumn_slider setThumbImage:[UIImage imageNamed:@"point"] forState:UIControlStateNormal];
     [controlView.volumn_slider setMinimumTrackImage:[[UIImage imageNamed:@"volume-bar-top"] stretchableImageWithLeftCapWidth:20 topCapHeight:0] forState:UIControlStateNormal];
     [controlView.volumn_slider setMaximumTrackImage:[UIImage imageNamed:@"volume-bar-bottom"] forState:UIControlStateNormal];
-//    [controlView.volumn_slider addTarget:self action:@selector(volumnSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     float volume = [MPMusicPlayerController applicationMusicPlayer].volume;
     [controlView.volumn_slider setValue:volume];
     
@@ -39,23 +37,6 @@
         [controlView.likeButton setBackgroundImage:[UIImage imageNamed:@"red_heart"] forState:UIControlStateNormal];
     }
     return controlView;
-    
-//    int currentTime = floor(self.moviePlayer.currentPlaybackTime);
-//    controlView.slider.value = currentTime;
-//    int current_minutes = currentTime / 60;
-//    int current_seconds = currentTime % 60;
-//    
-//    NSString *currentTimeString = [NSString stringWithFormat:@"%d:%02d", current_minutes, current_seconds];
-//    
-//    controlView.currentTimeLabel.text = [NSString stringWithFormat:@"%@",currentTimeString];
-//    
-//    int totalTime = self.moviePlayer.duration;
-//    int minutes = totalTime / 60;
-//    int seconds = totalTime % 60;
-//    
-//    NSString *time = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
-//    
-//    controlView.totalTimeLabel.text = [NSString stringWithFormat:@"%@",time];
 }
 
 @end
@@ -261,6 +242,7 @@
         int rowNum = 2;
         int videoListWidth = 442;
         videoListView.frame = CGRectMake(1024-videoListWidth, videoListView.frame.origin.y, videoListWidth, videoListView.frame.size.height);
+        NSString *vid = [AiVideoPlayerManager shareInstance].currentVideoObject.vid;
         for (int i = 0; i < totalNum; i++) {
             AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:[result objectAtIndex:i]];
             AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(startX + deltaX *(i%rowNum) , startY + deltaY *(i/rowNum), size.width, size.height) cellType:kViewCellTypeNormal];
@@ -269,6 +251,9 @@
             scrollViewCell.imageButton.tag = i;
             [scrollViewCell.imageButton removeTarget:scrollViewCell action:NULL forControlEvents:UIControlEventTouchUpInside];
             [scrollViewCell.imageButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
+            if ([vid isEqualToString:videoObject.vid]) {
+                [scrollViewCell setHightLightScrollViewCell];
+            }
         }
         CGSize contentSize = CGSizeMake(videoListView.frame.size.width, ceil((float)totalNum/rowNum) * deltaY);
         [videoListView setContentSize:contentSize];
@@ -281,7 +266,7 @@
 
 -(IBAction)onClickSelectVideos:(UIButton *)button
 {
-    NSLog(@"onClickSelectVideos !!");
+//    NSLog(@"onClickSelectVideos !!");
     if (self.playControlView.videoListView == nil) {
         NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
@@ -313,18 +298,27 @@
 {
     ResourceInfo *resourceInfo = [self.videoArray objectAtIndex:section];
     AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
-    [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
-    self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
-    
-    [videoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
-        if (error == nil) {
-//            NSLog(@"-------------play url is %@ self.moviePlayer is %@",urlString,self.moviePlayer);
-            [self.moviePlayer setContentURL:[NSURL URLWithString:urlString]];
-            [self.moviePlayer play];
-        } else {
-            NSLog(@"error is %@",error);
-        }
-    }];
+    if (resourceInfo.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_YOUKU) {
+        [_timer invalidate];
+        _timer = nil;
+        [[AiVideoPlayerManager shareInstance] saveVideoInDatabase];
+        [self dismissViewControllerAnimated:YES completion:^(){
+            [videoObject playVideo];
+        }];
+
+    } else {
+        [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
+        self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
+        
+        [videoObject getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+            if (error == nil) {
+                [self.moviePlayer setContentURL:[NSURL URLWithString:urlString]];
+                [self.moviePlayer play];
+            } else {
+                NSLog(@"error is %@",error);
+            }
+        }];
+    }
 }
 
 -(void)selectVideo:(UIButton *)button
@@ -337,16 +331,21 @@
 
 -(IBAction)onClickLike:(UIButton *)button
 {
+    AiVideoObject *videoObject = [AiVideoPlayerManager shareInstance].currentVideoObject;
     if (self.isLike == NO) {
         UIImage *likeImage = [UIImage imageNamed:@"red_heart_pressed"];
         [button setBackgroundImage:likeImage forState:UIControlStateNormal];
         self.isLike = YES;
         [[AiDataBaseManager shareInstance] addFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
+        
+        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"L\t%d\t%@",videoObject.sourceType,videoObject.vid] completion:nil];
     } else {
         UIImage *likeImage = [UIImage imageNamed:@"red_heart"];
         [button setBackgroundImage:likeImage forState:UIControlStateNormal];
         self.isLike = NO;
         [[AiDataBaseManager shareInstance] deleteFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
+        
+        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"NL\t%d\t%@",videoObject.sourceType,videoObject.vid] completion:nil];
     }
 }
 

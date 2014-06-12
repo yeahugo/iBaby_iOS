@@ -28,11 +28,41 @@
         UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, rect.size.height, rect.size.width)];
         self.view.backgroundColor = [UIColor blackColor];
         self.webView = webView;
+        self.webView.scrollView.scrollEnabled = NO;
         self.webView.delegate = self;
         [self playVideoWithVid:vid];
-        [AiWaitingView showInView:self.view];
-    }
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addWebViewButton)];
+        tap.numberOfTapsRequired = 1;
+        tap.delegate = self;
+        self.recognizer = tap;
+        [self.webView addGestureRecognizer:tap];
+        self.playControlView = nil;
+     }
     return self;
+}
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+-(void)addWebViewButton
+{
+    [self.recognizer removeTarget:self action:@selector(addWebViewButton)];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        UIButton *touchButton = [[UIButton alloc] initWithFrame:self.webView.frame];
+        touchButton.backgroundColor = [UIColor clearColor];
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addControl)];
+        [touchButton addGestureRecognizer:gesture];
+        self.webViewButton = touchButton;
+        [self.webView addSubview:touchButton];
+        });
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [_timer invalidate];
+    [super viewDidDisappear:animated];
 }
 
 -(void)finishVideo
@@ -43,25 +73,30 @@
         AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
         [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
         [self playVideoWithVid:videoObject.vid];
+    } else {
+        [self playVideoWithVid:[AiVideoPlayerManager shareInstance].currentVideoObject.vid];
     }
 }
 
 -(void)playVideoWithVid:(NSString *)vid
 {
+    [AiWaitingView showInView:self.webView];
     [self.webViewButton removeFromSuperview];
+    [self.recognizer addTarget:self action:@selector(addWebViewButton)];
     NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970];
-    NSString *clientScrete = @"2678d1ea3b4c0ea5703b3688e83a6e3b";
-    NSString *clientId = @"d68da6150f7d4460";
+    
+    NSString *clientScrete = [AiDataRequestManager shareInstance].youkuAppkey;
+    NSString *clientId = [AiDataRequestManager shareInstance].youkuSecret;
+    
     NSString *sourceSig = [NSString stringWithFormat:@"%@_%d_%@",vid,(int)timeInterval,clientScrete];
     NSString *signature = [AiUserManager md5Value:sourceSig];
     NSString *embSig = [NSString stringWithFormat:@"1_%d_%@",(int)timeInterval,signature];
-    NSString *htmlString = [NSString stringWithFormat:@"<html><div id=\"youkuplayer\"></div><script type=\"text/javascript\" src=\"http://player.youku.com/jsapi\"> player = new YKU.Player('youkuplayer',{client_id: '%@',vid: '%@',embsig:'%@',show_related: false,autoplay:true,events:{onPlayerReady:function(){window.location='ibaby:ready'},onPlayEnd:function(){ window.location='ibaby:finish'; alert('test')},onPlayStart:function(){window.location='ibaby:start'}}}); </script></html>",clientId,vid,embSig];
+    NSString *htmlString = [NSString stringWithFormat:@"<html><div id=\"youkuplayer\" style=\"background-color:Black;margin:-10px -10px;width:1026; height:770px;\"></div><script type=\"text/javascript\" src=\"http://player.youku.com/jsapi\"> player = new YKU.Player('youkuplayer',{client_id: '%@',vid: '%@',embsig:'%@',show_related: false,autoplay:true,events:{onPlayerReady:function(){window.location='ibaby:ready'},onPlayEnd:function(){ window.location='ibaby:finish';},onPlayStart:function(){window.location='ibaby:start'}}}); </script></html>",clientId,vid,embSig];
     [self.webView loadHTMLString:htmlString baseURL:nil];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSLog(@"request scheme is %@",request.URL.scheme);
     if (![request.URL.scheme isEqualToString:@"ibaby"]) {
         return YES;
     } else {
@@ -72,16 +107,10 @@
             [AiWaitingView dismiss];
             [self.view addSubview:self.webView];
         } else if ([request.URL.resourceSpecifier isEqualToString:@"start"]){
-            NSLog(@"start play!!");
+//            [self addWebViewButton];
+            [_timer invalidate];
             _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
-            UIButton *touchButton = [[UIButton alloc] initWithFrame:webView.frame];
-            touchButton.backgroundColor = [UIColor clearColor];
-            UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addControl)];
-            [touchButton addGestureRecognizer:gesture];
-            
-            self.webViewButton = touchButton;
             self.isPlay = YES;
-            [webView addSubview:touchButton];
         }
         //更新播放时间
         else {
@@ -139,6 +168,7 @@
         int rowNum = 2;
         int videoListWidth = 442;
         videoListView.frame = CGRectMake(1024-videoListWidth, videoListView.frame.origin.y, videoListWidth, videoListView.frame.size.height);
+        NSString *vid = [AiVideoPlayerManager shareInstance].currentVideoObject.vid;
         for (int i = 0; i < totalNum; i++) {
             AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:[result objectAtIndex:i]];
             AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(startX + deltaX *(i%rowNum) , startY + deltaY *(i/rowNum), size.width, size.height) cellType:kViewCellTypeNormal];
@@ -147,6 +177,10 @@
             scrollViewCell.imageButton.tag = i;
             [scrollViewCell.imageButton removeTarget:scrollViewCell action:NULL forControlEvents:UIControlEventTouchUpInside];
             [scrollViewCell.imageButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
+            
+            if ([vid isEqualToString:videoObject.vid]) {
+                [scrollViewCell setHightLightScrollViewCell];
+            }
         }
         CGSize contentSize = CGSizeMake(videoListView.frame.size.width, ceil((float)totalNum/rowNum) * deltaY);
         [videoListView setContentSize:contentSize];
@@ -168,11 +202,10 @@
 
 -(IBAction)onClickSelectVideos:(UIButton *)button
 {
-    NSLog(@"onClickSelectVideos !!");
     if (self.playControlView.videoListView == nil) {
         NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
-        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
+//        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
         if ([serialId isEqualToString:@"0"]) {
             sectionNum = AlbumNum;
         }
@@ -211,16 +244,19 @@
 
 -(IBAction)onClickLike:(UIButton *)button
 {
+    AiVideoObject *videoObject = [AiVideoPlayerManager shareInstance].currentVideoObject;
     if (self.isLike == NO) {
         UIImage *likeImage = [UIImage imageNamed:@"red_heart_pressed"];
         [button setBackgroundImage:likeImage forState:UIControlStateNormal];
         self.isLike = YES;
         [[AiDataBaseManager shareInstance] addFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
+                [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"L\n%d\n%@",videoObject.sourceType,videoObject.vid] completion:nil];
     } else {
         UIImage *likeImage = [UIImage imageNamed:@"red_heart"];
         [button setBackgroundImage:likeImage forState:UIControlStateNormal];
         self.isLike = NO;
         [[AiDataBaseManager shareInstance] deleteFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
+        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"NL\n%d\n%@",videoObject.sourceType,videoObject.vid] completion:nil];
     }
 }
 
@@ -232,9 +268,7 @@
 
 -(void)durationSliderValueChanged:(UISlider *)slider
 {
-    NSLog(@"slider value is %f max is %f seekto is %d",slider.value,slider.maximumValue,(int)(slider.value * slider.maximumValue));
     [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"player.seekTo(%d)",(int)(slider.value)]];
-//    [self.moviePlayer setCurrentPlaybackTime:slider.value];
 }
 
 -(void)volumnSliderValueChanged:(UISlider *)slider
@@ -268,34 +302,28 @@
         [viewControl removeFromSuperview];
         self.playControlView = nil;
     } else {
-        AiPlayerViewControl *controlView = [AiPlayerViewControl makePlayerViewControl];
-        [self.webViewButton addSubview:controlView];
-        [controlView.slider addTarget:self action:@selector(durationSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-        //毫秒转换为秒
-        int durationTime =[AiVideoPlayerManager shareInstance].currentVideoObject.durationTime/1000;
-        NSLog(@"duration Time is %d",durationTime);
-        controlView.slider.maximumValue = durationTime;
-        
-        [controlView.volumn_slider addTarget:self action:@selector(volumnSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-        
-//        int currentTime = floor(self.moviePlayer.currentPlaybackTime);
-//        controlView.slider.value = currentTime;
-//        int current_minutes = currentTime / 60;
-//        int current_seconds = currentTime % 60;
-//        
-//        NSString *currentTimeString = [NSString stringWithFormat:@"%d:%02d", current_minutes, current_seconds];
-//        
-//        controlView.currentTimeLabel.text = [NSString stringWithFormat:@"%@",currentTimeString];
-        
-        int minutes = durationTime / 60;
-        int seconds = durationTime % 60;
-        
-        NSString *time = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
-        
-        controlView.totalTimeLabel.text = [NSString stringWithFormat:@"%@",time];
-        self.playControlView = controlView;
+        @try {
+            AiPlayerViewControl *controlView = [AiPlayerViewControl makePlayerViewControl];
+            [self.webViewButton addSubview:controlView];
+            [controlView.slider addTarget:self action:@selector(durationSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+            //毫秒转换为秒
+            int durationTime =[AiVideoPlayerManager shareInstance].currentVideoObject.durationTime/1000;
+            controlView.slider.maximumValue = durationTime;
+            
+            [controlView.volumn_slider addTarget:self action:@selector(volumnSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+            
+            int minutes = durationTime / 60;
+            int seconds = durationTime % 60;
+            
+            NSString *time = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+            
+            controlView.totalTimeLabel.text = [NSString stringWithFormat:@"%@",time];
+            self.playControlView = controlView;
+        }
+        @catch (NSException *exception) {
+            NSLog(@"addControl error");
+        }
     }
-    NSLog(@"addControl");
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -334,6 +362,7 @@
 
 -(IBAction)onClickClose:(id)sender
 {
+    [_timer invalidate];
     [[AiVideoPlayerManager shareInstance] saveVideoInDatabase];
     [self dismissModalViewControllerAnimated:YES];
 }

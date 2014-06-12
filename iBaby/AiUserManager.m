@@ -127,7 +127,7 @@
 {
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
-            NSLog(@"userLogin here!!");
+//            NSLog(@"userLogin here!!");
             ReqHead *reqHead = [[ReqHead alloc] initWithBabyId:self.babyId guid:self.openUdid version:VERSION];
             NSString * seedString = [[AiThriftManager shareInstance].userClient getAuthSeed:reqHead];
             NSString * authString = [NSString stringWithFormat:@"%d%@%@%@",self.babyId,self.openUdid,self.passwd,seedString];

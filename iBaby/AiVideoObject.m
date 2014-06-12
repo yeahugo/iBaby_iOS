@@ -28,7 +28,6 @@
         self.vid = resourceInfo.vid;
         self.sourceType = resourceInfo.sourceType;
         self.resourceType = resourceInfo.resourceType;
-        self.videoType = resourceInfo.resourceType;
         self.serialId = resourceInfo.serialId;
         self.totalSectionNum = resourceInfo.sectionNum;
         self.curSectionNum = resourceInfo.curSection;
@@ -42,7 +41,8 @@
 
 -(void)playVideo
 {
-    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_YOUKU) {
+    [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"P\t%d\n%@",self.sourceType,self.vid] completion:nil];
+    if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_YOUKU && ![AiDataRequestManager shareInstance].isYoukuUseUrl) {
         [AiVideoPlayerManager shareInstance].currentVideoObject = self;
         UIApplication *shareApplication = [UIApplication sharedApplication];
         AiWebViewPlayerController *viewController = [[AiWebViewPlayerController alloc] initWithVid:self.vid];
@@ -53,7 +53,6 @@
                 [AiVideoPlayerManager shareInstance].currentVideoObject = self;
                 AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
                 [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
-                NSLog(@"playurl is %@",urlString);
                 self.playUrl = urlString;
                 UIApplication *shareApplication = [UIApplication sharedApplication];
                 [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
@@ -82,22 +81,23 @@
 -(void)getSongUrlWithCompletion:(void (^)(NSString *urlString,NSError *error))completion
 {
     if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_YOUKU) {
-        NSString *urlString = [NSString stringWithFormat:@"http://v.youku.com/player/getRealM3U8/vid/%@/type/mp4/v.m3u8",self.vid];
+        NSString *urlString = self.playUrl;
         completion(urlString,nil);
     }
     if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_56) {
-        NSLog(@"vid is %@",self.vid);
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
         int timeInteval = (int)[[NSDate date] timeIntervalSince1970];
         NSString *vidString = [NSString stringWithFormat:@"vid=%@",self.vid];
         NSString *appKey56 = [AiDataRequestManager shareInstance].wuliuAppkey;
-        NSLog(@"appKey is %@",appKey56);
         if (appKey56 == nil) {
             appKey56 = @"3000003910";
         }
-        NSString *secret = @"b7ed6e59906c4fa5";
-        NSString *signString = [NSString stringWithFormat:@"%@#%@#%@#%d",[self md5Value:vidString],appKey56,secret,timeInteval];
+        NSString *secret56 = [AiDataRequestManager shareInstance].wuliuSecret;
+        if (secret56 == nil) {
+            secret56 = @"b7ed6e59906c4fa5";
+        }
+        NSString *signString = [NSString stringWithFormat:@"%@#%@#%@#%d",[self md5Value:vidString],appKey56,secret56,timeInteval];
         NSString *md5SignString = [self md5Value:signString];
         NSString *urlString = [NSString stringWithFormat:@"http://oapi.56.com/video/mobile.json?appkey=%@&ts=%d&vid=%@&sign=%@",appKey56,timeInteval,self.vid,md5SignString];
         [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -119,7 +119,6 @@
         completion(urlString,nil);
     }
     if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_SHY) {
-        NSLog(@"playurl is %@",self.playUrl);
         NSString *urlString = self.playUrl;
         completion(urlString,nil);
     }
@@ -133,7 +132,7 @@
     aiVideoObject.imageUrl = _imageUrl;
     aiVideoObject.vid = _vid;
     aiVideoObject.sourceType = _sourceType;
-    aiVideoObject.videoType = _videoType;
+    aiVideoObject.resourceType = _resourceType;
     aiVideoObject.serialId = _serialId;
     aiVideoObject.totalSectionNum = _totalSectionNum;
     aiVideoObject.playUrl = _playUrl;

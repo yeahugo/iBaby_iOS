@@ -14,6 +14,8 @@
 
 @property (nonatomic, assign) BOOL isShow;
 
++(void)show;
+
 +(void)showInView:(UIView *)superView;
 
 +(void)showInView:(UIView *)superView point:(CGPoint)point;

@@ -42,8 +42,13 @@
     self.serialImageView.layer.masksToBounds = YES;
     
     _albumViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame serialId:self.videoObject.serialId completion:^(NSArray *resultArray, NSError *error) {
+//        NSLog(@"result is %@",resultArray);
+        [AiWaitingView dismiss];
         if (error == nil) {
             [_albumViewController.scrollView addSubview:_albumView];
+            if (resultArray.count == 0) {
+                return ;
+            }
             ResourceInfo *resourceInfo = [resultArray objectAtIndex:0];
             self.videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
             UMImageView *imageView = [[UMImageView alloc] initWithFrame:self.serialImageView.frame];
@@ -63,7 +68,8 @@
         }
     }];
     _albumViewController.sourceType = kDataSourceTypeWeb;
-    [self.view addSubview:_albumViewController.scrollView];    
+    [self.view addSubview:_albumViewController.scrollView];
+    [AiWaitingView showInView:self.view];
 }
 
 -(IBAction)playVideo:(id)sender
@@ -73,7 +79,6 @@
 
 -(IBAction)close:(id)sender
 {
-    NSLog(@"close album!!");
     [self dismissFormSheetControllerAnimated:YES completionHandler:nil];
 //    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
 //    [rootViewController closeSheetController];

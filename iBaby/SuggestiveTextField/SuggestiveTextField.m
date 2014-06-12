@@ -83,9 +83,7 @@
 
 - (void)matchStrings:(NSString *)letters {
     if (_stringsArray.count > 0) {
-        NSLog(@"string is %@",letters);
         self.matchedStrings = [_stringsArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self BEGINSWITH[cd] %@",letters]];
-        NSLog(@"self.matchedStrings is %d",self.matchedStrings.count);
         [_controller.tableView reloadData];
     }
 }
