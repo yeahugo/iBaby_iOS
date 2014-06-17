@@ -18,7 +18,6 @@
 #import "SwipeView.h"
 
 #import "Reachability.h"
-#import "iToast.h"
 #import "AFNetworking.h"
 
 #import "AiWaitingView.h"

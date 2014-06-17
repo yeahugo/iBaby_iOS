@@ -18,17 +18,17 @@
 
 @property (nonatomic, strong) IBOutlet UISlider *slider;
 
-@property (nonatomic, assign) AiPlayerViewController *playerViewController;
+@property (nonatomic, weak) AiPlayerViewController *playerViewController;
 
-@property (nonatomic, assign) IBOutlet UILabel *currentTimeLabel;
+@property (nonatomic, weak) IBOutlet UILabel *currentTimeLabel;
 
-@property (nonatomic, assign) IBOutlet UILabel *totalTimeLabel;
+@property (nonatomic, weak) IBOutlet UILabel *totalTimeLabel;
 
-@property (nonatomic, assign) IBOutlet UIButton *volumn_button;
+@property (nonatomic, weak) IBOutlet UIButton *volumn_button;
 
-@property (nonatomic, assign) IBOutlet UISlider *volumn_slider;
+@property (nonatomic, weak) IBOutlet UISlider *volumn_slider;
 
-@property (nonatomic, assign) IBOutlet UIButton *likeButton;
+@property (nonatomic, weak) IBOutlet UIButton *likeButton;
 
 +(AiPlayerViewControl *)makePlayerViewControl;
 

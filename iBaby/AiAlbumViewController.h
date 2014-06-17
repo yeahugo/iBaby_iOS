@@ -16,19 +16,19 @@
 
 @property (nonatomic, copy) NSString *serialId;
 
-@property (nonatomic, assign) IBOutlet UIView * backGroundView;
+@property (nonatomic, weak) IBOutlet UIView * backGroundView;
 
-@property (nonatomic, assign) IBOutlet UITextView *serialTextView;
+@property (nonatomic, weak) IBOutlet UITextView *serialTextView;
 
-@property (nonatomic, assign) IBOutlet UILabel * serialLabel;
+@property (nonatomic, weak) IBOutlet UILabel * serialLabel;
 
-@property (nonatomic, assign) IBOutlet UILabel * sectionNumLabel;
+@property (nonatomic, weak) IBOutlet UILabel * sectionNumLabel;
 
-@property (nonatomic, assign) IBOutlet UIImageView * serialImageView;
+@property (nonatomic, weak) IBOutlet UIImageView * serialImageView;
 
-@property (nonatomic, assign) IBOutlet UIView * albumView;
+@property (nonatomic, weak) IBOutlet UIView * albumView;
 
-@property (nonatomic, assign) IBOutlet UILabel * titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel * titleLabel;
 
 @property (nonatomic, strong) AiVideoObject *videoObject;
 

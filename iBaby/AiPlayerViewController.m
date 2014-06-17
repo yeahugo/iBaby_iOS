@@ -270,7 +270,7 @@
     if (self.playControlView.videoListView == nil) {
         NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
         int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
-        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
+//        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
         if ([serialId isEqualToString:@"0"]) {
             sectionNum = AlbumNum;
         }

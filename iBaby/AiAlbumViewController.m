@@ -79,7 +79,7 @@
 
 -(IBAction)close:(id)sender
 {
-    [self dismissFormSheetControllerAnimated:YES completionHandler:nil];
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
 //    AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
 //    [rootViewController closeSheetController];
 }

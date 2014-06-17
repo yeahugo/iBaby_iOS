@@ -14,7 +14,7 @@
 @class AiScrollViewController;
 
 @interface AiScrollView : UIScrollView
-<SwipeViewDataSource,EGORefreshTableHeaderDelegate,UIScrollViewDelegate>
+<EGORefreshTableHeaderDelegate,UIScrollViewDelegate>
 {
     EGORefreshTableHeaderView * _egoFooterView;
     int _cellHeight;

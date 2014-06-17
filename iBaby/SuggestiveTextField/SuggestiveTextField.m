@@ -7,6 +7,7 @@
 //
 
 #import "SuggestiveTextField.h"
+#import "AiSearchViewController.h"
 
 //#define DEFAULT_POPOVER_SIZE CGSizeMake(300, 300)
 #define DEFAULT_POPOVER_SIZE CGSizeMake(500, 300)
@@ -155,7 +156,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self setText:[_matchedStrings objectAtIndex:indexPath.row]];
     NSString *searchWords = [_matchedStrings objectAtIndex:indexPath.row];
-    [self.searchViewController performSelector:@selector(onClickSearchWords:) withObject:searchWords];
+    [(AiSearchViewController *)self.searchViewController performSelector:@selector(onClickSearchWords:) withObject:searchWords];
     [_popOver dismissPopoverAnimated:_shouldHideOnSelection];
 }
 

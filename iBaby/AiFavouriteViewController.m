@@ -35,7 +35,7 @@
     
     [[AiDataBaseManager shareInstance] getFavouriteListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
-            [_favouriViewController.scrollView setVideoDatas:videoList];
+            [_favouriViewController.scrollView setVideoDatas:(NSMutableArray *)videoList];
             [_favouriViewController.scrollView reloadData];
         } else {
             NSLog(@"getVideoList error is %@",error);
@@ -64,7 +64,7 @@
 
 -(IBAction)close:(id)sender
 {
-    [self dismissFormSheetControllerAnimated:YES completionHandler:nil];
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
     AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
     [rootViewController resetButtons];
 }
