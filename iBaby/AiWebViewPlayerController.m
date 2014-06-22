@@ -7,7 +7,7 @@
 //
 
 #import "AiWebViewPlayerController.h"
-#import "AiVideoPlayerManager.h"
+//#import "AiVideoPlayerManager.h"
 #import "AiUserManager.h"
 #import "AiDataRequestManager.h"
 #import "AiWaitingView.h"
@@ -19,18 +19,16 @@
 @end
 
 @implementation AiWebViewPlayerController
-
--(id)initWithVid:(NSString *)vid
+-(id)initWithAiVideoObject:(AiVideoObject *)videoObject
 {
-    self = [super initWithNibName:@"AiWebViewPlayerController" bundle:nil];
-    if (self) {
+    if (self = [super initWithAiVideoObject:videoObject]) {
         CGRect rect = [UIScreen mainScreen].bounds;
         UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, rect.size.height, rect.size.width)];
         self.view.backgroundColor = [UIColor blackColor];
         self.webView = webView;
         self.webView.scrollView.scrollEnabled = NO;
         self.webView.delegate = self;
-        [self playVideoWithVid:vid];
+        [self playVideoWithVid:videoObject.vid];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addWebViewButton)];
         tap.numberOfTapsRequired = 1;
@@ -38,7 +36,7 @@
         self.recognizer = tap;
         [self.webView addGestureRecognizer:tap];
         self.playControlView = nil;
-     }
+    }
     return self;
 }
 
@@ -61,20 +59,20 @@
 
 -(void)viewDidDisappear:(BOOL)animated
 {
-    [_timer invalidate];
+    [self.timer invalidate];
     [super viewDidDisappear:animated];
 }
 
 -(void)finishVideo
 {
-    int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
+    int sectionNum = self.videoObject.curSectionNum;
     if (self.videoArray.count > sectionNum + 2) {
         ResourceInfo *resourceInfo = [self.videoArray objectAtIndex:sectionNum + 1];
         AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:resourceInfo];
-        [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
+        self.videoObject = videoObject;
         [self playVideoWithVid:videoObject.vid];
     } else {
-        [self playVideoWithVid:[AiVideoPlayerManager shareInstance].currentVideoObject.vid];
+        [self playVideoWithVid:self.videoObject.vid];
     }
 }
 
@@ -108,8 +106,8 @@
             [self.view addSubview:self.webView];
         } else if ([request.URL.resourceSpecifier isEqualToString:@"start"]){
 //            [self addWebViewButton];
-            [_timer invalidate];
-            _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
+            [self.timer invalidate];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
             self.isPlay = YES;
         }
         //更新播放时间
@@ -126,108 +124,6 @@
     return NO;
 }
 
--(void)reloadVideoList:(NSArray *)result videoListView:(UIScrollView *)videoListView
-{
-    int totalNum = result.count;
-    UIImage *videoFrame = [UIImage imageNamed:@"episode edge"];
-    CGSize size = videoFrame.size;
-    self.videoArray = result;
-    
-    int curSectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.curSectionNum;
-    if ([AiVideoPlayerManager shareInstance].currentVideoObject.resourceType == RESOURCE_TYPE_CARTOON) {
-        int rowNum = 5;
-        for (int i = 0; i < totalNum; i++) {
-            UIButton *videoButton = [[UIButton alloc] initWithFrame:CGRectMake(i%rowNum * (size.width-2), i/rowNum * (size.height-2), size.width , size.height)];
-            videoButton.tag = i;
-            [videoButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
-            ResourceInfo *resourceInfo = (ResourceInfo *)[result objectAtIndex:i];
-            //获取同一专辑下的列表
-            int sectionNum = resourceInfo.curSection;
-            [videoButton setTitle:[NSString stringWithFormat:@"%d",sectionNum] forState:UIControlStateNormal];
-            if (curSectionNum == i+1) {
-                [videoButton setBackgroundImage:[UIImage imageNamed:@"episode current"] forState:UIControlStateNormal];
-            } else {
-                [videoButton setBackgroundImage:[UIImage imageNamed:@"episode edge"] forState:UIControlStateNormal];
-            }
-            [videoListView addSubview:videoButton];
-        }
-        CGSize contentSize = CGSizeMake(videoListView.frame.size.width, ceil((float)totalNum/rowNum) * size.height);
-        [videoListView setContentSize:contentSize];
-        if (contentSize.height > videoListView.frame.size.height) {
-            UIView * backGroundView = [videoListView viewWithTag:2000];
-            backGroundView.frame = CGRectMake(0, 0, backGroundView.frame.size.width, contentSize.height);
-        }
-    }
-    else{
-        UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"edge_background_low"]];
-        CGSize size = frameImageView.frame.size;
-        int startX = 28;
-        int startY = 23;
-        int deltaX = (size.width + 28);
-        int deltaY = (size.height + 26);
-        int rowNum = 2;
-        int videoListWidth = 442;
-        videoListView.frame = CGRectMake(1024-videoListWidth, videoListView.frame.origin.y, videoListWidth, videoListView.frame.size.height);
-        NSString *vid = [AiVideoPlayerManager shareInstance].currentVideoObject.vid;
-        for (int i = 0; i < totalNum; i++) {
-            AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:[result objectAtIndex:i]];
-            AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(startX + deltaX *(i%rowNum) , startY + deltaY *(i/rowNum), size.width, size.height) cellType:kViewCellTypeNormal];
-            scrollViewCell.aiVideoObject = videoObject;
-            [videoListView addSubview:scrollViewCell];
-            scrollViewCell.imageButton.tag = i;
-            [scrollViewCell.imageButton removeTarget:scrollViewCell action:NULL forControlEvents:UIControlEventTouchUpInside];
-            [scrollViewCell.imageButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
-            
-            if ([vid isEqualToString:videoObject.vid]) {
-                [scrollViewCell setHightLightScrollViewCell];
-            }
-        }
-        CGSize contentSize = CGSizeMake(videoListView.frame.size.width, ceil((float)totalNum/rowNum) * deltaY);
-        [videoListView setContentSize:contentSize];
-        if (contentSize.height > videoListView.frame.size.height) {
-            UIView * backGroundView = [videoListView viewWithTag:2000];
-            backGroundView.frame = CGRectMake(0, 0, backGroundView.frame.size.width, contentSize.height);
-        }
-    }
-}
-
--(void)selectVideo:(UIButton *)button
-{
-    [[AiVideoPlayerManager shareInstance] saveVideoInDatabase];
-    [self.playControlView removeFromSuperview];
-    AiVideoObject * videoObject = [self.videoArray objectAtIndex:button.tag];
-    [self playVideoWithVid:videoObject.vid];
-}
-
-
--(IBAction)onClickSelectVideos:(UIButton *)button
-{
-    if (self.playControlView.videoListView == nil) {
-        NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
-        int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
-//        NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
-        if ([serialId isEqualToString:@"0"]) {
-            sectionNum = AlbumNum;
-        }
-        
-        [button setBackgroundImage:[UIImage imageNamed:@"episode_pressed"] forState:UIControlStateNormal];
-        UIImage *videoListBackgroundImage = [UIImage imageNamed:@"episode background"];
-        UIScrollView *videoListView = [[UIScrollView alloc] initWithFrame:CGRectMake(1024 - videoListBackgroundImage.size.width, 89, videoListBackgroundImage.size.width, videoListBackgroundImage.size.height)];
-        videoListView.tag = 10;
-        UIImageView *videoListBackgroundView = [[UIImageView alloc] initWithImage:videoListBackgroundImage];
-        videoListBackgroundView.tag = 2000;
-        [videoListView addSubview:videoListBackgroundView];
-        
-        [self reloadVideoList:self.videoArray videoListView:videoListView];
-        
-        self.playControlView.videoListView = videoListView;
-        [self.playControlView addSubview:videoListView];
-    } else {
-        [button setBackgroundImage:[UIImage imageNamed:@"episode_nomal"] forState:UIControlStateNormal];
-        [self.playControlView.videoListView removeFromSuperview];
-        self.playControlView.videoListView = nil;
-    }
-}
 
 -(IBAction)onClickPlay:(id)button
 {
@@ -242,23 +138,6 @@
     }
 }
 
--(IBAction)onClickLike:(UIButton *)button
-{
-    AiVideoObject *videoObject = [AiVideoPlayerManager shareInstance].currentVideoObject;
-    if (self.isLike == NO) {
-        UIImage *likeImage = [UIImage imageNamed:@"red_heart_pressed"];
-        [button setBackgroundImage:likeImage forState:UIControlStateNormal];
-        self.isLike = YES;
-        [[AiDataBaseManager shareInstance] addFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
-                [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"L\n%d\n%@",videoObject.sourceType,videoObject.vid] completion:nil];
-    } else {
-        UIImage *likeImage = [UIImage imageNamed:@"red_heart"];
-        [button setBackgroundImage:likeImage forState:UIControlStateNormal];
-        self.isLike = NO;
-        [[AiDataBaseManager shareInstance] deleteFavouriteRecord:[AiVideoPlayerManager shareInstance].currentVideoObject];
-        [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"NL\n%d\n%@",videoObject.sourceType,videoObject.vid] completion:nil];
-    }
-}
 
 -(void)updateTime:(NSTimer *)timer
 {
@@ -303,11 +182,11 @@
         self.playControlView = nil;
     } else {
         @try {
-            AiPlayerViewControl *controlView = [AiPlayerViewControl makePlayerViewControl];
+            AiPlayerViewControl *controlView = [AiPlayerViewControl makePlayerViewControl:self.videoObject];
             [self.webViewButton addSubview:controlView];
             [controlView.slider addTarget:self action:@selector(durationSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
             //毫秒转换为秒
-            int durationTime =[AiVideoPlayerManager shareInstance].currentVideoObject.durationTime/1000;
+            int durationTime = self.videoObject.durationTime/1000;
             controlView.slider.maximumValue = durationTime;
             
             [controlView.volumn_slider addTarget:self action:@selector(volumnSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -338,34 +217,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSString *serialId = [AiVideoPlayerManager shareInstance].currentVideoObject.serialId;
-    int sectionNum = [AiVideoPlayerManager shareInstance].currentVideoObject.totalSectionNum;
-    if ([serialId isEqualToString:@"0"]) {
-        sectionNum = AlbumNum;
-    }
-    NSString *videoTitle = [AiVideoPlayerManager shareInstance].currentVideoObject.title;
-    [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *result, NSError *error) {
-        if (result.count > 0) {
-            int sectionNum = [(ResourceInfo *)[result objectAtIndex:0] sectionNum];
-            if (sectionNum == 1 && ![serialId isEqualToString:@"0"]) {
-                [[AiDataRequestManager shareInstance] requestAlbumWithSerialId:serialId startId:0 recordNum:sectionNum videoTitle:videoTitle completion:^(NSArray *resultArray, NSError *error) {
-                    self.videoArray = resultArray;
-                }];
-            } else{
-                self.videoArray = result;
-            }
-        }
-    }];
     // Do any additional setup after loading the view from its nib.
 }
 
--(IBAction)onClickClose:(id)sender
-{
-    [_timer invalidate];
-    [[AiVideoPlayerManager shareInstance] saveVideoInDatabase];
-    [self dismissModalViewControllerAnimated:YES];
-}
 
 - (void)didReceiveMemoryWarning
 {

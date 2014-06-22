@@ -1,14 +1,14 @@
 //
-//  JGPlayerViewController.h
-//  FourPlayer
+//  AiPlayerViewController.h
+//  iBaby
 //
-//  Created by yeahugo on 14-3-13.
-//  Copyright (c) 2014年 AiJingang. All rights reserved.
+//  Created by yeahugo on 14-6-16.
+//  Copyright (c) 2014年 Ai. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "AiVideoObject.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "AiVideoObject.h"
 
 @class AiPlayerViewController;
 
@@ -30,41 +30,33 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *likeButton;
 
-+(AiPlayerViewControl *)makePlayerViewControl;
+@property (nonatomic, weak) AiVideoObject *videoObject;
+
++(AiPlayerViewControl *)makePlayerViewControl:(AiVideoObject *)videoObject;
 
 
 @end
 
-@interface AiPlayerViewController : MPMoviePlayerViewController
-<UIGestureRecognizerDelegate>
-{
-    NSTimer *_timer;
-}
-
-@property (nonatomic, strong) NSArray *videoArray;
+@interface AiPlayerViewController : UIViewController
 
 @property (nonatomic, strong) AiPlayerViewControl *playControlView;
 
-@property (nonatomic, strong) MPMoviePlayerController *playerController;
+//@property (nonatomic, assign) BOOL isLike;
 
-@property (nonatomic, strong) UIView *webView;
-
-@property (nonatomic, assign) float volume;
-
-@property (nonatomic, unsafe_unretained) BOOL isLike;
+@property (nonatomic, assign) BOOL isPlay;
 
 @property (nonatomic, assign) BOOL isOnVolumn;
 
--(IBAction)onClickClose:(id)sender;
+@property (nonatomic, assign) float volume;
 
--(IBAction)onClickLike:(id)sender;
+@property (nonatomic, strong) NSTimer *timer;
 
--(IBAction)onClickPlay:(id)sender;
+@property (nonatomic, strong) NSArray *videoArray;
+
+@property (nonatomic, strong) AiVideoObject *videoObject;
 
 -(IBAction)onClickSelectVideos:(UIButton *)button;
 
--(IBAction)onClickVolumn:(id)sender;
-
--(void)playVideoAtSection:(int)section;
-
+-(id)initWithAiVideoObject:(AiVideoObject *)videoObject;
+//- (id)initWithContentURL:(NSURL *)url;
 @end

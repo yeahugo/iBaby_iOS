@@ -7,7 +7,7 @@
 //
 
 #import "AiScrollView.h"
-#import "AiPlayerViewController.h"
+#import "AiNormalPlayerViewController.h"
 #import "AiVideoPlayerManager.h"
 #import "UMImageView.h"
 #import "AiBannerView.h"
@@ -460,12 +460,12 @@
         UITextField *textField = (UITextField *)[self.superview.superview viewWithTag:50];
         [textField resignFirstResponder];
     }
-//    NSLog(@"video resourceType is %d",self.aiVideoObject.resourceType);
+    NSLog(@"video resourceType is %d",self.aiVideoObject.resourceType);
     if (![self.aiVideoObject.serialId isEqualToString:@"0"]  && self.scrollView.viewType == kTagViewTypeIndex) {
         AiFirstViewController *firstViewController = (AiFirstViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;
         [firstViewController presentAlbumViewObject:self.aiVideoObject];
     } else {
-        [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
+//        [AiVideoPlayerManager shareInstance].currentVideoObject = self.aiVideoObject;
         [self.aiVideoObject playVideo];
     }
 }

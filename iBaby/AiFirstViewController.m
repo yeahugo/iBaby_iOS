@@ -247,8 +247,8 @@
 {
     if (_isPresentView == NO) {
         _isPresentView = YES;
-        [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
         AiAlbumViewController *albumViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"album"];
+        albumViewController.videoObject = videoObject;
         [self mz_presentFormSheetController:[self makeMZFormSheetController:albumViewController] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
 //            NSLog(@"finish!!");
             _isPresentView = NO;

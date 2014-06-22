@@ -31,7 +31,6 @@
 - (void)viewDidLoad
 {    
     [super viewDidLoad];
-    self.videoObject = [AiVideoPlayerManager shareInstance].currentVideoObject;
     [self.sectionNumLabel setText:[NSString stringWithFormat:@"%d",self.videoObject.totalSectionNum]];
     [self.titleLabel setText:self.videoObject.serialTitle];
     if (self.videoObject.serialDes.length > 0) {

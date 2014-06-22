@@ -10,7 +10,8 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "AFNetworking.h"
 #import "shy.h"
-#import "AiVideoPlayerManager.h"
+//#import "AiVideoPlayerManager.h"
+#import "AiNormalPlayerViewController.h"
 #import "AiDataRequestManager.h"
 #import "AiUserManager.h"
 #import "AiWebViewPlayerController.h"
@@ -43,19 +44,18 @@
 {
     [[AiDataRequestManager shareInstance] requestReportWithString:[NSString stringWithFormat:@"P\t%d\n%@",self.sourceType,self.vid] completion:nil];
     if (self.sourceType == RESOURCE_SOURCE_TYPE_RESOURCE_SOURCE_YOUKU && ![AiDataRequestManager shareInstance].isYoukuUseUrl) {
-        [AiVideoPlayerManager shareInstance].currentVideoObject = self;
         UIApplication *shareApplication = [UIApplication sharedApplication];
-        AiWebViewPlayerController *viewController = [[AiWebViewPlayerController alloc] initWithVid:self.vid];
+        AiWebViewPlayerController *viewController = [[AiWebViewPlayerController alloc] initWithAiVideoObject:self];
         [shareApplication.keyWindow.rootViewController presentModalViewController:viewController animated:YES];
     } else {
         [self getSongUrlWithCompletion:^(NSString *urlString,NSError *error){
+            NSLog(@"url is %@",urlString);
             if (error == nil) {
-                [AiVideoPlayerManager shareInstance].currentVideoObject = self;
-                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:urlString]];
-                [AiVideoPlayerManager shareInstance].aiPlayerViewController = playViewController;
                 self.playUrl = urlString;
+//                AiPlayerViewController *playViewController = [[AiPlayerViewController alloc] init];
+                AiNormalPlayerViewController *playViewController = [[AiNormalPlayerViewController alloc] initWithAiVideoObject:self];
                 UIApplication *shareApplication = [UIApplication sharedApplication];
-                [shareApplication.keyWindow.rootViewController presentMoviePlayerViewControllerAnimated:playViewController];
+                [shareApplication.keyWindow.rootViewController presentModalViewController:playViewController animated:YES];
             } else {
                 NSLog(@"error is %@",error);
             }
@@ -100,7 +100,9 @@
         NSString *signString = [NSString stringWithFormat:@"%@#%@#%@#%d",[self md5Value:vidString],appKey56,secret56,timeInteval];
         NSString *md5SignString = [self md5Value:signString];
         NSString *urlString = [NSString stringWithFormat:@"http://oapi.56.com/video/mobile.json?appkey=%@&ts=%d&vid=%@&sign=%@",appKey56,timeInteval,self.vid,md5SignString];
+        NSLog(@"request url is %@",urlString);
         [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//            NSLog(@"result is %@",responseObject);
             NSDictionary * resourceInfo = [responseObject valueForKey:@"info"];
             int index = [[resourceInfo valueForKey:@"rfiles"] count]-1;
             NSString *urlString = [[[resourceInfo valueForKey:@"rfiles"] objectAtIndex:index] valueForKey:@"url"];
