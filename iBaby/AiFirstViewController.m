@@ -10,7 +10,7 @@
 #import "AiVideoObject.h"
 #import "AiDefine.h"
 #import "AiDataRequestManager.h"
-#import "AiScrollViewController.h"
+#import "AiIndexViewController.h"
 #import "AiAlbumViewController.h"
 #import "AiUserManager.h"
 
@@ -18,7 +18,6 @@
 #import "SwipeView.h"
 
 #import "Reachability.h"
-#import "iToast.h"
 #import "AFNetworking.h"
 
 #import "AiWaitingView.h"
@@ -30,9 +29,9 @@
     AiDataRequestManager *_dataManager;
     NSMutableArray *_songListArray;
     
-    AiScrollViewController *_songViewController;
-    AiScrollViewController *_catoonViewController;
-    AiScrollViewController *_videoViewController;
+    AiIndexViewController *_songViewController;
+    AiIndexViewController *_catoonViewController;
+    AiIndexViewController *_videoViewController;
     
     kTagButtonType _currentType;
     int _scrollNum;
@@ -97,15 +96,16 @@
                 [self addNoNetworkTip];
             } else {
                 [self removeNetworkTip];
-                if (self.songScrollView.videoDatas.count == 0) {
-                    [self.songScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_SONG completion:nil];
-                }
-                if (self.catoonScrollView.videoDatas.count == 0) {
-                    [self.catoonScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_CARTOON completion:nil];
-                }
-                if (self.videoScrollView.videoDatas.count == 0) {
-                    [self.catoonScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_TV completion:nil];
-                }
+#warning ToDo here!
+//                if (self.songScrollView.videoDatas.count == 0) {
+//                    [self.songScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_SONG completion:nil];
+//                }
+//                if (self.catoonScrollView.videoDatas.count == 0) {
+//                    [self.catoonScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_CARTOON completion:nil];
+//                }
+//                if (self.videoScrollView.videoDatas.count == 0) {
+//                    [self.catoonScrollView.scrollViewController getRecommendResource:RESOURCE_TYPE_TV completion:nil];
+//                }
             }
         });
     }];
@@ -157,24 +157,21 @@
     
     CGRect backGroundRect = self.backgroundView.frame;
     
-    _songViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_SONG completion:nil];
+    _songViewController = [[AiIndexViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_SONG completion:nil];
     _songViewController.videoType = kTagButtonTypeSong;
-    _songViewController.sourceType = kDataSourceTypeWeb;
     self.songScrollView = _songViewController.scrollView;
     self.songScrollView.tag = kTagButtonTypeSong;
     
-    _catoonViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_CARTOON completion:nil];
+    _catoonViewController = [[AiIndexViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_CARTOON completion:nil];
     _catoonViewController.videoType = kTagButtonTypeCatoon;
-    _catoonViewController.sourceType = kDataSourceTypeWeb;
     self.catoonScrollView = _catoonViewController.scrollView;
     self.catoonScrollView.tag = kTagButtonTypeCatoon;
 //
-    _videoViewController = [[AiScrollViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_TV completion:^(void){
+    _videoViewController = [[AiIndexViewController alloc] initWithFrame:backGroundRect recommend:RESOURCE_TYPE_TV completion:^(void){
         [self checkNetwork];
         [AiWaitingView dismiss];
     }];
     _videoViewController.videoType = kTagButtonTypeVideo;
-    _videoViewController.sourceType = kDataSourceTypeWeb;
     self.videoScrollView = _videoViewController.scrollView;
     self.videoScrollView.tag = kTagButtonTypeVideo;
 
@@ -248,8 +245,8 @@
 {
     if (_isPresentView == NO) {
         _isPresentView = YES;
-        [AiVideoPlayerManager shareInstance].currentVideoObject = videoObject;
         AiAlbumViewController *albumViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"album"];
+        albumViewController.videoObject = videoObject;
         [self mz_presentFormSheetController:[self makeMZFormSheetController:albumViewController] animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
 //            NSLog(@"finish!!");
             _isPresentView = NO;

@@ -11,50 +11,48 @@
 #import "SwipeView.h"
 #import "EGORefreshTableHeaderView.h"
 
-@class AiScrollViewController;
+@protocol AiScrollViewDelegate <NSObject>
+
+-(int)scrollViewReload;
+
+-(void)getMoreData:(int)num;
+
+-(BOOL)reloadEgoFooterView:(NSArray *)resourceInfos totalNum:(int)totalNum egoView:(EGORefreshTableHeaderView *)footView;
+
+-(NSArray *)showVideoArray:(NSArray *)videoArray;
+
+@end
+
+@class AiIndexViewController;
 
 @interface AiScrollView : UIScrollView
-<SwipeViewDataSource,EGORefreshTableHeaderDelegate,UIScrollViewDelegate>
+<UIScrollViewDelegate>
 {
-    EGORefreshTableHeaderView * _egoFooterView;
+//    EGORefreshTableHeaderView * _egoFooterView;
     int _cellHeight;
     int _cellOffSetY;
     int _cellOffSetX;
-    int _leftNum;
-    int _getMoreDataNum;
+    int _showdNum;
+//    int _leftNum;
+//    int _getMoreDataNum;
 }
 
 @property (nonatomic, assign) kTagViewType viewType;
-
-@property (nonatomic, assign) kSearchViewType searchViewType;
-
-@property (nonatomic, strong) NSMutableArray * videoDatas;
-
-@property (nonatomic, strong) NSMutableArray * normalDatas;
 
 @property (nonatomic, strong) NSArray *leftDatas;  //第一次没有显示完的数据
 
 @property (nonatomic, strong) NSOperationQueue *queue;
 
-@property (nonatomic, assign) AiScrollViewController * scrollViewController;
-
 @property (nonatomic, assign) int pageCount;
 
-@property (nonatomic, strong) UIButton *songButton;
+@property (nonatomic, weak) id<AiScrollViewDelegate> scrollViewDelegate;
 
-@property (nonatomic, strong) UIButton *allButton;
-
-@property (nonatomic, strong) UIButton *cattonButton;
-
-@property (nonatomic, strong) UIButton *videoButton;
-
-@property (nonatomic, strong) UIImageView *chooseView;
+@property (nonatomic, strong) EGORefreshTableHeaderView *egoFooterView;
 
 -(void)setAiVideoObjects:(NSArray *)aiVideoObjects;
 
 -(void)addAiVideoObjects:(NSArray *)aiVideoObjects;
 
--(void)reloadData;
 @end
 
 @interface AiAlbumView : UIView
@@ -78,25 +76,3 @@
 -(IBAction)playVideo:(id)sender;
 @end
 
-@interface AiScrollViewCell : UIView
-
-@property (nonatomic, copy) AiVideoObject *aiVideoObject;
-
-@property (nonatomic, strong) UIButton *imageButton;
-
-@property (nonatomic, strong) UILabel *titleLabel;
-
-@property (nonatomic, assign) AiScrollView *scrollView;
-
-@property (nonatomic, assign) kViewCellType viewCellType;
-
-@property (nonatomic, strong) UIImageView *backgroundView;
-
--(void)onClickButton:(UIButton *)button;
-
--(id)initWithVideoObject:(AiVideoObject *)videoObject;
-
--(id)initWithFrame:(CGRect)frame cellType:(kViewCellType)viewCellType;
-
--(void)setHightLightScrollViewCell;
-@end

@@ -8,15 +8,16 @@
 
 #import <UIKit/UIKit.h>
 //#import "AiGridViewController.h"
-#import "AiScrollViewController.h"
+#import "AiIndexViewController.h"
+#import "AiScrollView.h"
 
 @interface AiHistoryViewController : UIViewController
 {
-    AiScrollViewController *_scrollViewController;
+//    AiIndexViewController *_scrollViewController;
 //    AiGridViewController *_historyViewController;
 }
 
-@property (nonatomic, assign) IBOutlet UIView *backGroundView;
+@property (nonatomic, assign) IBOutlet AiScrollView *scrollView;
 
 -(IBAction)close:(id)sender;
 

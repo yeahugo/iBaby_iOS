@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "AiVideoObject.h"
-#import "AiPlayerViewController.h"
+#import "AiNormalPlayerViewController.h"
 
 @interface AiVideoPlayerManager : NSObject
 
-@property (nonatomic, strong) AiPlayerViewController *aiPlayerViewController;
+@property (nonatomic, strong) AiNormalPlayerViewController *aiPlayerViewController;
 
 @property (nonatomic, strong) AiVideoObject *currentVideoObject;
 

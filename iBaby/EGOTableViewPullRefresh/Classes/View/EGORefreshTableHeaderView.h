@@ -60,9 +60,10 @@ typedef enum{
 
 @end
 @protocol EGORefreshTableHeaderDelegate
+@optional
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view;
 - (void)egoRefreshTableHeaderDidTriggerGetMore:(EGORefreshTableHeaderView*)view;
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view;
-@optional
+
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view;
 @end

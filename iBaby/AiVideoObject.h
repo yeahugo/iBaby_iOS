@@ -42,6 +42,8 @@
 
 @property (nonatomic, copy) NSString *serialDes;
 
+@property (nonatomic, assign) BOOL isLike;
+
 -(void)getSongUrlWithCompletion:(void (^)(NSString *urlString,NSError *error))completion;
 
 -(id)initWithResourceInfo:(ResourceInfo *)resourceInfo;

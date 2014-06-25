@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class AiSearchViewController;
+
 @interface SuggestiveTextField : UITextField <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, assign) id searchViewController;
+@property (nonatomic, weak) id  searchViewController;
 
 @property (strong) UIPopoverController *popOver;
 

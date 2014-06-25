@@ -8,6 +8,7 @@
 
 #import "AiBannerView.h"
 #import "AiScrollView.h"
+#import "AiScrollViewCell.h"
 
 @implementation AiBannerView
 
@@ -34,7 +35,8 @@
                 AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(i * scrollView.frame.size.width, 0, scrollView.frame.size.width, scrollView.frame.size.height) cellType:kViewCellTypeHot];
                 scrollViewCell.scrollView = aiScrollView;
                 scrollViewCell.tag = 2000 + i;
-                scrollViewCell.aiVideoObject = [videoDatas objectAtIndex:i];
+                scrollViewCell.resourceInfo = [videoDatas objectAtIndex:i];
+                [scrollViewCell reloadResourceInfo];
                 bigVideoNum ++;
                 [scrollView addSubview:scrollViewCell];
             }
@@ -69,7 +71,8 @@
             if (videoObject.status == RESOURCE_STATUS_RECOMMEND) {
                 AiScrollViewCell *scrollViewCellRecommend = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(_scrollViewWidth + deltaX, i*(height+deltaY), width, height) cellType:kViewCellTypeRecommend];
                 scrollViewCellRecommend.scrollView = aiScrollView;
-                scrollViewCellRecommend.aiVideoObject = [videoDatas objectAtIndex:bigVideoNum + i];
+                scrollViewCellRecommend.resourceInfo = [videoDatas objectAtIndex:bigVideoNum + i];
+                [scrollViewCellRecommend reloadResourceInfo];
                 [self addSubview:scrollViewCellRecommend];
             }
         }

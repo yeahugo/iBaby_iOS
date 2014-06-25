@@ -297,7 +297,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
-                            <view contentMode="scaleToFill" id="Pba-O5-OfP">
+                            <view contentMode="scaleToFill" id="Pba-O5-OfP" customClass="AiScrollView">
                                 <rect key="frame" x="70" y="95" width="800" height="402"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -322,7 +322,7 @@
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
-                        <outlet property="backGroundView" destination="Pba-O5-OfP" id="DJQ-uy-q7G"/>
+                        <outlet property="scrollView" destination="Pba-O5-OfP" id="nf2-As-M51"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N5w-uQ-wXO" userLabel="First Responder" sceneMemberID="firstResponder"/>

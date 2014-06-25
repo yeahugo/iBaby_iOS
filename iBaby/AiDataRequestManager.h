@@ -51,8 +51,6 @@ typedef void (^Completion)(NSArray *resultArray,NSError *error);
 
 -(void)requestRecommendWithType:(int)resourceType startId:(int)startId totalNum:(int)totalNum completion:(void (^)(NSArray *resultArray , NSError * error))completion;
 
--(void)requestGetResourcesWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId totalSectionNum:(int)sectionNum completion:(void (^)(NSArray *, NSError *))completion;
-
 -(void)requestSearchWithKeyWords:(NSString *)keyWords startId:(NSNumber *)startId resourceType:(int)resourceType completion:(void (^)(NSArray *resultArray,NSError *error))completion;
 
 -(void)requestSearchRecommend:(void (^)(NSArray * resultArray,NSError *error))completion;

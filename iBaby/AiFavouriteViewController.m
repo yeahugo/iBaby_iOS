@@ -28,19 +28,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _favouriViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
-    _favouriViewController.scrollView.viewType = kTagViewTypeFavourite;
-    _favouriViewController.sourceType = kDataSourceTypeDatabase;
-    [self.view addSubview:_favouriViewController.scrollView];
-    
-    [[AiDataBaseManager shareInstance] getFavouriteListsWithCompletion:^(NSArray *videoList, NSError *error) {
-        if (error == nil) {
-            [_favouriViewController.scrollView setVideoDatas:videoList];
-            [_favouriViewController.scrollView reloadData];
-        } else {
-            NSLog(@"getVideoList error is %@",error);
-        }
-    }];
+//    _favouriViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+//    _favouriViewController.scrollView.viewType = kTagViewTypeFavourite;
+//    _favouriViewController.sourceType = kDataSourceTypeDatabase;
+//    [self.view addSubview:_favouriViewController.scrollView];
+//    
+//    [[AiDataBaseManager shareInstance] getFavouriteListsWithCompletion:^(NSArray *videoList, NSError *error) {
+//        if (error == nil) {
+//            [_favouriViewController.scrollView setVideoDatas:(NSMutableArray *)videoList];
+//            [_favouriViewController.scrollView reloadData];
+//        } else {
+//            NSLog(@"getVideoList error is %@",error);
+//        }
+//    }];
 }
 
 -(NSMutableArray *)makeVideoArrays:(NSArray *)videoList
@@ -64,7 +64,7 @@
 
 -(IBAction)close:(id)sender
 {
-    [self dismissFormSheetControllerAnimated:YES completionHandler:nil];
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
     AiFirstViewController  *rootViewController = (AiFirstViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
     [rootViewController resetButtons];
 }

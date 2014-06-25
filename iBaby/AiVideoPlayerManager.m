@@ -28,7 +28,7 @@
 {
     self = [super init];
     if (self) {
-        AiPlayerViewController * playerViewController = [[AiPlayerViewController alloc] init];
+        AiNormalPlayerViewController * playerViewController = [[AiNormalPlayerViewController alloc] init];
         self.aiPlayerViewController = playerViewController;
         _currentVideoObject = [[AiVideoObject alloc] init];
     }
@@ -43,8 +43,8 @@
             [self.aiPlayerViewController playVideoAtSection:sectionNum + 1];
         }
     } else {
-        MPMoviePlayerController *moviePlayer = self.aiPlayerViewController.moviePlayer;
-        [moviePlayer stop];
+//        MPMoviePlayerController *moviePlayer = self.aiPlayerViewController.moviePlayer;
+//        [moviePlayer stop];
     }
     [self saveVideoInDatabase];
 }
@@ -52,7 +52,8 @@
 -(void)saveVideoInDatabase
 {
     AiVideoObject *aiVideoObject = self.currentVideoObject;
-    aiVideoObject.playTime = self.aiPlayerViewController.moviePlayer.currentPlaybackTime;
+#warning Todo here
+//    aiVideoObject.playTime = self.aiPlayerViewController.moviePlayer.currentPlaybackTime;
     [[AiDataBaseManager shareInstance] addVideoRecord:aiVideoObject];
 }
 @end

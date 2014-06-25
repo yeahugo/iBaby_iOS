@@ -65,7 +65,7 @@
     if ([window viewWithTag:100]) {
         return;
     }
-    UIViewController  *rootViewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+//    UIViewController  *rootViewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     UIImage *unreachableImage = [UIImage imageNamed:@"no_network"];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:unreachableImage];
     imageView.center = CGPointMake(superView.frame.size.width/2, superView.frame.size.height/2);
