@@ -11,6 +11,7 @@
 //#import "AiVideoPlayerManager.h"
 #import "AiWaitingView.h"
 #import "AiScrollView.h"
+#import "AiScrollViewCell.h"
 #import "AiDataRequestManager.h"
 
 @implementation AiPlayerViewControl
@@ -184,14 +185,16 @@
         videoListView.frame = CGRectMake(1024-videoListWidth, videoListView.frame.origin.y, videoListWidth, videoListView.frame.size.height);
         NSString *vid = self.videoObject.vid;
         for (int i = 0; i < totalNum; i++) {
-            AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:[result objectAtIndex:i]];
+//            AiVideoObject *videoObject = [[AiVideoObject alloc] initWithResourceInfo:[result objectAtIndex:i]];
+            ResourceInfo *resourceInfo = [result objectAtIndex:i];
             AiScrollViewCell *scrollViewCell = [[AiScrollViewCell alloc] initWithFrame:CGRectMake(startX + deltaX *(i%rowNum) , startY + deltaY *(i/rowNum), size.width, size.height) cellType:kViewCellTypeNormal];
-            scrollViewCell.aiVideoObject = videoObject;
+            scrollViewCell.resourceInfo = resourceInfo;
+            [scrollViewCell reloadResourceInfo];
             [videoListView addSubview:scrollViewCell];
             scrollViewCell.imageButton.tag = i;
             [scrollViewCell.imageButton removeTarget:scrollViewCell action:NULL forControlEvents:UIControlEventTouchUpInside];
             [scrollViewCell.imageButton addTarget:self action:@selector(selectVideo:) forControlEvents:UIControlEventTouchUpInside];
-            if ([vid isEqualToString:videoObject.vid]) {
+            if ([vid isEqualToString:resourceInfo.vid]) {
                 [scrollViewCell setHightLightScrollViewCell];
             }
         }

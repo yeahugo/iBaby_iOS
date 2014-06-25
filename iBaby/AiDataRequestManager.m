@@ -197,7 +197,7 @@
 
 -(void)requestRecommendWithType:(int)resourceType startId:(int)startId totalNum:(int)totalNum completion:(void (^)(NSArray *resultArray , NSError * error))completion
 {
-//    NSLog(@"totalNum is %d",totalNum);
+//    NSLog(@"totalNum is %d ",totalNum);
     [[AiThriftManager shareInstance].queue addOperationWithBlock:^{
         @try {
             [self doRecommendWithType:resourceType startId:startId totalNum:totalNum userLogin:YES completion:completion];

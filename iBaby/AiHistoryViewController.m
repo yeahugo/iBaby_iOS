@@ -29,15 +29,17 @@
 {
     [super viewDidLoad];
     
-    _scrollViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
-    _scrollViewController.scrollView.viewType = kTagViewTypeHistory;
-    _scrollViewController.sourceType = kDataSourceTypeDatabase;
-    _scrollViewController.scrollView.pageCount = HistoryNum;
-    [self.view addSubview:_scrollViewController.scrollView];
+//    _scrollViewController = [[AiScrollViewController alloc] initWithFrame:self.backGroundView.frame keyWords:nil];
+//    _scrollViewController.scrollView.viewType = kTagViewTypeHistory;
+//    _scrollViewController.sourceType = kDataSourceTypeDatabase;
+//    _scrollViewController.scrollView.pageCount = HistoryNum;
+//    [self.view addSubview:_scrollViewController.scrollView];
+
     
     [[AiDataBaseManager shareInstance] getVideoListsWithCompletion:^(NSArray *videoList, NSError *error) {
         if (error == nil) {
-            [_scrollViewController.scrollView setAiVideoObjects:videoList];
+//            [self.scrollView setVideoDatas:videoList];
+//            [_scrollViewController.scrollView setAiVideoObjects:videoList];
         } else {
             NSLog(@"getVideoList error is %@",error);
         }

@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D501800218FC22BA0069E681 /* AiPlayerViewControl.xib in Resources */ = {isa = PBXBuildFile; fileRef = D501800118FC22BA0069E681 /* AiPlayerViewControl.xib */; };
-		D511B64F191E0724005F3DCA /* AiScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D511B64E191E0724005F3DCA /* AiScrollViewController.m */; };
+		D511B64F191E0724005F3DCA /* AiIndexViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D511B64E191E0724005F3DCA /* AiIndexViewController.m */; };
 		D511B652191E0814005F3DCA /* AiScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = D511B651191E0814005F3DCA /* AiScrollView.m */; };
-		D511B656191F830E005F3DCA /* AiAlbumView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D511B655191F830E005F3DCA /* AiAlbumView.xib */; };
 		D511B6A019211A82005F3DCA /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D511B69619211A82005F3DCA /* EGORefreshTableHeaderView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D511B6A119211A82005F3DCA /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D511B69819211A82005F3DCA /* blackArrow.png */; };
 		D511B6A219211A82005F3DCA /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D511B69919211A82005F3DCA /* blackArrow@2x.png */; };
@@ -21,6 +20,7 @@
 		D511B6A719211A82005F3DCA /* whiteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D511B69E19211A82005F3DCA /* whiteArrow.png */; };
 		D511B6A819211A82005F3DCA /* whiteArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D511B69F19211A82005F3DCA /* whiteArrow@2x.png */; };
 		D511B6AC192255CE005F3DCA /* shy.m in Sources */ = {isa = PBXBuildFile; fileRef = D511B6AB192255CE005F3DCA /* shy.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D51983361957A2F800127E1A /* AiScrollViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D51983351957A2F800127E1A /* AiScrollViewCell.m */; };
 		D51CCA4B192B595A003244E8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51CCA4A192B595A003244E8 /* SystemConfiguration.framework */; };
 		D51CCA4F192B5B1E003244E8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D51CCA4E192B5B1E003244E8 /* Reachability.m */; };
 		D51CCA53192B6302003244E8 /* SuggestiveTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = D51CCA52192B6302003244E8 /* SuggestiveTextField.m */; };
@@ -238,11 +238,10 @@
 
 /* Begin PBXFileReference section */
 		D501800118FC22BA0069E681 /* AiPlayerViewControl.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AiPlayerViewControl.xib; sourceTree = "<group>"; };
-		D511B64D191E0724005F3DCA /* AiScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AiScrollViewController.h; sourceTree = "<group>"; };
-		D511B64E191E0724005F3DCA /* AiScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AiScrollViewController.m; sourceTree = "<group>"; };
+		D511B64D191E0724005F3DCA /* AiIndexViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AiIndexViewController.h; sourceTree = "<group>"; };
+		D511B64E191E0724005F3DCA /* AiIndexViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AiIndexViewController.m; sourceTree = "<group>"; };
 		D511B650191E0814005F3DCA /* AiScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AiScrollView.h; sourceTree = "<group>"; };
 		D511B651191E0814005F3DCA /* AiScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AiScrollView.m; sourceTree = "<group>"; };
-		D511B655191F830E005F3DCA /* AiAlbumView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AiAlbumView.xib; sourceTree = "<group>"; };
 		D511B69519211A82005F3DCA /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		D511B69619211A82005F3DCA /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		D511B69819211A82005F3DCA /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -255,6 +254,8 @@
 		D511B69F19211A82005F3DCA /* whiteArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "whiteArrow@2x.png"; sourceTree = "<group>"; };
 		D511B6AA192255CE005F3DCA /* shy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shy.h; path = Thrift/shy.h; sourceTree = "<group>"; };
 		D511B6AB192255CE005F3DCA /* shy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = shy.m; path = Thrift/shy.m; sourceTree = "<group>"; };
+		D51983341957A2F800127E1A /* AiScrollViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AiScrollViewCell.h; sourceTree = "<group>"; };
+		D51983351957A2F800127E1A /* AiScrollViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AiScrollViewCell.m; sourceTree = "<group>"; };
 		D51CCA4A192B595A003244E8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D51CCA4D192B5B1E003244E8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		D51CCA4E192B5B1E003244E8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
@@ -829,7 +830,6 @@
 				D5A4464618E2512800B95D22 /* Main_iPhone.storyboard */,
 				D5A4464918E2512800B95D22 /* Main_iPad.storyboard */,
 				D501800118FC22BA0069E681 /* AiPlayerViewControl.xib */,
-				D511B655191F830E005F3DCA /* AiAlbumView.xib */,
 				D5B5750019250EE40011D094 /* AiSearchRecommendView.xib */,
 				D5B5751E1928E9DF0011D094 /* AiDefaultSearchView.xib */,
 				D5A44A8F18E6CBF100B95D22 /* database.db */,
@@ -1010,16 +1010,6 @@
 				D511B651191E0814005F3DCA /* AiScrollView.m */,
 				D5B575021926FAF20011D094 /* AiBannerView.h */,
 				D5B575031926FAF20011D094 /* AiBannerView.m */,
-				D5A4464C18E2512800B95D22 /* AiFirstViewController.h */,
-				D5A4464D18E2512800B95D22 /* AiFirstViewController.m */,
-				D5A44A7818E673C800B95D22 /* AiSearchViewController.h */,
-				D5A44A7918E673C800B95D22 /* AiSearchViewController.m */,
-				D5A44A9318E6D4C300B95D22 /* AiHistoryViewController.h */,
-				D5A44A9418E6D4C300B95D22 /* AiHistoryViewController.m */,
-				D575B1D41907F95E000A17E1 /* AiFavouriteViewController.h */,
-				D575B1D51907F95E000A17E1 /* AiFavouriteViewController.m */,
-				D5B5750519270DF70011D094 /* AiAlbumViewController.h */,
-				D5B5750619270DF70011D094 /* AiAlbumViewController.m */,
 				D5E3F20F1931B47100F33827 /* AiFeedbackViewController.h */,
 				D5E3F2101931B47100F33827 /* AiFeedbackViewController.m */,
 				D5B575331928EBA80011D094 /* AiDefaultSearchView.h */,
@@ -1033,6 +1023,8 @@
 				D523465D1942AC5200F15AF3 /* AiWebViewPlayerController.xib */,
 				D5F2F1A4194F2DA200E8B068 /* AiPlayerViewController.h */,
 				D5F2F1A5194F2DA200E8B068 /* AiPlayerViewController.m */,
+				D51983341957A2F800127E1A /* AiScrollViewCell.h */,
+				D51983351957A2F800127E1A /* AiScrollViewCell.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1122,8 +1114,18 @@
 		D5A44ABE18E8088100B95D22 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				D511B64D191E0724005F3DCA /* AiScrollViewController.h */,
-				D511B64E191E0724005F3DCA /* AiScrollViewController.m */,
+				D511B64D191E0724005F3DCA /* AiIndexViewController.h */,
+				D511B64E191E0724005F3DCA /* AiIndexViewController.m */,
+				D5A44A7818E673C800B95D22 /* AiSearchViewController.h */,
+				D5A44A7918E673C800B95D22 /* AiSearchViewController.m */,
+				D5B5750519270DF70011D094 /* AiAlbumViewController.h */,
+				D5B5750619270DF70011D094 /* AiAlbumViewController.m */,
+				D5A4464C18E2512800B95D22 /* AiFirstViewController.h */,
+				D5A4464D18E2512800B95D22 /* AiFirstViewController.m */,
+				D5A44A9318E6D4C300B95D22 /* AiHistoryViewController.h */,
+				D5A44A9418E6D4C300B95D22 /* AiHistoryViewController.m */,
+				D575B1D41907F95E000A17E1 /* AiFavouriteViewController.h */,
+				D575B1D51907F95E000A17E1 /* AiFavouriteViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -1367,7 +1369,6 @@
 				D55B3F0A19357EC60005850C /* logo_58.png in Resources */,
 				D5E3F21D1931D84800F33827 /* birds.mp3 in Resources */,
 				D511B6A419211A82005F3DCA /* blueArrow@2x.png in Resources */,
-				D511B656191F830E005F3DCA /* AiAlbumView.xib in Resources */,
 				D5E3F1D1192F891100F33827 /* point@2x.png in Resources */,
 				D589687C192D8267004FA0E4 /* delete@2x.png in Resources */,
 				D5A4473C18E45B5300B95D22 /* CHANGELOG.md in Resources */,
@@ -1457,6 +1458,7 @@
 				D5A4473218E45B5300B95D22 /* TException.m in Sources */,
 				D5E3F2111931B47100F33827 /* AiFeedbackViewController.m in Sources */,
 				D5A4473018E45B5300B95D22 /* TSocketServer.m in Sources */,
+				D51983361957A2F800127E1A /* AiScrollViewCell.m in Sources */,
 				D5A4473B18E45B5300B95D22 /* AiThriftManager.m in Sources */,
 				D5A4474118E45B5300B95D22 /* UMImageLoadConnection.m in Sources */,
 				D5A44A6C18E66C4F00B95D22 /* MZFormSheetBackgroundWindowViewController.m in Sources */,
@@ -1493,7 +1495,7 @@
 				D5B574C619231A350011D094 /* AiUserManager.m in Sources */,
 				D511B652191E0814005F3DCA /* AiScrollView.m in Sources */,
 				D5E3F20C19312E9500F33827 /* AiWaitingView.m in Sources */,
-				D511B64F191E0724005F3DCA /* AiScrollViewController.m in Sources */,
+				D511B64F191E0724005F3DCA /* AiIndexViewController.m in Sources */,
 				D5A44A7018E66C4F00B95D22 /* UIImage+Additional.m in Sources */,
 				D5A44A8718E6BB0400B95D22 /* EGODatabaseRequest.m in Sources */,
 				D5A44A7118E66C4F00B95D22 /* UIViewController+TargetViewController.m in Sources */,

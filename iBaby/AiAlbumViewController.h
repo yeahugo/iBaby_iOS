@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AiScrollViewController.h"
+#import "AiScrollView.h"
+#import "AiVideoObject.h"
+//#import "AiScrollViewController.h"
 
-@interface AiAlbumViewController : UIViewController
-{
-    AiScrollViewController *_albumViewController;
-}
+@interface AiAlbumViewController : UIViewController<AiScrollViewDelegate,EGORefreshTableHeaderDelegate>
+//{
+//    AiScrollViewController *_albumViewController;
+//}
 
 @property (nonatomic, copy) NSString *serialId;
 
@@ -30,7 +32,11 @@
 
 @property (nonatomic, weak) IBOutlet UILabel * titleLabel;
 
+@property (nonatomic, strong) AiScrollView *scrollView;
+
 @property (nonatomic, strong) AiVideoObject *videoObject;
+
+@property (nonatomic, assign) int startId;
 
 -(IBAction)close:(id)sender;
 

@@ -47,10 +47,10 @@ typedef enum {
 } kTagViewType;
 
 typedef enum {
-    kSearchViewTypeAll,
-    kSearchViewTypeSong,
-    kSearchViewTypeCatoon,
-    kSearchViewTypeVideo
+    kSearchViewTypeAll = -1,
+    kSearchViewTypeSong = 1,
+    kSearchViewTypeCatoon = 2,
+    kSearchViewTypeVideo = 3
 }kSearchViewType;
 
 #define ResponseCodeSuccess 0
