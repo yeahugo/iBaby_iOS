@@ -13,7 +13,7 @@
 #import "SuggestiveTextField.h"
 
 @interface AiSearchViewController : UIViewController
-<UITextFieldDelegate,AiScrollViewDelegate>
+<UITextFieldDelegate,AiScrollViewDelegate,EGORefreshTableHeaderDelegate>
 
 @property (nonatomic, assign) IBOutlet UIView * backGroundView;
 

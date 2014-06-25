@@ -152,13 +152,16 @@
 }
 
 #pragma mark AiScrollViewDelegate
+-(NSArray *)showVideoArray:(NSArray *)videoArray
+{
+    return videoArray;
+}
+
 -(int)scrollViewReload
 {
     AiVideoObject *firstVideoObject = self.firstVideoObject;
     int returnOffSet = 0;
-//    if (self.songListArray.count > 0) {
-//        firstVideoObject = [self.songListArray objectAtIndex:0];
-//    }
+
     //搜索页面推荐效果
     if (firstVideoObject.status == 1) {
         NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"AiSearchRecommendView" owner:self options:nil];
@@ -178,13 +181,8 @@
         UIImage *image = [UIImage imageWithData:data];
         [searchRecommendView.albumImage setImage:image];
         [self.scrollView addSubview:searchRecommendView];
-        
-//        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"break line"]];
-//        line.center = CGPointMake(self.frame.size.width/2, searchRecommendView.frame.size.height);
-//        [self.view addSubview:line];
-//        
+
         returnOffSet = searchRecommendView.frame.size.height + 40;
-        
         [self addButtonsFromOffSet:searchRecommendView.frame.size.height];
     }
     else {
@@ -202,6 +200,25 @@
             [self.scrollView addAiVideoObjects:resultArray];
         }
     }];
+}
+
+-(BOOL)reloadEgoFooterView:(NSArray *)resourceInfos totalNum:(int)totalNum egoView:(EGORefreshTableHeaderView *)footView
+{
+    BOOL returnResult = NO;
+    if (resourceInfos.count % totalNum == 0 && resourceInfos.count > 0) {
+        footView.delegate = self;
+        footView.center = CGPointMake(footView.center.x, self.scrollView.contentSize.height);
+        [self.scrollView addSubview:footView];
+        returnResult = YES;
+    }
+    return returnResult;
+}
+
+#pragma mark EGOHeaderViewDelegate
+- (void)egoRefreshTableHeaderDidTriggerGetMore:(EGORefreshTableHeaderView*)view
+{
+    NSLog(@"egoRefreshTableHeaderDidTriggerGetMore !!");
+    [self getMoreData:SearchNum];
 }
 
 -(void)addButtonsFromOffSet:(float)offset
